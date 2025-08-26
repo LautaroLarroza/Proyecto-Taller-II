@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Latrozz's computer\\source\\repos\\Automotors\\Automotors\\Automotors.csproj",
+      "projectUniqueName": "C:\\Users\\Latrozz's computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\Automotors.csproj",
       "projectName": "Automotors",
-      "projectPath": "C:\\Users\\Latrozz's computer\\source\\repos\\Automotors\\Automotors\\Automotors.csproj",
+      "projectPath": "C:\\Users\\Latrozz's computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\Automotors.csproj",
       "packagesPath": "C:\\Users\\Latrozz's computer\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Latrozz's computer\\source\\repos\\Automotors\\Automotors\\obj\\",
+      "outputPath": "C:\\Users\\Latrozz's computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
