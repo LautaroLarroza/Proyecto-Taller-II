@@ -25,14 +25,14 @@ namespace Automotors
 
             dataGridView1.DataSource = tabla;
         }
-        private void btnAgregar_Click(object sender, EventArgs e)
+        private void BAgregar_Click(object sender, EventArgs e)
         {
             FrmAgregarUsuario frm = new FrmAgregarUsuario();
             frm.ShowDialog(); // Se abre un modal para ingresar datos
             CargarUsuarios(); // Método que recarga la DataGridView
         }
 
-        private void btnEliminar_Click(object sender, EventArgs e)
+        private void BEliminar_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count > 0)
             {
@@ -41,10 +41,30 @@ namespace Automotors
                 CargarUsuarios();
             }
         }
+        private void CargarUsuarios()
+        {
+            DataTable tabla = new DataTable();
+            tabla.Columns.Add("Id");
+            tabla.Columns.Add("Nombre");
+            tabla.Columns.Add("Apellido");
+            tabla.Columns.Add("Usuario");
+            tabla.Columns.Add("Cargo");
+
+            // Ejemplo de datos
+            tabla.Rows.Add(1, "Juan", "Pérez", "jperez", "Admin");
+            tabla.Rows.Add(2, "María", "Gómez", "mgomez", "Vendedor");
+
+            dataGridView1.DataSource = tabla;
+        }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             // Opcional
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
