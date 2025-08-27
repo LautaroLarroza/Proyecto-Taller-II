@@ -30,3 +30,11 @@ C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotor
 C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.dll
 C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\refint\Automotors.dll
 C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.pdb
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmAgregarUsuario.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.exe
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.deps.json
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.runtimeconfig.json
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.pdb
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.genruntimeconfig.cache
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\ref\Automotors.dll

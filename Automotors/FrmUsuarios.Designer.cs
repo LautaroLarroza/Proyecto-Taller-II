@@ -43,7 +43,7 @@
             BAgregar.TabIndex = 1;
             BAgregar.Text = "Agregar";
             BAgregar.UseVisualStyleBackColor = true;
-            BAgregar.Click += button1_Click;
+            BAgregar.Click += BAgregar_Click;
             // 
             // BModificar
             // 
