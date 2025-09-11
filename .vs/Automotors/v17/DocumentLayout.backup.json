@@ -1,0 +1,73 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerA\u00F1o\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|c:\\users\\feder\\onedrive\\escritorio\\xd\\tercera\u00F1o\\2do cuatrimestre\\taller de programacion 2\\proyecto-taller-ii\\automotors\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|solutionrelative:automotors\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|c:\\users\\feder\\onedrive\\escritorio\\xd\\tercera\u00F1o\\2do cuatrimestre\\taller de programacion 2\\proyecto-taller-ii\\automotors\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|solutionrelative:automotors\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|c:\\users\\feder\\onedrive\\escritorio\\xd\\tercera\u00F1o\\2do cuatrimestre\\taller de programacion 2\\proyecto-taller-ii\\automotors\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|solutionrelative:automotors\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerA\u00F1o\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\Automotors\\Form1.cs",
+              "RelativeDocumentMoniker": "Automotors\\Form1.cs",
+              "ToolTip": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerA\u00F1o\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\Automotors\\Form1.cs [Dise\u00F1o]",
+              "RelativeToolTip": "Automotors\\Form1.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-10T21:55:25.352Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerA\u00F1o\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\Automotors\\Form1.Designer.cs",
+              "RelativeDocumentMoniker": "Automotors\\Form1.Designer.cs",
+              "ToolTip": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerA\u00F1o\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\Automotors\\Form1.Designer.cs",
+              "RelativeToolTip": "Automotors\\Form1.Designer.cs",
+              "ViewState": "AgIAAHgAAAAAAAAAAAAAAH0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-10T21:51:54.834Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerA\u00F1o\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\Automotors\\Form1.cs",
+              "RelativeDocumentMoniker": "Automotors\\Form1.cs",
+              "ToolTip": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerA\u00F1o\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\Automotors\\Form1.cs",
+              "RelativeToolTip": "Automotors\\Form1.cs",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAgwIIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-10T21:47:23.78Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

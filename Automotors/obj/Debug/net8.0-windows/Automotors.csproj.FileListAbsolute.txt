@@ -1,0 +1,83 @@
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.Form1.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.Form2.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.FrmUsuarios.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.Properties.Resources.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.GenerateResource.cache
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.AssemblyInfoInputs.cache
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.AssemblyInfo.cs
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.CoreCompileInputs.cache
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\bin\Debug\net8.0-windows\Automotors.exe
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\bin\Debug\net8.0-windows\Automotors.deps.json
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\bin\Debug\net8.0-windows\Automotors.runtimeconfig.json
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\bin\Debug\net8.0-windows\Automotors.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\bin\Debug\net8.0-windows\Automotors.pdb
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\refint\Automotors.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.pdb
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\Automotors.genruntimeconfig.cache
+C:\Users\Latrozz's computer\source\repos\Automotors\Automotors\obj\Debug\net8.0-windows\ref\Automotors.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Form1.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Form2.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmUsuarios.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Properties.Resources.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.GenerateResource.cache
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.AssemblyInfoInputs.cache
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.AssemblyInfo.cs
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.CoreCompileInputs.cache
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.sourcelink.json
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\refint\Automotors.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.pdb
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmAgregarUsuario.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.exe
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.deps.json
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.runtimeconfig.json
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.pdb
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.genruntimeconfig.cache
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\ref\Automotors.dll
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Form1.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Form2.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmAgregarUsuario.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmLogin.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmUsuarios.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Properties.Resources.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.GenerateResource.cache
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.AssemblyInfoInputs.cache
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.AssemblyInfo.cs
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.CoreCompileInputs.cache
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.dll
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\refint\Automotors.dll
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.pdb
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.exe
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.deps.json
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.runtimeconfig.json
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.dll
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.pdb
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.genruntimeconfig.cache
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II-main\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\ref\Automotors.dll
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.exe
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.deps.json
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.runtimeconfig.json
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.dll
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\Automotors.pdb
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Form1.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Form2.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmAgregarUsuario.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmLogin.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmUsuarios.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Properties.Resources.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.GenerateResource.cache
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.AssemblyInfoInputs.cache
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.AssemblyInfo.cs
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.CoreCompileInputs.cache
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.sourcelink.json
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.dll
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\refint\Automotors.dll
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.pdb
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.genruntimeconfig.cache
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\ref\Automotors.dll
