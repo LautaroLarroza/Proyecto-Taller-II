@@ -13,15 +13,13 @@ namespace Automotors
 
         private void ConfigurarAccesos()
         {
-            // Deshabilitar todos los botones inicialmente
             BUsuarios.Enabled = false;
             BBackUp.Enabled = false;
             BVentas.Enabled = false;
             BClientes.Enabled = false;
             BProductos.Enabled = false;
-            button6.Enabled = false; // Reportes
+            button6.Enabled = false;
 
-            // Habilitar botones según el tipo de usuario
             switch (FrmLogin.TipoUsuario)
             {
                 case "Administrador":
@@ -34,7 +32,7 @@ namespace Automotors
                 case "Gerente":
                     BClientes.Enabled = true;
                     BVentas.Enabled = true;
-                    button6.Enabled = true; // Reportes
+                    button6.Enabled = true;
                     break;
 
                 case "Vendedor":
@@ -43,68 +41,29 @@ namespace Automotors
                     break;
             }
 
-            // Mostrar información del usuario logueado
             this.Text = $"Sistema Automotors - Usuario: {FrmLogin.UsuarioLogueado} ({FrmLogin.TipoUsuario})";
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            // Código que quieras ejecutar al cargar el formulario principal
-        }
+        private void Form1_Load(object sender, EventArgs e) { }
 
         private void BUsuarios_Click(object sender, EventArgs e)
         {
             if (!BUsuarios.Enabled) return;
 
             panelContenedor.Controls.Clear();
-            FrmUsuarios frm = new FrmUsuarios();
+            FrmUsuarios frm = new FrmUsuarios(panelContenedor);
             frm.TopLevel = false;
             frm.Dock = DockStyle.Fill;
             panelContenedor.Controls.Add(frm);
             frm.Show();
         }
 
-        private void BBackUp_Click(object sender, EventArgs e)
-        {
-            if (!BBackUp.Enabled) return;
+        private void BBackUp_Click(object sender, EventArgs e) { if (!BBackUp.Enabled) return; panelContenedor.Controls.Clear(); }
+        private void BVentas_Click(object sender, EventArgs e) { if (!BVentas.Enabled) return; panelContenedor.Controls.Clear(); }
+        private void BClientes_Click(object sender, EventArgs e) { if (!BClientes.Enabled) return; panelContenedor.Controls.Clear(); }
+        private void BProductos_Click(object sender, EventArgs e) { if (!BProductos.Enabled) return; panelContenedor.Controls.Clear(); }
+        private void button6_Click(object sender, EventArgs e) { if (!button6.Enabled) return; panelContenedor.Controls.Clear(); }
 
-            panelContenedor.Controls.Clear();
-            // Aquí podrías abrir tu formulario de BackUp
-        }
-
-        private void BVentas_Click(object sender, EventArgs e)
-        {
-            if (!BVentas.Enabled) return;
-
-            panelContenedor.Controls.Clear();
-            // Aquí podrías abrir tu formulario de Ventas
-        }
-
-        private void BClientes_Click(object sender, EventArgs e)
-        {
-            if (!BClientes.Enabled) return;
-
-            panelContenedor.Controls.Clear();
-            // Aquí podrías abrir tu formulario de Clientes
-        }
-
-        private void BProductos_Click(object sender, EventArgs e)
-        {
-            if (!BProductos.Enabled) return;
-
-            panelContenedor.Controls.Clear();
-            // Aquí podrías abrir tu formulario de Productos
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            if (!button6.Enabled) return;
-
-            panelContenedor.Controls.Clear();
-            // Aquí podrías abrir tu formulario de Reportes
-        }
-
-        // Botón Cerrar Sesión
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("¿Está seguro que desea cerrar sesión?",
@@ -118,7 +77,6 @@ namespace Automotors
             }
         }
 
-        // Botón Salir (cierra aplicación completamente)
         private void button7_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("¿Está seguro que desea salir de la aplicación?",
@@ -130,10 +88,6 @@ namespace Automotors
             }
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            // Opcional
-        }
-        
+        private void panel1_Paint(object sender, PaintEventArgs e) { }
     }
 }

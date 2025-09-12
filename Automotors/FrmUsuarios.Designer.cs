@@ -35,8 +35,6 @@
             // 
             // BAgregar
             // 
-            BAgregar.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            BAgregar.AutoSize = true;
             BAgregar.Location = new Point(231, 434);
             BAgregar.Name = "BAgregar";
             BAgregar.Size = new Size(100, 50);
@@ -53,6 +51,7 @@
             BModificar.TabIndex = 2;
             BModificar.Text = "Modificar";
             BModificar.UseVisualStyleBackColor = true;
+            BModificar.Click += BModificar_Click;
             // 
             // BEliminar
             // 
@@ -62,6 +61,7 @@
             BEliminar.TabIndex = 3;
             BEliminar.Text = "Eliminar";
             BEliminar.UseVisualStyleBackColor = true;
+            BEliminar.Click += BEliminar_Click;
             // 
             // FrmUsuarios
             // 
@@ -77,7 +77,6 @@
             Load += FrmUsuarios_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion

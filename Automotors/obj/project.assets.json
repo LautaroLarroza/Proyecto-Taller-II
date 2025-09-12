@@ -8,23 +8,23 @@
     "net8.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\feder\\.nuget\\packages\\": {},
+    "C:\\Users\\Latrozz's computer\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerAño\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\Automotors\\Automotors.csproj",
+      "projectUniqueName": "C:\\Users\\Latrozz's computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\Automotors.csproj",
       "projectName": "Automotors",
-      "projectPath": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerAño\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\Automotors\\Automotors.csproj",
-      "packagesPath": "C:\\Users\\feder\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerAño\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\Automotors\\obj\\",
+      "projectPath": "C:\\Users\\Latrozz's computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\Automotors.csproj",
+      "packagesPath": "C:\\Users\\Latrozz's computer\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Latrozz's computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\feder\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Latrozz's computer\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -33,6 +33,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -75,7 +76,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
