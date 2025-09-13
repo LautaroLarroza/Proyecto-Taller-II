@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace Automotors
@@ -26,6 +27,9 @@ namespace Automotors
             CRol.SelectedIndex = 0;
         }
 
+        // ====================
+        // Propiedades públicas
+        // ====================
         public string Nombre
         {
             get => TNombre.Text;
@@ -58,6 +62,13 @@ namespace Automotors
 
         public bool ModificarEnCurso { get; set; } = false;
 
+        // 👇 Aquí guardamos el ID del usuario cuando estemos modificando
+        public int UsuarioId { get; set; }
+
+        // ====================
+        // Eventos
+        // ====================
+
         private void CheckContraseña_CheckedChanged(object? sender, EventArgs e)
         {
             TContraseña.PasswordChar = CheckContraseña.Checked ? '\0' : '*';
@@ -80,12 +91,54 @@ namespace Automotors
                 return;
             }
 
-            if (!ModificarEnCurso)
+            try
             {
-                formPadre.AgregarUsuarioANuevaFila(Nombre, Apellido, Usuario, Rol);
+                Conexion con = new Conexion();
+                using (var connection = con.GetConnection())
+                {
+                    connection.Open();
+
+                    if (!ModificarEnCurso)
+                    {
+                        // INSERT
+                        SqlCommand cmd = new SqlCommand(
+                            "INSERT INTO Usuarios (Nombre, Apellido, Usuario, Contraseña, Rol, Estado) " +
+                            "VALUES (@Nombre, @Apellido, @Usuario, @Contraseña, @Rol, 1)", connection);
+
+                        cmd.Parameters.AddWithValue("@Nombre", Nombre);
+                        cmd.Parameters.AddWithValue("@Apellido", Apellido);
+                        cmd.Parameters.AddWithValue("@Usuario", Usuario);
+                        cmd.Parameters.AddWithValue("@Contraseña", Contraseña);
+                        cmd.Parameters.AddWithValue("@Rol", Rol);
+
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("✅ Usuario agregado correctamente.");
+                    }
+                    else
+                    {
+                        // UPDATE
+                        SqlCommand cmd = new SqlCommand(
+                            "UPDATE Usuarios SET Nombre=@Nombre, Apellido=@Apellido, Usuario=@Usuario, Contraseña=@Contraseña, Rol=@Rol " +
+                            "WHERE Id=@Id", connection);
+
+                        cmd.Parameters.AddWithValue("@Nombre", Nombre);
+                        cmd.Parameters.AddWithValue("@Apellido", Apellido);
+                        cmd.Parameters.AddWithValue("@Usuario", Usuario);
+                        cmd.Parameters.AddWithValue("@Contraseña", Contraseña);
+                        cmd.Parameters.AddWithValue("@Rol", Rol);
+                        cmd.Parameters.AddWithValue("@Id", UsuarioId);
+
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("✅ Usuario modificado correctamente.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error en la operación: " + ex.Message);
             }
 
-            // 🔥 volvemos al formulario de usuarios en el mismo panel
+            // 🔥 Volver al formulario de usuarios
             panelContenedor.Controls.Clear();
             FrmUsuarios frmUsuarios = new FrmUsuarios(panelContenedor);
             frmUsuarios.TopLevel = false;
@@ -94,6 +147,7 @@ namespace Automotors
             frmUsuarios.Show();
         }
 
+        // Eventos opcionales
         private void FrmAgregarUsuario_Load(object? sender, EventArgs e) { }
         private void panel1_Paint(object? sender, PaintEventArgs e) { }
         private void checkBox1_CheckedChanged(object? sender, EventArgs e) { }

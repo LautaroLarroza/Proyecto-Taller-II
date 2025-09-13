@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -7,7 +8,6 @@ namespace Automotors
 {
     public partial class FrmUsuarios : Form
     {
-        private DataTable tablaUsuarios = new DataTable();
         private Panel panelContenedor;
 
         public FrmUsuarios(Panel panel)
@@ -18,24 +18,28 @@ namespace Automotors
 
         private void FrmUsuarios_Load(object sender, EventArgs e)
         {
-            InicializarTabla();
-            dataGridView1.DataSource = tablaUsuarios;
+            try
+            {
+                Conexion con = new Conexion();
+                using (var connection = con.GetConnection())
+                {
+                    connection.Open();
+                    MessageBox.Show("✅ Conectado a la base de datos con éxito.");
+
+                    // Cargar usuarios reales desde SQL
+                    SqlDataAdapter da = new SqlDataAdapter("SELECT Id, Nombre, Apellido, Usuario, Rol FROM Usuarios", connection);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dataGridView1.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al conectar: " + ex.Message);
+            }
 
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = true;
-        }
-
-        private void InicializarTabla()
-        {
-            tablaUsuarios = new DataTable();
-            tablaUsuarios.Columns.Add("Id", typeof(int));
-            tablaUsuarios.Columns.Add("Nombre", typeof(string));
-            tablaUsuarios.Columns.Add("Apellido", typeof(string));
-            tablaUsuarios.Columns.Add("Usuario", typeof(string));
-            tablaUsuarios.Columns.Add("Cargo", typeof(string));
-
-            tablaUsuarios.Rows.Add(1, "Juan", "Pérez", "jperez", "Admin");
-            tablaUsuarios.Rows.Add(2, "María", "Gómez", "mgomez", "Vendedor");
         }
 
         private void BAgregar_Click(object sender, EventArgs e)
@@ -65,25 +69,33 @@ namespace Automotors
 
             if (confirm == DialogResult.Yes)
             {
-                for (int i = dataGridView1.SelectedRows.Count - 1; i >= 0; i--)
+                try
                 {
-                    DataGridViewRow row = dataGridView1.SelectedRows[i];
-                    if (!row.IsNewRow)
+                    int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["Id"].Value);
+
+                    Conexion con = new Conexion();
+                    using (var connection = con.GetConnection())
                     {
-                        DataRow filaTabla = ((DataRowView)row.DataBoundItem).Row;
-                        tablaUsuarios.Rows.Remove(filaTabla);
+                        connection.Open();
+                        SqlCommand cmd = new SqlCommand("DELETE FROM Usuarios WHERE Id = @id", connection);
+                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.ExecuteNonQuery();
                     }
+
+                    MessageBox.Show("Usuario eliminado correctamente.");
+
+                    // Refrescar la tabla
+                    FrmUsuarios frm = new FrmUsuarios(panelContenedor);
+                    frm.TopLevel = false;
+                    frm.Dock = DockStyle.Fill;
+                    panelContenedor.Controls.Add(frm);
+                    frm.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("❌ Error al eliminar: " + ex.Message);
                 }
             }
-        }
-
-        public void AgregarUsuarioANuevaFila(string nombre, string apellido, string usuario, string rol)
-        {
-            int nuevoId = tablaUsuarios.Rows.Count == 0
-                ? 1
-                : tablaUsuarios.AsEnumerable().Max(r => r.Field<int>("Id")) + 1;
-
-            tablaUsuarios.Rows.Add(nuevoId, nombre, apellido, usuario, rol);
         }
 
         private void BModificar_Click(object sender, EventArgs e)
@@ -94,17 +106,21 @@ namespace Automotors
                 return;
             }
 
-            DataGridViewRow filaSeleccionada = dataGridView1.SelectedRows[0];
-            DataRow filaTabla = ((DataRowView)filaSeleccionada.DataBoundItem).Row;
+            int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["Id"].Value);
+            string nombre = dataGridView1.SelectedRows[0].Cells["Nombre"].Value.ToString();
+            string apellido = dataGridView1.SelectedRows[0].Cells["Apellido"].Value.ToString();
+            string usuario = dataGridView1.SelectedRows[0].Cells["Usuario"].Value.ToString();
+            string rol = dataGridView1.SelectedRows[0].Cells["Rol"].Value.ToString();
 
             panelContenedor.Controls.Clear();
             FrmAgregarUsuario frmModificar = new FrmAgregarUsuario(this, panelContenedor)
             {
-                Nombre = filaTabla["Nombre"].ToString() ?? "",
-                Apellido = filaTabla["Apellido"].ToString() ?? "",
-                Usuario = filaTabla["Usuario"].ToString() ?? "",
-                Rol = filaTabla["Cargo"].ToString() ?? "",
-                ModificarEnCurso = true
+                Nombre = nombre,
+                Apellido = apellido,
+                Usuario = usuario,
+                Rol = rol,
+                ModificarEnCurso = true,
+                UsuarioId = id
             };
 
             frmModificar.TopLevel = false;

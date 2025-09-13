@@ -82,3 +82,11 @@ C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de prog
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.genruntimeconfig.cache
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\ref\Automotors.dll
 C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmLogin.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\System.Data.SqlClient.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\runtimes\win-arm64\native\sni.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\runtimes\win-x64\native\sni.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\runtimes\win-x86\native\sni.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\runtimes\unix\lib\net8.0\System.Data.SqlClient.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Data.SqlClient.dll
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.AssemblyReference.cache
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.Up2Date
