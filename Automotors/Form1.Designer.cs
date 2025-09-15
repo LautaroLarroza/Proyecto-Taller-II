@@ -90,6 +90,7 @@
             BProductos.Text = "Productos";
             BProductos.TextAlign = ContentAlignment.BottomCenter;
             BProductos.UseVisualStyleBackColor = true;
+            BProductos.Click += BProductos_Click;
             // 
             // button6
             // 
