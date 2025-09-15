@@ -61,7 +61,17 @@ namespace Automotors
         private void BBackUp_Click(object sender, EventArgs e) { if (!BBackUp.Enabled) return; panelContenedor.Controls.Clear(); }
         private void BVentas_Click(object sender, EventArgs e) { if (!BVentas.Enabled) return; panelContenedor.Controls.Clear(); }
         private void BClientes_Click(object sender, EventArgs e) { if (!BClientes.Enabled) return; panelContenedor.Controls.Clear(); }
-        private void BProductos_Click(object sender, EventArgs e) { if (!BProductos.Enabled) return; panelContenedor.Controls.Clear(); }
+        private void BProductos_Click(object sender, EventArgs e)
+        {
+            if (!BProductos.Enabled) return;
+
+            panelContenedor.Controls.Clear();
+            FrmProductos frm = new FrmProductos();
+            frm.TopLevel = false;
+            frm.Dock = DockStyle.Fill;
+            panelContenedor.Controls.Add(frm);
+            frm.Show();
+        }
         private void button6_Click(object sender, EventArgs e) { if (!button6.Enabled) return; panelContenedor.Controls.Clear(); }
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
