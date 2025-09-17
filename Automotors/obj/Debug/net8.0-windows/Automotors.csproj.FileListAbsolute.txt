@@ -100,3 +100,5 @@ C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de prog
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.Up2Date
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmEditarProducto.resources
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmProductos.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmEditarProducto.resources
+C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmProductos.resources

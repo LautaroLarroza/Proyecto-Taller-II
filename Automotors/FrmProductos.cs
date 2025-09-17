@@ -6,7 +6,8 @@ namespace Automotors
 {
     public partial class FrmProductos : Form
     {
-        private List<Producto> productos = new List<Producto>();
+        private readonly ProductoRepository _repo = new ProductoRepository(new Conexion());
+        private BindingSource _bs = new BindingSource();
 
         public FrmProductos()
         {
@@ -15,22 +16,24 @@ namespace Automotors
 
         private void FrmProductos_Load(object sender, EventArgs e)
         {
-            CargarProductosEstaticos();
             ConfigurarDataGridView();
+            CargarDesdeDb();
         }
 
-        private void CargarProductosEstaticos()
+        private void CargarDesdeDb()
         {
-            productos.Clear();
-            productos.Add(new Producto(1, "Toyota", "Corolla", 2024, 25000.00m, 5, true));
-            productos.Add(new Producto(2, "Toyota", "Hilux", 2024, 35000.00m, 3, true));
-            productos.Add(new Producto(3, "Ford", "F-150", 2024, 40000.00m, 2, true));
-            productos.Add(new Producto(4, "Chevrolet", "Cruze", 2024, 22000.00m, 4, true));
-            productos.Add(new Producto(5, "Honda", "Civic", 2024, 23000.00m, 6, true));
-            productos.Add(new Producto(6, "Volkswagen", "Golf", 2024, 24000.00m, 3, true));
-
-            dgvProductos.DataSource = null;
-            dgvProductos.DataSource = productos;
+            try
+            {
+                var datos = _repo.Listar();
+                _bs.DataSource = datos;
+                dgvProductos.AutoGenerateColumns = false;
+                dgvProductos.DataSource = _bs;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error cargando productos: " + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ConfigurarDataGridView()
@@ -38,7 +41,6 @@ namespace Automotors
             dgvProductos.AutoGenerateColumns = false;
             dgvProductos.Columns.Clear();
 
-            // Configurar columnas manualmente
             dgvProductos.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 DataPropertyName = "Id",
@@ -96,11 +98,21 @@ namespace Automotors
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    Producto nuevoProducto = frm.ProductoEditado;
-                    nuevoProducto.Id = productos.Count > 0 ? productos[productos.Count - 1].Id + 1 : 1;
-                    productos.Add(nuevoProducto);
-                    dgvProductos.DataSource = null;
-                    dgvProductos.DataSource = productos;
+                    try
+                    {
+                        var nuevo = frm.ProductoEditado;
+                        int nuevoId = _repo.Insertar(nuevo);
+                        nuevo.Id = nuevoId;
+
+                        var lista = (List<Producto>)_bs.DataSource;
+                        lista.Add(nuevo);
+                        _bs.ResetBindings(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("No se pudo guardar el producto: " + ex.Message,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -114,16 +126,32 @@ namespace Automotors
                 return;
             }
 
-            Producto productoSeleccionado = dgvProductos.SelectedRows[0].DataBoundItem as Producto;
+            var seleccionado = dgvProductos.SelectedRows[0].DataBoundItem as Producto;
+            if (seleccionado == null) return;
 
-            using (FrmEditarProducto frm = new FrmEditarProducto(productoSeleccionado))
+            var copia = new Producto(seleccionado.Id, seleccionado.Marca, seleccionado.Modelo,
+                                     seleccionado.Anio, seleccionado.Precio,
+                                     seleccionado.CantidadStock, seleccionado.Estado);
+
+            using (FrmEditarProducto frm = new FrmEditarProducto(copia))
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    int index = productos.IndexOf(productoSeleccionado);
-                    productos[index] = frm.ProductoEditado;
-                    dgvProductos.DataSource = null;
-                    dgvProductos.DataSource = productos;
+                    try
+                    {
+                        var editado = frm.ProductoEditado;
+                        _repo.Actualizar(editado);
+
+                        var lista = (List<Producto>)_bs.DataSource;
+                        int idx = lista.FindIndex(p => p.Id == editado.Id);
+                        if (idx >= 0) lista[idx] = editado;
+                        _bs.ResetBindings(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("No se pudo actualizar: " + ex.Message,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -137,21 +165,29 @@ namespace Automotors
                 return;
             }
 
-            Producto productoSeleccionado = dgvProductos.SelectedRows[0].DataBoundItem as Producto;
+            var seleccionado = dgvProductos.SelectedRows[0].DataBoundItem as Producto;
+            if (seleccionado == null) return;
 
-            DialogResult result = MessageBox.Show(
-                $"¿Está seguro que desea eliminar el producto {productoSeleccionado.Marca} {productoSeleccionado.Modelo}?",
-                "Confirmar eliminación",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            var confirm = MessageBox.Show(
+                $"¿Está seguro que desea eliminar el producto {seleccionado.Marca} {seleccionado.Modelo}?",
+                "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            if (result == DialogResult.Yes)
+            if (confirm == DialogResult.Yes)
             {
-                productos.Remove(productoSeleccionado);
-                dgvProductos.DataSource = null;
-                dgvProductos.DataSource = productos;
-                MessageBox.Show("Producto eliminado correctamente.", "Éxito",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try
+                {
+                    _repo.Eliminar(seleccionado.Id);
+                    var lista = (List<Producto>)_bs.DataSource;
+                    lista.Remove(seleccionado);
+                    _bs.ResetBindings(false);
+                    MessageBox.Show("Producto eliminado correctamente.", "Éxito",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo eliminar: " + ex.Message,
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

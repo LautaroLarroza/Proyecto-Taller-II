@@ -1,17 +1,20 @@
-﻿using System.Data;
+﻿using System.Configuration;
 using System.Data.SqlClient;
-
 
 namespace Automotors
 {
     public class Conexion
     {
-        private readonly string connectionString =
-            "Server=localhost\\SQLEXPRESS;Database=Automotors;Trusted_Connection=True;";
+        private readonly string _cs;
 
-        public SqlConnection GetConnection()
+        public Conexion()
         {
-            return new SqlConnection(connectionString);
+            _cs = ConfigurationManager.ConnectionStrings["AutomotorsDb"].ConnectionString;
+        }
+
+        public SqlConnection CrearConexion()
+        {
+            return new SqlConnection(_cs);
         }
     }
 }
