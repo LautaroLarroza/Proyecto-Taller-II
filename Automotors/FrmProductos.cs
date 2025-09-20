@@ -7,6 +7,12 @@ namespace Automotors
 {
     public partial class FrmProductos : Form
     {
+<<<<<<< HEAD
+=======
+        private readonly ProductoRepository _repo = new ProductoRepository(new Conexion());
+        private BindingSource _bs = new BindingSource();
+
+>>>>>>> 2589dee1a930e4bca7307439a0779e59ffa5b83f
         public FrmProductos()
         {
             InitializeComponent();
@@ -14,12 +20,41 @@ namespace Automotors
 
         private void FrmProductos_Load(object sender, EventArgs e)
         {
+<<<<<<< HEAD
             CargarProductos();
         }
 
         private void CargarProductos()
         {
             try
+=======
+            ConfigurarDataGridView();
+            CargarDesdeDb();
+        }
+
+        private void CargarDesdeDb()
+        {
+            try
+            {
+                var datos = _repo.Listar();
+                _bs.DataSource = datos;
+                dgvProductos.AutoGenerateColumns = false;
+                dgvProductos.DataSource = _bs;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error cargando productos: " + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ConfigurarDataGridView()
+        {
+            dgvProductos.AutoGenerateColumns = false;
+            dgvProductos.Columns.Clear();
+
+            dgvProductos.Columns.Add(new DataGridViewTextBoxColumn()
+>>>>>>> 2589dee1a930e4bca7307439a0779e59ffa5b83f
             {
                 string query = @"
 SELECT p.IdProducto, m.Nombre as Marca, p.Modelo, p.Anio, 
@@ -50,7 +85,28 @@ ORDER BY p.IdProducto";
             FrmAgregarProducto formAgregar = new FrmAgregarProducto();
             if (formAgregar.ShowDialog() == DialogResult.OK)
             {
+<<<<<<< HEAD
                 CargarProductos();
+=======
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var nuevo = frm.ProductoEditado;
+                        int nuevoId = _repo.Insertar(nuevo);
+                        nuevo.Id = nuevoId;
+
+                        var lista = (List<Producto>)_bs.DataSource;
+                        lista.Add(nuevo);
+                        _bs.ResetBindings(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("No se pudo guardar el producto: " + ex.Message,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+>>>>>>> 2589dee1a930e4bca7307439a0779e59ffa5b83f
             }
         }
 
@@ -58,6 +114,7 @@ ORDER BY p.IdProducto";
         {
             if (dgvProductos.SelectedRows.Count > 0)
             {
+<<<<<<< HEAD
                 // Suponiendo que tienes una clase Producto con las siguientes propiedades:
                 Producto producto = new Producto
                 {
@@ -75,6 +132,39 @@ ORDER BY p.IdProducto";
                 if (formEditar.ShowDialog() == DialogResult.OK)
                 {
                     CargarProductos();
+=======
+                MessageBox.Show("Seleccione un producto para modificar.", "Advertencia",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var seleccionado = dgvProductos.SelectedRows[0].DataBoundItem as Producto;
+            if (seleccionado == null) return;
+
+            var copia = new Producto(seleccionado.Id, seleccionado.Marca, seleccionado.Modelo,
+                                     seleccionado.Anio, seleccionado.Precio,
+                                     seleccionado.CantidadStock, seleccionado.Estado);
+
+            using (FrmEditarProducto frm = new FrmEditarProducto(copia))
+            {
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var editado = frm.ProductoEditado;
+                        _repo.Actualizar(editado);
+
+                        var lista = (List<Producto>)_bs.DataSource;
+                        int idx = lista.FindIndex(p => p.Id == editado.Id);
+                        if (idx >= 0) lista[idx] = editado;
+                        _bs.ResetBindings(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("No se pudo actualizar: " + ex.Message,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+>>>>>>> 2589dee1a930e4bca7307439a0779e59ffa5b83f
                 }
             }
             else
@@ -109,9 +199,36 @@ ORDER BY p.IdProducto";
                     }
                 }
             }
+<<<<<<< HEAD
             else
             {
                 MessageBox.Show("Por favor, seleccione un producto para eliminar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+=======
+
+            var seleccionado = dgvProductos.SelectedRows[0].DataBoundItem as Producto;
+            if (seleccionado == null) return;
+
+            var confirm = MessageBox.Show(
+                $"¿Está seguro que desea eliminar el producto {seleccionado.Marca} {seleccionado.Modelo}?",
+                "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (confirm == DialogResult.Yes)
+            {
+                try
+                {
+                    _repo.Eliminar(seleccionado.Id);
+                    var lista = (List<Producto>)_bs.DataSource;
+                    lista.Remove(seleccionado);
+                    _bs.ResetBindings(false);
+                    MessageBox.Show("Producto eliminado correctamente.", "Éxito",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo eliminar: " + ex.Message,
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+>>>>>>> 2589dee1a930e4bca7307439a0779e59ffa5b83f
             }
         }
     }
