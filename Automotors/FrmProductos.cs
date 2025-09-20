@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace Automotors
 {
     public partial class FrmProductos : Form
     {
-        private List<Producto> productos = new List<Producto>();
-
         public FrmProductos()
         {
             InitializeComponent();
@@ -15,143 +14,104 @@ namespace Automotors
 
         private void FrmProductos_Load(object sender, EventArgs e)
         {
-            CargarProductosEstaticos();
-            ConfigurarDataGridView();
+            CargarProductos();
         }
 
-        private void CargarProductosEstaticos()
+        private void CargarProductos()
         {
-            productos.Clear();
-            productos.Add(new Producto(1, "Toyota", "Corolla", 2024, 25000.00m, 5, true));
-            productos.Add(new Producto(2, "Toyota", "Hilux", 2024, 35000.00m, 3, true));
-            productos.Add(new Producto(3, "Ford", "F-150", 2024, 40000.00m, 2, true));
-            productos.Add(new Producto(4, "Chevrolet", "Cruze", 2024, 22000.00m, 4, true));
-            productos.Add(new Producto(5, "Honda", "Civic", 2024, 23000.00m, 6, true));
-            productos.Add(new Producto(6, "Volkswagen", "Golf", 2024, 24000.00m, 3, true));
-
-            dgvProductos.DataSource = null;
-            dgvProductos.DataSource = productos;
-        }
-
-        private void ConfigurarDataGridView()
-        {
-            dgvProductos.AutoGenerateColumns = false;
-            dgvProductos.Columns.Clear();
-
-            // Configurar columnas manualmente
-            dgvProductos.Columns.Add(new DataGridViewTextBoxColumn()
+            try
             {
-                DataPropertyName = "Id",
-                HeaderText = "ID",
-                Width = 50
-            });
+                string query = @"
+SELECT p.IdProducto, m.Nombre as Marca, p.Modelo, p.Anio, 
+       p.Precio, p.Stock as CantidadStock, p.Descripcion, p.Estado
+FROM Productos p
+INNER JOIN Marcas m ON p.IdMarca = m.IdMarca
+WHERE p.Estado = 1
+ORDER BY p.IdProducto";
 
-            dgvProductos.Columns.Add(new DataGridViewTextBoxColumn()
+                using (SqlDataReader reader = Conexion.ExecuteReader(query))
+                {
+                    if (reader != null)
+                    {
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        dgvProductos.DataSource = dt;
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                DataPropertyName = "Marca",
-                HeaderText = "Marca",
-                Width = 120
-            });
-
-            dgvProductos.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                DataPropertyName = "Modelo",
-                HeaderText = "Modelo",
-                Width = 120
-            });
-
-            dgvProductos.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                DataPropertyName = "Anio",
-                HeaderText = "Año",
-                Width = 60
-            });
-
-            dgvProductos.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                DataPropertyName = "Precio",
-                HeaderText = "Precio",
-                Width = 80,
-                DefaultCellStyle = { Format = "C2" }
-            });
-
-            dgvProductos.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                DataPropertyName = "CantidadStock",
-                HeaderText = "Stock",
-                Width = 60
-            });
-
-            dgvProductos.Columns.Add(new DataGridViewCheckBoxColumn()
-            {
-                DataPropertyName = "Estado",
-                HeaderText = "Activo",
-                Width = 60
-            });
+                MessageBox.Show($"Error al cargar productos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void BtnAgregar_Click(object sender, EventArgs e)
         {
-            using (FrmEditarProducto frm = new FrmEditarProducto())
+            FrmAgregarProducto formAgregar = new FrmAgregarProducto();
+            if (formAgregar.ShowDialog() == DialogResult.OK)
             {
-                if (frm.ShowDialog() == DialogResult.OK)
-                {
-                    Producto nuevoProducto = frm.ProductoEditado;
-                    nuevoProducto.Id = productos.Count > 0 ? productos[productos.Count - 1].Id + 1 : 1;
-                    productos.Add(nuevoProducto);
-                    dgvProductos.DataSource = null;
-                    dgvProductos.DataSource = productos;
-                }
+                CargarProductos();
             }
         }
 
         private void BtnModificar_Click(object sender, EventArgs e)
         {
-            if (dgvProductos.SelectedRows.Count == 0)
+            if (dgvProductos.SelectedRows.Count > 0)
             {
-                MessageBox.Show("Seleccione un producto para modificar.", "Advertencia",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            Producto productoSeleccionado = dgvProductos.SelectedRows[0].DataBoundItem as Producto;
-
-            using (FrmEditarProducto frm = new FrmEditarProducto(productoSeleccionado))
-            {
-                if (frm.ShowDialog() == DialogResult.OK)
+                // Suponiendo que tienes una clase Producto con las siguientes propiedades:
+                Producto producto = new Producto
                 {
-                    int index = productos.IndexOf(productoSeleccionado);
-                    productos[index] = frm.ProductoEditado;
-                    dgvProductos.DataSource = null;
-                    dgvProductos.DataSource = productos;
+                    IdProducto = Convert.ToInt32(dgvProductos.SelectedRows[0].Cells["IdProducto"].Value),
+                    Marca = dgvProductos.SelectedRows[0].Cells["Marca"].Value.ToString(),
+                    Modelo = dgvProductos.SelectedRows[0].Cells["Modelo"].Value.ToString(),
+                    Anio = dgvProductos.SelectedRows[0].Cells["Anio"].Value != DBNull.Value ? Convert.ToInt32(dgvProductos.SelectedRows[0].Cells["Anio"].Value) : (int?)null,
+                    Precio = Convert.ToDecimal(dgvProductos.SelectedRows[0].Cells["Precio"].Value),
+                    CantidadStock = Convert.ToInt32(dgvProductos.SelectedRows[0].Cells["CantidadStock"].Value),
+                    Descripcion = dgvProductos.SelectedRows[0].Cells["Descripcion"].Value.ToString(),
+                    Estado = dgvProductos.SelectedRows[0].Cells["Estado"].Value.ToString() == "Activo"
+                };
+
+                FrmEditarProducto formEditar = new FrmEditarProducto(producto);
+                if (formEditar.ShowDialog() == DialogResult.OK)
+                {
+                    CargarProductos();
                 }
+            }
+            else
+            {
+                MessageBox.Show("Por favor, seleccione un producto para modificar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void BtnEliminar_Click(object sender, EventArgs e)
         {
-            if (dgvProductos.SelectedRows.Count == 0)
+            if (dgvProductos.SelectedRows.Count > 0)
             {
-                MessageBox.Show("Seleccione un producto para eliminar.", "Advertencia",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                int idProducto = Convert.ToInt32(dgvProductos.SelectedRows[0].Cells["IdProducto"].Value);
+                string modelo = dgvProductos.SelectedRows[0].Cells["Modelo"].Value.ToString();
+
+                DialogResult result = MessageBox.Show(
+                    $"¿Está seguro de que desea eliminar el producto '{modelo}'?",
+                    "Confirmar eliminación",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    // Elimina o comenta la siguiente línea si la columna Estado no existe
+                    // string query = $"UPDATE Productos SET Estado = 0 WHERE IdProducto = {idProducto}";
+                    // Usa un DELETE si realmente quieres eliminar el registro:
+                    string query = $"DELETE FROM Productos WHERE IdProducto = {idProducto}";
+                    if (Conexion.ExecuteNonQuery(query))
+                    {
+                        MessageBox.Show("Producto eliminado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CargarProductos();
+                    }
+                }
             }
-
-            Producto productoSeleccionado = dgvProductos.SelectedRows[0].DataBoundItem as Producto;
-
-            DialogResult result = MessageBox.Show(
-                $"¿Está seguro que desea eliminar el producto {productoSeleccionado.Marca} {productoSeleccionado.Modelo}?",
-                "Confirmar eliminación",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
+            else
             {
-                productos.Remove(productoSeleccionado);
-                dgvProductos.DataSource = null;
-                dgvProductos.DataSource = productos;
-                MessageBox.Show("Producto eliminado correctamente.", "Éxito",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Por favor, seleccione un producto para eliminar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

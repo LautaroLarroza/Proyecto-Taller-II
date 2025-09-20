@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Automotors
@@ -20,14 +19,20 @@ namespace Automotors
         {
             try
             {
-                Conexion con = new Conexion();
-                using (var connection = con.GetConnection())
+                using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
                     MessageBox.Show("✅ Conectado a la base de datos con éxito.");
 
-                    // Cargar usuarios reales desde SQL
-                    SqlDataAdapter da = new SqlDataAdapter("SELECT Id, Nombre, Apellido, Usuario, Rol FROM Usuarios", connection);
+                    // ✅ CONSULTA CORREGIDA según tu diseño de base de datos
+                    // En FrmUsuarios_Load, actualiza la consulta:
+                    SqlDataAdapter da = new SqlDataAdapter(@"
+    SELECT u.IdUsuario, u.Nombre, u.Apellido, u.DNI, u.Email, 
+           r.Nombre as Rol, 
+           CASE WHEN u.Estado = 1 THEN 'Activo' ELSE 'Inactivo' END as Estado
+    FROM Usuarios u
+    INNER JOIN Roles r ON u.IdRol = r.IdRol", connection);
+
                     DataTable dt = new DataTable();
                     da.Fill(dt);
                     dataGridView1.DataSource = dt;
@@ -36,21 +41,10 @@ namespace Automotors
             catch (Exception ex)
             {
                 MessageBox.Show("❌ Error al conectar: " + ex.Message);
-            }
+            }       
 
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = true;
-        }
-
-        private void BAgregar_Click(object sender, EventArgs e)
-        {
-            panelContenedor.Controls.Clear();
-            FrmAgregarUsuario frmAgregar = new FrmAgregarUsuario(this, panelContenedor);
-            frmAgregar.ModificarEnCurso = false;
-            frmAgregar.TopLevel = false;
-            frmAgregar.Dock = DockStyle.Fill;
-            panelContenedor.Controls.Add(frmAgregar);
-            frmAgregar.Show();
         }
 
         private void BEliminar_Click(object sender, EventArgs e)
@@ -71,13 +65,13 @@ namespace Automotors
             {
                 try
                 {
-                    int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["Id"].Value);
+                    int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["IdUsuario"].Value);
 
-                    Conexion con = new Conexion();
-                    using (var connection = con.GetConnection())
+                    // ✅ CORREGIDO: Usar Conexion estática directamente
+                    using (var connection = Conexion.GetConnection())
                     {
                         connection.Open();
-                        SqlCommand cmd = new SqlCommand("DELETE FROM Usuarios WHERE Id = @id", connection);
+                        SqlCommand cmd = new SqlCommand("DELETE FROM Usuarios WHERE IdUsuario = @id", connection);
                         cmd.Parameters.AddWithValue("@id", id);
                         cmd.ExecuteNonQuery();
                     }
@@ -98,6 +92,18 @@ namespace Automotors
             }
         }
 
+        // Los otros métodos deben mantenerse aquí también:
+        private void BAgregar_Click(object sender, EventArgs e)
+        {
+            panelContenedor.Controls.Clear();
+            FrmAgregarUsuario frmAgregar = new FrmAgregarUsuario(this, panelContenedor);
+            frmAgregar.ModificarEnCurso = false;
+            frmAgregar.TopLevel = false;
+            frmAgregar.Dock = DockStyle.Fill;
+            panelContenedor.Controls.Add(frmAgregar);
+            frmAgregar.Show();
+        }
+
         private void BModificar_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count == 0)
@@ -106,10 +112,10 @@ namespace Automotors
                 return;
             }
 
-            int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["Id"].Value);
+            int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["IdUsuario"].Value);
             string nombre = dataGridView1.SelectedRows[0].Cells["Nombre"].Value.ToString();
             string apellido = dataGridView1.SelectedRows[0].Cells["Apellido"].Value.ToString();
-            string usuario = dataGridView1.SelectedRows[0].Cells["Usuario"].Value.ToString();
+            string usuario = dataGridView1.SelectedRows[0].Cells["Email"].Value.ToString();
             string rol = dataGridView1.SelectedRows[0].Cells["Rol"].Value.ToString();
 
             panelContenedor.Controls.Clear();
@@ -117,7 +123,7 @@ namespace Automotors
             {
                 Nombre = nombre,
                 Apellido = apellido,
-                Usuario = usuario,
+                Email = usuario,
                 Rol = rol,
                 ModificarEnCurso = true,
                 UsuarioId = id

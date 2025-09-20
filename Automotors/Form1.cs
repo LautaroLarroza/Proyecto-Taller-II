@@ -44,7 +44,11 @@ namespace Automotors
             this.Text = $"Sistema Automotors - Usuario: {FrmLogin.UsuarioLogueado} ({FrmLogin.TipoUsuario})";
         }
 
-        private void Form1_Load(object sender, EventArgs e) { }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // Probar conexión al iniciar la aplicación
+            ProbarConexion();
+        }
 
         private void BUsuarios_Click(object sender, EventArgs e)
         {
@@ -99,5 +103,21 @@ namespace Automotors
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e) { }
+
+        private void ProbarConexion()
+        {
+            if (Conexion.TestConnection())
+            {
+                // Opcional: mostrar mensaje de éxito (puedes comentar esto después de probar)
+                MessageBox.Show("Conexión a la base de datos exitosa!", "Éxito",
+                               MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("No se pudo conectar a la base de datos. La aplicación puede no funcionar correctamente.",
+                               "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }

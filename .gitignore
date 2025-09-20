@@ -2,9 +2,12 @@
 .vs/
 bin/
 obj/
-*.user
 *.suo
+*.user
 *.cache
-*.log
-*.db
+*.pdb
+*.dll
+*.exe
 *.vsidx
+DocumentLayout.*
+DesignTimeBuild/

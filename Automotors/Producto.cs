@@ -1,28 +1,23 @@
-﻿using System;
-
-namespace Automotors
+﻿namespace Automotors
 {
     public class Producto
     {
-        public int Id { get; set; }
-        public string Marca { get; set; }
+        public int IdProducto { get; set; }
+        public int IdMarca { get; set; }
+        public string Marca { get; set; } 
         public string Modelo { get; set; }
-        public int Anio { get; set; }
+        public int? Anio { get; set; }
         public decimal Precio { get; set; }
-        public int CantidadStock { get; set; }
+        public int Stock { get; set; }
+        public int CantidadStock { get; set; } 
+        public string Descripcion { get; set; }
         public bool Estado { get; set; }
 
-        public Producto() { }
-
-        public Producto(int id, string marca, string modelo, int anio, decimal precio, int cantidadStock, bool estado)
+        public Producto()
         {
-            Id = id;
-            Marca = marca;
-            Modelo = modelo;
-            Anio = anio;
-            Precio = precio;
-            CantidadStock = cantidadStock;
-            Estado = estado;
+            Marca = string.Empty;
+            Modelo = string.Empty;
+            Descripcion = string.Empty;
         }
     }
 }

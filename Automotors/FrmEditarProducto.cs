@@ -17,7 +17,7 @@ namespace Automotors
             {
                 txtMarca.Text = producto.Marca;
                 txtModelo.Text = producto.Modelo;
-                nudAnio.Value = producto.Anio;
+                nudAnio.Value = producto.Anio ?? 0; // ✅ CORREGIDO: Manejar valor nulo
                 nudPrecio.Value = producto.Precio;
                 nudStock.Value = producto.CantidadStock;
                 chkEstado.Checked = producto.Estado;
