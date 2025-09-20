@@ -23,6 +23,7 @@
             this.lblEstado = new System.Windows.Forms.Label();
             this.txtMarca = new System.Windows.Forms.TextBox();
             this.txtModelo = new System.Windows.Forms.TextBox();
+            this.txtDescripcion = new System.Windows.Forms.TextBox();
             this.nudAnio = new System.Windows.Forms.NumericUpDown();
             this.nudPrecio = new System.Windows.Forms.NumericUpDown();
             this.nudStock = new System.Windows.Forms.NumericUpDown();
@@ -33,6 +34,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudPrecio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudStock)).BeginInit();
             this.SuspendLayout();
+
+            this.txtDescripcion.Location = new System.Drawing.Point(120, 230);
+            this.txtDescripcion.Multiline = true;
+            this.txtDescripcion.Name = "txtDescripcion";
+            this.txtDescripcion.Size = new System.Drawing.Size(200, 60);
+            this.txtDescripcion.TabIndex = 8;
+
+
             // 
             // lblMarca
             // 
@@ -197,6 +206,7 @@
             this.Controls.Add(this.lblAnio);
             this.Controls.Add(this.lblModelo);
             this.Controls.Add(this.lblMarca);
+            this.Controls.Add(this.txtDescripcion);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

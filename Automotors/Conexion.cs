@@ -1,33 +1,17 @@
-<<<<<<< HEAD
-﻿using System;
+using System;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Windows.Forms;
-=======
-﻿using System.Configuration;
-using System.Data.SqlClient;
->>>>>>> 2589dee1a930e4bca7307439a0779e59ffa5b83f
 
 namespace Automotors
 {
     public static class Conexion
     {
-<<<<<<< HEAD
-        // ✅ USA EL NOMBRE CORRECTO DE TU INSTANCIA
         private static string connectionString = @"Data Source=GERBERFEDERICO\SQLEXPRESS01;Initial Catalog=bd_automotors;Integrated Security=True;TrustServerCertificate=True";
 
         public static SqlConnection GetConnection()
-=======
-        private readonly string _cs;
-
-        public Conexion()
->>>>>>> 2589dee1a930e4bca7307439a0779e59ffa5b83f
         {
-            _cs = ConfigurationManager.ConnectionStrings["AutomotorsDb"].ConnectionString;
-        }
-
-        public SqlConnection CrearConexion()
-        {
-            return new SqlConnection(_cs);
+            return new SqlConnection(connectionString);
         }
 
         public static bool TestConnection()

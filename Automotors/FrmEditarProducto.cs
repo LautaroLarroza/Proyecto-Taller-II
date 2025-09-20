@@ -17,9 +17,10 @@ namespace Automotors
             {
                 txtMarca.Text = producto.Marca;
                 txtModelo.Text = producto.Modelo;
-                nudAnio.Value = producto.Anio ?? 0; // ✅ CORREGIDO: Manejar valor nulo
+                nudAnio.Value = producto.Anio;
                 nudPrecio.Value = producto.Precio;
                 nudStock.Value = producto.CantidadStock;
+                txtDescripcion.Text = producto.Descripcion; // ✅ Mostrar descripción
                 chkEstado.Checked = producto.Estado;
                 this.Text = "Modificar Producto";
             }
@@ -52,6 +53,7 @@ namespace Automotors
                 Anio = (int)nudAnio.Value,
                 Precio = nudPrecio.Value,
                 CantidadStock = (int)nudStock.Value,
+                Descripcion = txtDescripcion.Text.Trim(), // ✅ Incluir descripción
                 Estado = chkEstado.Checked
             };
 
@@ -64,5 +66,7 @@ namespace Automotors
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
+
+        private System.Windows.Forms.TextBox txtDescripcion;
     }
 }
