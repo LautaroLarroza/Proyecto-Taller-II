@@ -22,7 +22,7 @@
             BVentas = new Button();
             BClientes = new Button();
             BProductos = new Button();
-            button6 = new Button();
+            BReportes = new Button();
             button7 = new Button();
             btnCerrarSesion = new Button();
             panel1 = new Panel();
@@ -92,17 +92,18 @@
             BProductos.UseVisualStyleBackColor = true;
             BProductos.Click += BProductos_Click;
             // 
-            // button6
+            // BReportes
             // 
-            button6.Image = Properties.Resources.Reportes;
-            button6.Location = new Point(0, 588);
-            button6.Margin = new Padding(3, 4, 3, 4);
-            button6.Name = "button6";
-            button6.Size = new Size(242, 120);
-            button6.TabIndex = 6;
-            button6.Text = "Reportes";
-            button6.TextAlign = ContentAlignment.BottomCenter;
-            button6.UseVisualStyleBackColor = true;
+            BReportes.Image = Properties.Resources.Reportes;
+            BReportes.Location = new Point(0, 588);
+            BReportes.Margin = new Padding(3, 4, 3, 4);
+            BReportes.Name = "BReportes";
+            BReportes.Size = new Size(242, 120);
+            BReportes.TabIndex = 6;
+            BReportes.Text = "Reportes";
+            BReportes.TextAlign = ContentAlignment.BottomCenter;
+            BReportes.UseVisualStyleBackColor = true;
+            BReportes.Click += BReportes_Click;
             // 
             // button7
             // 
@@ -130,7 +131,7 @@
             // 
             panel1.Controls.Add(btnCerrarSesion);
             panel1.Controls.Add(button7);
-            panel1.Controls.Add(button6);
+            panel1.Controls.Add(BReportes);
             panel1.Controls.Add(BProductos);
             panel1.Controls.Add(BClientes);
             panel1.Controls.Add(BVentas);
@@ -173,7 +174,7 @@
         private Button BVentas;
         private Button BClientes;
         private Button BProductos;
-        private Button button6;
+        private Button BReportes;
         private Button button7;
         private Panel panel1;
         private Panel panelContenedor;

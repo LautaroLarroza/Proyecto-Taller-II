@@ -13,31 +13,29 @@ namespace Automotors
 
         private void ConfigurarAccesos()
         {
+            // 🔒 Deshabilitar todo por defecto
             BUsuarios.Enabled = false;
             BBackUp.Enabled = false;
             BVentas.Enabled = false;
             BClientes.Enabled = false;
             BProductos.Enabled = false;
-            button6.Enabled = false;
+            BReportes.Enabled = false;
 
             switch (FrmLogin.TipoUsuario)
             {
                 case "Administrador":
                     BUsuarios.Enabled = true;
                     BBackUp.Enabled = true;
-                    BClientes.Enabled = true;
                     BProductos.Enabled = true;
                     break;
 
                 case "Gerente":
-                    BClientes.Enabled = true;
-                    BVentas.Enabled = true;
-                    button6.Enabled = true;
+                    BReportes.Enabled = true;
                     break;
 
                 case "Vendedor":
                     BClientes.Enabled = true;
-                    BProductos.Enabled = true;
+                    BVentas.Enabled = true;
                     break;
             }
 
@@ -62,9 +60,24 @@ namespace Automotors
             frm.Show();
         }
 
-        private void BBackUp_Click(object sender, EventArgs e) { if (!BBackUp.Enabled) return; panelContenedor.Controls.Clear(); }
-        private void BVentas_Click(object sender, EventArgs e) { if (!BVentas.Enabled) return; panelContenedor.Controls.Clear(); }
-        private void BClientes_Click(object sender, EventArgs e) { if (!BClientes.Enabled) return; panelContenedor.Controls.Clear(); }
+        private void BBackUp_Click(object sender, EventArgs e)
+        {
+            if (!BBackUp.Enabled) return;
+            panelContenedor.Controls.Clear();
+        }
+
+        private void BVentas_Click(object sender, EventArgs e)
+        {
+            if (!BVentas.Enabled) return;
+            panelContenedor.Controls.Clear();
+        }
+
+        private void BClientes_Click(object sender, EventArgs e)
+        {
+            if (!BClientes.Enabled) return;
+            panelContenedor.Controls.Clear();
+        }
+
         private void BProductos_Click(object sender, EventArgs e)
         {
             if (!BProductos.Enabled) return;
@@ -76,7 +89,13 @@ namespace Automotors
             panelContenedor.Controls.Add(frm);
             frm.Show();
         }
-        private void button6_Click(object sender, EventArgs e) { if (!button6.Enabled) return; panelContenedor.Controls.Clear(); }
+
+        private void BReportes_Click(object sender, EventArgs e)
+        {
+            if (!BReportes.Enabled) return;
+            panelContenedor.Controls.Clear();
+            // Acá podés cargar tu formulario de reportes (FrmReportes por ej.)
+        }
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
@@ -118,6 +137,5 @@ namespace Automotors
                                "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
     }
 }
