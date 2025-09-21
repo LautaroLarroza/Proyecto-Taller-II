@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using System.Windows.Forms;
 
 namespace Automotors
@@ -17,31 +17,7 @@ namespace Automotors
 
         private void FrmUsuarios_Load(object sender, EventArgs e)
         {
-            try
-            {
-                using (var connection = Conexion.GetConnection())
-                {
-                    connection.Open();
-                    MessageBox.Show("✅ Conectado a la base de datos con éxito.");
-
-                    // ✅ CONSULTA CORREGIDA según tu diseño de base de datos
-                    // En FrmUsuarios_Load, actualiza la consulta:
-                    SqlDataAdapter da = new SqlDataAdapter(@"
-    SELECT u.IdUsuario, u.Nombre, u.Apellido, u.DNI, u.Email, 
-           r.Nombre as Rol, 
-           CASE WHEN u.Estado = 1 THEN 'Activo' ELSE 'Inactivo' END as Estado
-    FROM Usuarios u
-    INNER JOIN Roles r ON u.IdRol = r.IdRol", connection);
-
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dataGridView1.DataSource = dt;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("❌ Error al conectar: " + ex.Message);
-            }       
+            CargarUsuarios();
 
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = true;
@@ -67,32 +43,24 @@ namespace Automotors
                 {
                     int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["IdUsuario"].Value);
 
-                    // ✅ CORREGIDO: Usar Conexion estática directamente
                     using (var connection = Conexion.GetConnection())
                     {
                         connection.Open();
-                        SqlCommand cmd = new SqlCommand("DELETE FROM Usuarios WHERE IdUsuario = @id", connection);
+                        SqliteCommand cmd = new SqliteCommand("DELETE FROM Usuarios WHERE IdUsuario = @id", connection);
                         cmd.Parameters.AddWithValue("@id", id);
                         cmd.ExecuteNonQuery();
                     }
 
-                    MessageBox.Show("Usuario eliminado correctamente.");
-
-                    // Refrescar la tabla
-                    FrmUsuarios frm = new FrmUsuarios(panelContenedor);
-                    frm.TopLevel = false;
-                    frm.Dock = DockStyle.Fill;
-                    panelContenedor.Controls.Add(frm);
-                    frm.Show();
+                    MessageBox.Show("✅ Usuario eliminado correctamente.");
+                    CargarUsuarios();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("❌ Error al eliminar: " + ex.Message);
+                    MessageBox.Show($"❌ Error al eliminar: {ex.Message}");
                 }
             }
         }
 
-        // Los otros métodos deben mantenerse aquí también:
         private void BAgregar_Click(object sender, EventArgs e)
         {
             panelContenedor.Controls.Clear();
@@ -102,6 +70,16 @@ namespace Automotors
             frmAgregar.Dock = DockStyle.Fill;
             panelContenedor.Controls.Add(frmAgregar);
             frmAgregar.Show();
+
+            frmAgregar.FormClosed += (s, args) =>
+            {
+                panelContenedor.Controls.Clear();
+                FrmUsuarios frmUsuarios = new FrmUsuarios(panelContenedor);
+                frmUsuarios.TopLevel = false;
+                frmUsuarios.Dock = DockStyle.Fill;
+                panelContenedor.Controls.Add(frmUsuarios);
+                frmUsuarios.Show();
+            };
         }
 
         private void BModificar_Click(object sender, EventArgs e)
@@ -115,7 +93,8 @@ namespace Automotors
             int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["IdUsuario"].Value);
             string nombre = dataGridView1.SelectedRows[0].Cells["Nombre"].Value.ToString();
             string apellido = dataGridView1.SelectedRows[0].Cells["Apellido"].Value.ToString();
-            string usuario = dataGridView1.SelectedRows[0].Cells["Email"].Value.ToString();
+            string dni = dataGridView1.SelectedRows[0].Cells["DNI"].Value?.ToString() ?? "";
+            string email = dataGridView1.SelectedRows[0].Cells["Email"].Value.ToString();
             string rol = dataGridView1.SelectedRows[0].Cells["Rol"].Value.ToString();
 
             panelContenedor.Controls.Clear();
@@ -123,7 +102,8 @@ namespace Automotors
             {
                 Nombre = nombre,
                 Apellido = apellido,
-                Email = usuario,
+                DNI = dni,
+                Email = email,
                 Rol = rol,
                 ModificarEnCurso = true,
                 UsuarioId = id
@@ -133,11 +113,72 @@ namespace Automotors
             frmModificar.Dock = DockStyle.Fill;
             panelContenedor.Controls.Add(frmModificar);
             frmModificar.Show();
+
+            frmModificar.FormClosed += (s, args) =>
+            {
+                panelContenedor.Controls.Clear();
+                FrmUsuarios frmUsuarios = new FrmUsuarios(panelContenedor);
+                frmUsuarios.TopLevel = false;
+                frmUsuarios.Dock = DockStyle.Fill;
+                panelContenedor.Controls.Add(frmUsuarios);
+                frmUsuarios.Show();
+            };
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             // opcional
+        }
+
+        private void CargarUsuarios()
+        {
+            try
+            {
+                using (var connection = Conexion.GetConnection())
+                {
+                    connection.Open();
+
+                    string query = @"
+                        SELECT u.IdUsuario, u.Nombre, u.Apellido, u.DNI, u.Email, 
+                               r.Nombre as Rol, 
+                               CASE WHEN u.Estado = 1 THEN 'Activo' ELSE 'Inactivo' END as Estado
+                        FROM Usuarios u
+                        INNER JOIN Roles r ON u.IdRol = r.IdRol";
+
+                    using (var command = new SqliteCommand(query, connection))
+                    using (var reader = command.ExecuteReader())
+                    {
+                        DataTable dt = new DataTable();
+
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            dt.Columns.Add(reader.GetName(i), reader.GetFieldType(i));
+                        }
+
+                        while (reader.Read())
+                        {
+                            DataRow row = dt.NewRow();
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                row[i] = reader.IsDBNull(i) ? DBNull.Value : reader.GetValue(i);
+                            }
+                            dt.Rows.Add(row);
+                        }
+
+                        dataGridView1.DataSource = dt;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al cargar usuarios: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void ActualizarDataGrid()
+        {
+            CargarUsuarios();
         }
     }
 }

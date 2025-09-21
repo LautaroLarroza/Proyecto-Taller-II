@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using System.Windows.Forms;
 
 namespace Automotors
@@ -20,12 +20,7 @@ namespace Automotors
             BCancelar.Click += BCancelar_Click;
 
             TContraseña.PasswordChar = '•';
-
-            CRol.Items.Clear();
-            CRol.Items.Add("Vendedor");
-            CRol.Items.Add("Administrador");
-            CRol.Items.Add("Gerente");
-            CRol.SelectedIndex = 0;
+            CargarRolesDesdeBD();
         }
 
         // ====================
@@ -97,37 +92,80 @@ namespace Automotors
 
                     if (!ModificarEnCurso)
                     {
-                        // INSERT con nuevas columnas
-                        SqlCommand cmd = new SqlCommand(
+                        // INSERT
+                        SqliteCommand cmd = new SqliteCommand(
                             "INSERT INTO Usuarios (Nombre, Apellido, DNI, Email, PasswordHash, PasswordSalt, IdRol) " +
-                            "VALUES (@Nombre, @Apellido, @DNI, @Email, @PasswordHash, @PasswordSalt, @IdRol)", connection);
+                            "VALUES (@Nombre, @Apellido, @DNI, @Email, @PasswordHash, @PasswordSalt, @IdRol)",
+                            connection);
 
                         AgregarParametros(cmd);
                         cmd.ExecuteNonQuery();
-                        MessageBox.Show("✅ Usuario agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // ✅ SOLO mensaje esencial
+                        MessageBox.Show("✅ Usuario agregado correctamente", "Éxito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        // UPDATE con nuevas columnas
-                        SqlCommand cmd = new SqlCommand(
-                            "UPDATE Usuarios SET Nombre=@Nombre, Apellido=@Apellido, DNI=@DNI, Email=@Email, " +
-                            "PasswordHash=@PasswordHash, PasswordSalt=@PasswordSalt, IdRol=@IdRol " +
-                            "WHERE IdUsuario=@Id", connection);
+                        // UPDATE - Manejar contraseña correctamente
+                        string query = "UPDATE Usuarios SET Nombre=@Nombre, Apellido=@Apellido, " +
+                                      "DNI=@DNI, Email=@Email, IdRol=@IdRol ";
 
-                        AgregarParametros(cmd);
-                        cmd.Parameters.AddWithValue("@Id", UsuarioId);
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("✅ Usuario modificado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (!string.IsNullOrEmpty(Contraseña))
+                        {
+                            query += ", PasswordHash=@PasswordHash, PasswordSalt=@PasswordSalt ";
+                        }
+
+                        query += "WHERE IdUsuario=@Id";
+
+                        using (SqliteCommand cmd = new SqliteCommand(query, connection))
+                        {
+                            cmd.Parameters.AddWithValue("@Nombre", Nombre);
+                            cmd.Parameters.AddWithValue("@Apellido", Apellido);
+                            cmd.Parameters.AddWithValue("@DNI", DNI);
+                            cmd.Parameters.AddWithValue("@Email", Email);
+                            cmd.Parameters.AddWithValue("@IdRol", GetRolId(Rol));
+                            cmd.Parameters.AddWithValue("@Id", UsuarioId);
+
+                            if (!string.IsNullOrEmpty(Contraseña))
+                            {
+                                byte[] salt = GenerateSalt();
+                                byte[] passwordHash = HashPassword(Contraseña, salt);
+                                cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
+                                cmd.Parameters.AddWithValue("@PasswordSalt", salt);
+                            }
+
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // ✅ SOLO mensaje esencial
+                        MessageBox.Show("✅ Usuario modificado correctamente", "Éxito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
 
-                // Volver al formulario de usuarios
-                VolverAUsuarios();
+                // ✅ CERRAR AUTOMÁTICAMENTE
+                this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"❌ Error en la operación: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"❌ Error: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void AgregarParametros(SqliteCommand cmd)
+        {
+            byte[] salt = GenerateSalt();
+            byte[] passwordHash = HashPassword(Contraseña, salt);
+
+            cmd.Parameters.AddWithValue("@Nombre", Nombre);
+            cmd.Parameters.AddWithValue("@Apellido", Apellido);
+            cmd.Parameters.AddWithValue("@DNI", DNI);
+            cmd.Parameters.AddWithValue("@Email", Email);
+            cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
+            cmd.Parameters.AddWithValue("@PasswordSalt", salt);
+            cmd.Parameters.AddWithValue("@IdRol", GetRolId(Rol));
         }
 
         private bool ValidarDatos()
@@ -177,44 +215,17 @@ namespace Automotors
             return true;
         }
 
-        private void AgregarParametros(SqlCommand cmd)
-        {
-            byte[] salt = GenerateSalt();
-            byte[] passwordHash = HashPassword(Contraseña, salt);
-
-            cmd.Parameters.AddWithValue("@Nombre", Nombre);
-            cmd.Parameters.AddWithValue("@Apellido", Apellido);
-            cmd.Parameters.AddWithValue("@DNI", DNI);
-            cmd.Parameters.AddWithValue("@Email", Email);
-            cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-            cmd.Parameters.AddWithValue("@PasswordSalt", salt);
-            cmd.Parameters.AddWithValue("@IdRol", GetRolId(Rol));
-        }
-
-        private void VolverAUsuarios()
-        {
-            panelContenedor.Controls.Clear();
-            FrmUsuarios frmUsuarios = new FrmUsuarios(panelContenedor);
-            frmUsuarios.TopLevel = false;
-            frmUsuarios.Dock = DockStyle.Fill;
-            panelContenedor.Controls.Add(frmUsuarios);
-            frmUsuarios.Show();
-            this.Close();
-        }
-
         // ====================
         // Métodos de utilidad
         // ====================
 
         private bool EsDniValido(string dni)
         {
-            // Validar que el DNI contenga solo números y tenga entre 8 y 10 dígitos
             return System.Text.RegularExpressions.Regex.IsMatch(dni, @"^\d{8,10}$");
         }
 
         private bool EsEmailValido(string email)
         {
-            // Validación básica de email
             return System.Text.RegularExpressions.Regex.IsMatch(email,
                 @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
         }
@@ -223,7 +234,6 @@ namespace Automotors
         {
             using (var sha256 = System.Security.Cryptography.SHA256.Create())
             {
-                // Combinar password + salt antes de hashear
                 byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
                 byte[] combinedBytes = new byte[passwordBytes.Length + salt.Length];
 
@@ -236,7 +246,7 @@ namespace Automotors
 
         private byte[] GenerateSalt()
         {
-            byte[] salt = new byte[32]; // 256 bits
+            byte[] salt = new byte[32];
             using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
             {
                 rng.GetBytes(salt);
@@ -246,6 +256,31 @@ namespace Automotors
 
         private int GetRolId(string rolNombre)
         {
+            try
+            {
+                using (var connection = Conexion.GetConnection())
+                {
+                    connection.Open();
+                    string query = "SELECT IdRol FROM Roles WHERE LOWER(Nombre) = LOWER(@Nombre)";
+
+                    using (var command = new SqliteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Nombre", rolNombre);
+                        var result = command.ExecuteScalar();
+
+                        if (result != null && result != DBNull.Value)
+                        {
+                            return Convert.ToInt32(result);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // ✅ SOLO mostrar errores graves
+                Console.WriteLine($"Error obteniendo ID del rol: {ex.Message}");
+            }
+
             switch (rolNombre.ToLower())
             {
                 case "administrador": return 1;
@@ -255,7 +290,70 @@ namespace Automotors
             }
         }
 
-        // Eventos del formulario
+        private void CargarRolesDesdeBD()
+        {
+            try
+            {
+                CRol.Items.Clear();
+
+                using (var connection = Conexion.GetConnection())
+                {
+                    connection.Open();
+                    string query = "SELECT Nombre FROM Roles ORDER BY Nombre";
+
+                    using (var command = new SqliteCommand(query, connection))
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (!reader.HasRows)
+                        {
+                            // ✅ SIN MENSAJE - Insertar silenciosamente
+                            InsertarRolesPorDefecto(connection);
+                            CargarRolesDesdeBD();
+                            return;
+                        }
+
+                        while (reader.Read())
+                        {
+                            CRol.Items.Add(reader["Nombre"].ToString());
+                        }
+                    }
+                }
+
+                if (CRol.Items.Count > 0)
+                {
+                    CRol.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // ✅ SOLO ERRORES GRAVES
+                MessageBox.Show($"Error cargando roles: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void InsertarRolesPorDefecto(SqliteConnection connection)
+        {
+            try
+            {
+                string insertQuery = @"
+                    INSERT INTO Roles (Nombre, Descripcion) VALUES 
+                    ('Administrador', 'Acceso completo al sistema'),
+                    ('Gerente', 'Gestion de ventas y productos'),
+                    ('Vendedor', 'Solo ventas y clientes')";
+
+                using (var command = new SqliteCommand(insertQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                // ✅ SOLO ERRORES GRAVES
+                Console.WriteLine($"Error insertando roles: {ex.Message}");
+            }
+        }
+
         private void FrmAgregarUsuario_Load(object? sender, EventArgs e) { }
         private void panel1_Paint(object? sender, PaintEventArgs e) { }
     }

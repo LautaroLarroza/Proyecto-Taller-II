@@ -1,24 +1,25 @@
 using System;
-using System.Configuration;
-using System.Data.SqlClient;
+using System.Data;
+using Microsoft.Data.Sqlite;
 using System.Windows.Forms;
 
 namespace Automotors
 {
     public static class Conexion
     {
-        private static string connectionString = @"Data Source=GERBERFEDERICO\SQLEXPRESS01;Initial Catalog=bd_automotors;Integrated Security=True;TrustServerCertificate=True";
+        // Si dejás bd_automotors.db en la misma carpeta que el .exe, esta cadena alcanza.
+        private static string connectionString = "Data Source=bd_automotors.db;Cache=Shared;Mode=ReadWriteCreate;";
 
-        public static SqlConnection GetConnection()
+        public static SqliteConnection GetConnection()
         {
-            return new SqlConnection(connectionString);
+            return new SqliteConnection(connectionString);
         }
 
         public static bool TestConnection()
         {
             try
             {
-                using (SqlConnection connection = GetConnection())
+                using (var connection = GetConnection())
                 {
                     connection.Open();
                     return true;
@@ -26,7 +27,7 @@ namespace Automotors
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error de conexión: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error de conexión (SQLite): {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -35,11 +36,12 @@ namespace Automotors
         {
             try
             {
-                using (SqlConnection connection = GetConnection())
+                using (var connection = GetConnection())
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (var command = connection.CreateCommand())
                     {
+                        command.CommandText = query;
                         command.ExecuteNonQuery();
                         return true;
                     }
@@ -52,14 +54,15 @@ namespace Automotors
             }
         }
 
-        public static SqlDataReader ExecuteReader(string query)
+        public static SqliteDataReader ExecuteReader(string query)
         {
             try
             {
-                SqlConnection connection = GetConnection();
+                var connection = GetConnection();
                 connection.Open();
-                SqlCommand command = new SqlCommand(query, connection);
-                return command.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
+                var command = connection.CreateCommand();
+                command.CommandText = query;
+                return command.ExecuteReader(CommandBehavior.CloseConnection);
             }
             catch (Exception ex)
             {

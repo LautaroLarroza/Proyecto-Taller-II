@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using System.Windows.Forms;
 
 namespace Automotors
@@ -14,7 +14,6 @@ namespace Automotors
             InitializeComponent();
         }
 
-        // ✅ Método que coincide con el evento click del botón Guardar
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (cmbMarca.SelectedItem == null || string.IsNullOrWhiteSpace(cmbMarca.Text))
@@ -61,7 +60,7 @@ namespace Automotors
                     Anio = anio,
                     Precio = precio,
                     CantidadStock = stock,
-                    Descripcion = txtDescripcion.Text.Trim(), // ✅ Incluir descripción
+                    Descripcion = txtDescripcion.Text.Trim(),
                     Estado = true
                 };
 
@@ -74,14 +73,12 @@ namespace Automotors
             }
         }
 
-        // ✅ Método que coincide con el evento click del botón Cancelar
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        // ✅ Método para cargar marcas al abrir el formulario
         private void FrmAgregarProducto_Load(object sender, EventArgs e)
         {
             CargarMarcas();
@@ -96,12 +93,12 @@ namespace Automotors
                     connection.Open();
                     string query = "SELECT Nombre FROM Marcas ORDER BY Nombre";
 
-                    using (var command = new SqlCommand(query, connection))
+                    using (var command = new SqliteCommand(query, connection))
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            cmbMarca.Items.Add(reader.GetString("Nombre"));
+                            cmbMarca.Items.Add(reader.GetString(reader.GetOrdinal("Nombre")));
                         }
                     }
                 }
@@ -113,7 +110,6 @@ namespace Automotors
             }
         }
 
-        // ✅ Validación para que solo se ingresen números en año, precio y stock
         private void txtAnio_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -129,7 +125,6 @@ namespace Automotors
                 e.Handled = true;
             }
 
-            // Permitir solo un punto decimal
             if (e.KeyChar == '.' && (sender as TextBox).Text.IndexOf('.') > -1)
             {
                 e.Handled = true;
@@ -143,6 +138,5 @@ namespace Automotors
                 e.Handled = true;
             }
         }
-        
     }
 }

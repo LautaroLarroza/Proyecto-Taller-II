@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using System.Windows.Forms;
 
 namespace Automotors.Data
@@ -22,7 +22,6 @@ namespace Automotors.Data
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
-                    // ✅ CORREGIDO: Query con JOIN para obtener el nombre de la marca y columnas correctas
                     string query = @"SELECT 
                            p.IdProducto as Id, 
                            m.Nombre as Marca, 
@@ -36,21 +35,21 @@ namespace Automotors.Data
                        INNER JOIN Marcas m ON p.IdMarca = m.IdMarca
                        WHERE p.Estado = 1";
 
-                    using (var command = new SqlCommand(query, connection))
+                    using (var command = new SqliteCommand(query, connection))
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             productos.Add(new Producto
                             {
-                                Id = reader.GetInt32("Id"),
-                                Marca = reader.GetString("Marca"),
-                                Modelo = reader.GetString("Modelo"),
-                                Anio = reader.GetInt32("Anio"),
-                                Precio = reader.GetDecimal("Precio"),
-                                CantidadStock = reader.GetInt32("CantidadStock"),
-                                Descripcion = reader.IsDBNull(reader.GetOrdinal("Descripcion")) ? "" : reader.GetString("Descripcion"),
-                                Estado = reader.GetBoolean("Estado")
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Marca = reader.GetString(reader.GetOrdinal("Marca")),
+                                Modelo = reader.GetString(reader.GetOrdinal("Modelo")),
+                                Anio = reader.GetInt32(reader.GetOrdinal("Anio")),
+                                Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                                CantidadStock = reader.GetInt32(reader.GetOrdinal("CantidadStock")),
+                                Descripcion = reader.IsDBNull(reader.GetOrdinal("Descripcion")) ? "" : reader.GetString(reader.GetOrdinal("Descripcion")),
+                                Estado = reader.GetBoolean(reader.GetOrdinal("Estado"))
                             });
                         }
                     }
@@ -84,9 +83,9 @@ namespace Automotors.Data
 
                     string query = @"INSERT INTO Productos (IdMarca, Modelo, Anio, Precio, Stock, Descripcion, Estado) 
                            VALUES (@IdMarca, @Modelo, @Anio, @Precio, @Stock, @Descripcion, @Estado);
-                           SELECT SCOPE_IDENTITY();";
+                           SELECT last_insert_rowid();";
 
-                    using (var command = new SqlCommand(query, connection))
+                    using (var command = new SqliteCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdMarca", idMarca);
                         command.Parameters.AddWithValue("@Modelo", producto.Modelo);
@@ -94,7 +93,7 @@ namespace Automotors.Data
                         command.Parameters.AddWithValue("@Precio", producto.Precio);
                         command.Parameters.AddWithValue("@Stock", producto.CantidadStock);
                         command.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
-                        command.Parameters.AddWithValue("@Estado", producto.Estado);
+                        command.Parameters.AddWithValue("@Estado", producto.Estado ? 1 : 0);
 
                         return Convert.ToInt32(command.ExecuteScalar());
                     }
@@ -115,20 +114,29 @@ namespace Automotors.Data
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
+
+                    // Primero obtener el IdMarca basado en el nombre
+                    int idMarca = ObtenerIdMarca(producto.Marca);
+                    if (idMarca == -1)
+                    {
+                        idMarca = CrearMarca(producto.Marca);
+                    }
+
                     string query = @"UPDATE Productos 
-                                   SET Marca = @Marca, Modelo = @Modelo, Anio = @Anio, 
-                                       Precio = @Precio, CantidadStock = @CantidadStock, Estado = @Estado
+                                   SET IdMarca = @IdMarca, Modelo = @Modelo, Anio = @Anio, 
+                                       Precio = @Precio, Stock = @Stock, Descripcion = @Descripcion, Estado = @Estado
                                    WHERE IdProducto = @Id";
 
-                    using (var command = new SqlCommand(query, connection))
+                    using (var command = new SqliteCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", producto.Id);
-                        command.Parameters.AddWithValue("@Marca", producto.Marca);
+                        command.Parameters.AddWithValue("@IdMarca", idMarca);
                         command.Parameters.AddWithValue("@Modelo", producto.Modelo);
                         command.Parameters.AddWithValue("@Anio", producto.Anio);
                         command.Parameters.AddWithValue("@Precio", producto.Precio);
-                        command.Parameters.AddWithValue("@CantidadStock", producto.CantidadStock);
-                        command.Parameters.AddWithValue("@Estado", producto.Estado);
+                        command.Parameters.AddWithValue("@Stock", producto.CantidadStock);
+                        command.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
+                        command.Parameters.AddWithValue("@Estado", producto.Estado ? 1 : 0);
 
                         return command.ExecuteNonQuery() > 0;
                     }
@@ -152,7 +160,7 @@ namespace Automotors.Data
                     // Eliminación lógica (cambiar estado)
                     string query = "UPDATE Productos SET Estado = 0 WHERE IdProducto = @Id";
 
-                    using (var command = new SqlCommand(query, connection))
+                    using (var command = new SqliteCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         return command.ExecuteNonQuery() > 0;
@@ -174,9 +182,13 @@ namespace Automotors.Data
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
-                    string query = "SELECT IdProducto as Id, * FROM Productos WHERE IdProducto = @Id";
+                    string query = @"SELECT p.IdProducto as Id, m.Nombre as Marca, p.Modelo, p.Anio, 
+                                   p.Precio, p.Stock as CantidadStock, p.Descripcion, p.Estado
+                            FROM Productos p
+                            INNER JOIN Marcas m ON p.IdMarca = m.IdMarca
+                            WHERE p.IdProducto = @Id";
 
-                    using (var command = new SqlCommand(query, connection))
+                    using (var command = new SqliteCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
 
@@ -186,13 +198,14 @@ namespace Automotors.Data
                             {
                                 return new Producto
                                 {
-                                    Id = reader.GetInt32("Id"),
-                                    Marca = reader.GetString("Marca"),
-                                    Modelo = reader.GetString("Modelo"),
-                                    Anio = reader.GetInt32("Anio"),
-                                    Precio = reader.GetDecimal("Precio"),
-                                    CantidadStock = reader.GetInt32("CantidadStock"),
-                                    Estado = reader.GetBoolean("Estado")
+                                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                    Marca = reader.GetString(reader.GetOrdinal("Marca")),
+                                    Modelo = reader.GetString(reader.GetOrdinal("Modelo")),
+                                    Anio = reader.GetInt32(reader.GetOrdinal("Anio")),
+                                    Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                                    CantidadStock = reader.GetInt32(reader.GetOrdinal("CantidadStock")),
+                                    Descripcion = reader.IsDBNull(reader.GetOrdinal("Descripcion")) ? "" : reader.GetString(reader.GetOrdinal("Descripcion")),
+                                    Estado = reader.GetBoolean(reader.GetOrdinal("Estado"))
                                 };
                             }
                         }
@@ -207,6 +220,7 @@ namespace Automotors.Data
 
             return null;
         }
+
         private int ObtenerIdMarca(string nombreMarca)
         {
             using (var connection = Conexion.GetConnection())
@@ -214,7 +228,7 @@ namespace Automotors.Data
                 connection.Open();
                 string query = "SELECT IdMarca FROM Marcas WHERE Nombre = @Nombre";
 
-                using (var command = new SqlCommand(query, connection))
+                using (var command = new SqliteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Nombre", nombreMarca);
                     var result = command.ExecuteScalar();
@@ -229,9 +243,9 @@ namespace Automotors.Data
             using (var connection = Conexion.GetConnection())
             {
                 connection.Open();
-                string query = "INSERT INTO Marcas (Nombre) VALUES (@Nombre); SELECT SCOPE_IDENTITY();";
+                string query = "INSERT INTO Marcas (Nombre) VALUES (@Nombre); SELECT last_insert_rowid();";
 
-                using (var command = new SqlCommand(query, connection))
+                using (var command = new SqliteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Nombre", nombreMarca);
                     return Convert.ToInt32(command.ExecuteScalar());
