@@ -9,6 +9,7 @@ namespace Automotors
         private FrmUsuarios formPadre;
         private Panel panelContenedor;
         private bool cambiarContraseña = false;
+        private bool _modificarEnCurso = false;
 
         public FrmAgregarUsuario(FrmUsuarios padre, Panel panel)
         {
@@ -24,7 +25,7 @@ namespace Automotors
             TContraseña.PasswordChar = '•';
             TContraseña.Enabled = false;
             CargarRolesDesdeBD();
-            ConfigurarEstado();
+            ConfigurarEstado(); // Configurar estado inicial
         }
 
         // ====================
@@ -72,7 +73,16 @@ namespace Automotors
             set => chkEstado.Checked = value;
         }
 
-        public bool ModificarEnCurso { get; set; } = false;
+        public bool ModificarEnCurso
+        {
+            get => _modificarEnCurso;
+            set
+            {
+                _modificarEnCurso = value;
+                ConfigurarEstado(); // Actualizar interfaz automáticamente
+            }
+        }
+
         public int UsuarioId { get; set; }
 
         // ====================
@@ -100,7 +110,8 @@ namespace Automotors
             {
                 btnCambiarContraseña.Text = "Cambiar Contraseña";
                 btnCambiarContraseña.BackColor = System.Drawing.Color.FromArgb(52, 152, 219);
-                TContraseña.Text = "";
+                TContraseña.Text = "********";
+                TContraseña.Enabled = false;
             }
         }
 
@@ -253,19 +264,31 @@ namespace Automotors
             if (ModificarEnCurso)
             {
                 label6.Text = "Modificar Usuario";
+
+                // 🔥 VISIBLE EN MODO MODIFICACIÓN
                 chkEstado.Visible = true;
                 labelEstado.Visible = true;
                 btnCambiarContraseña.Visible = true;
+
                 TContraseña.Enabled = false;
+                TContraseña.Text = "********"; // Placeholder
+                cambiarContraseña = false;
+                btnCambiarContraseña.Text = "Cambiar Contraseña";
+                btnCambiarContraseña.BackColor = System.Drawing.Color.FromArgb(52, 152, 219);
             }
             else
             {
                 label6.Text = "Agregar Nuevo Usuario";
-                chkEstado.Visible = false;
-                labelEstado.Visible = false;
+
+                // 🔥 AHORA TAMBIÉN VISIBLE EN MODO AGREGAR
+                chkEstado.Visible = true;
+                labelEstado.Visible = true;
                 btnCambiarContraseña.Visible = false;
+
                 TContraseña.Enabled = true;
-                chkEstado.Checked = true; // Por defecto activo
+                TContraseña.Text = ""; // Limpiar campo
+                chkEstado.Checked = true; // Por defecto activo para nuevos usuarios
+                cambiarContraseña = false;
             }
         }
 
