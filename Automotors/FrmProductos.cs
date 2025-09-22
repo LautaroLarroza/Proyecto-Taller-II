@@ -82,7 +82,12 @@ namespace Automotors
                 DataPropertyName = "Precio",
                 HeaderText = "Precio",
                 Name = "colPrecio",
-                Width = 80
+                Width = 80,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Format = "C2",
+                    Alignment = DataGridViewContentAlignment.MiddleRight
+                }
             });
 
             dgvProductos.Columns.Add(new DataGridViewTextBoxColumn()
@@ -90,7 +95,21 @@ namespace Automotors
                 DataPropertyName = "CantidadStock",
                 HeaderText = "Stock",
                 Name = "colStock",
-                Width = 60
+                Width = 60,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleRight
+                }
+            });
+
+            // NUEVA COLUMNA DESCRIPCIÓN
+            dgvProductos.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                DataPropertyName = "Descripcion",
+                HeaderText = "Descripción",
+                Name = "colDescripcion",
+                Width = 200,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
 
             dgvProductos.Columns.Add(new DataGridViewCheckBoxColumn()
@@ -144,31 +163,25 @@ namespace Automotors
             var seleccionado = dgvProductos.SelectedRows[0].DataBoundItem as Producto;
             if (seleccionado == null) return;
 
-            var copia = new Producto
+            using (FrmAgregarProducto frm = new FrmAgregarProducto())
             {
-                Id = seleccionado.Id,
-                Marca = seleccionado.Marca,
-                Modelo = seleccionado.Modelo,
-                Anio = seleccionado.Anio,
-                Precio = seleccionado.Precio,
-                CantidadStock = seleccionado.CantidadStock,
-                Descripcion = seleccionado.Descripcion,
-                Estado = seleccionado.Estado
-            };
+                frm.CargarDatosProducto(seleccionado);
 
-            using (FrmEditarProducto frm = new FrmEditarProducto(copia))
-            {
                 if (frm.ShowDialog() == DialogResult.OK && frm.ProductoEditado != null)
                 {
                     try
                     {
                         var editado = frm.ProductoEditado;
+                        editado.Id = seleccionado.Id;
                         _repo.Actualizar(editado);
 
                         var lista = (List<Producto>)_bs.DataSource;
                         int idx = lista.FindIndex(p => p.Id == editado.Id);
                         if (idx >= 0) lista[idx] = editado;
                         _bs.ResetBindings(false);
+
+                        MessageBox.Show("Producto actualizado correctamente.", "Éxito",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
@@ -214,6 +227,15 @@ namespace Automotors
                     MessageBox.Show("No se pudo eliminar: " + ex.Message,
                         "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+        }
+
+        private void btnGestionarMarcas_Click(object sender, EventArgs e)
+        {
+            using (FrmMarcas frmMarcas = new FrmMarcas())
+            {
+                frmMarcas.ShowDialog();
+                CargarDesdeDb();
             }
         }
     }

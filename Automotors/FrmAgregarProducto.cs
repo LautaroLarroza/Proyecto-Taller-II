@@ -14,69 +14,19 @@ namespace Automotors
             InitializeComponent();
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        // Método para cargar datos cuando se usa para editar
+        public void CargarDatosProducto(Producto producto)
         {
-            if (cmbMarca.SelectedItem == null || string.IsNullOrWhiteSpace(cmbMarca.Text))
+            if (producto != null)
             {
-                MessageBox.Show("La marca es obligatoria.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                cmbMarca.Focus();
-                return;
+                cmbMarca.Text = producto.Marca;
+                txtModelo.Text = producto.Modelo;
+                nudAnio.Value = producto.Anio;
+                nudPrecio.Value = producto.Precio;
+                nudStock.Value = producto.CantidadStock;
+                txtDescripcion.Text = producto.Descripcion;
+                this.Text = "Modificar Producto";
             }
-
-            if (string.IsNullOrWhiteSpace(txtModelo.Text))
-            {
-                MessageBox.Show("El modelo es obligatorio.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtModelo.Focus();
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtAnio.Text) || !int.TryParse(txtAnio.Text, out int anio))
-            {
-                MessageBox.Show("El año debe ser un número válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtAnio.Focus();
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtPrecio.Text) || !decimal.TryParse(txtPrecio.Text, out decimal precio))
-            {
-                MessageBox.Show("El precio debe ser un número válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtPrecio.Focus();
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtStock.Text) || !int.TryParse(txtStock.Text, out int stock))
-            {
-                MessageBox.Show("El stock debe ser un número válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtStock.Focus();
-                return;
-            }
-
-            try
-            {
-                ProductoEditado = new Producto
-                {
-                    Marca = cmbMarca.Text.Trim(),
-                    Modelo = txtModelo.Text.Trim(),
-                    Anio = anio,
-                    Precio = precio,
-                    CantidadStock = stock,
-                    Descripcion = txtDescripcion.Text.Trim(),
-                    Estado = true
-                };
-
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnCancelar_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
         }
 
         private void FrmAgregarProducto_Load(object sender, EventArgs e)
@@ -88,6 +38,8 @@ namespace Automotors
         {
             try
             {
+                cmbMarca.Items.Clear();
+
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
@@ -110,32 +62,91 @@ namespace Automotors
             }
         }
 
-        private void txtAnio_KeyPress(object sender, KeyPressEventArgs e)
+        private void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            if (string.IsNullOrWhiteSpace(cmbMarca.Text))
             {
-                e.Handled = true;
+                MessageBox.Show("La marca es obligatoria.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                cmbMarca.Focus();
+                return;
             }
+
+            if (string.IsNullOrWhiteSpace(txtModelo.Text))
+            {
+                MessageBox.Show("El modelo es obligatorio.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtModelo.Focus();
+                return;
+            }
+
+            ProductoEditado = new Producto
+            {
+                Marca = cmbMarca.Text.Trim(),
+                Modelo = txtModelo.Text.Trim(),
+                Anio = (int)nudAnio.Value,
+                Precio = nudPrecio.Value,
+                CantidadStock = (int)nudStock.Value,
+                Descripcion = txtDescripcion.Text.Trim(),
+                Estado = true
+            };
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
-        private void txtPrecio_KeyPress(object sender, KeyPressEventArgs e)
+        private void btnCancelar_Click(object sender, EventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
-            {
-                e.Handled = true;
-            }
-
-            if (e.KeyChar == '.' && (sender as TextBox).Text.IndexOf('.') > -1)
-            {
-                e.Handled = true;
-            }
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
         }
 
-        private void txtStock_KeyPress(object sender, KeyPressEventArgs e)
+        private void btnAgregarMarca_Click(object sender, EventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            string nuevaMarca = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el nombre de la marca:", "Agregar Marca");
+
+            if (!string.IsNullOrWhiteSpace(nuevaMarca))
             {
-                e.Handled = true;
+                try
+                {
+                    using (var connection = Conexion.GetConnection())
+                    {
+                        connection.Open();
+
+                        // Verificar si la marca ya existe
+                        string checkQuery = "SELECT COUNT(*) FROM Marcas WHERE Nombre = @Nombre";
+                        using (var checkCommand = new SqliteCommand(checkQuery, connection))
+                        {
+                            checkCommand.Parameters.AddWithValue("@Nombre", nuevaMarca.Trim());
+                            long existe = (long)checkCommand.ExecuteScalar();
+
+                            if (existe > 0)
+                            {
+                                MessageBox.Show("La marca ya existe.", "Advertencia",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                return;
+                            }
+                        }
+
+                        // Insertar nueva marca
+                        string insertQuery = "INSERT INTO Marcas (Nombre) VALUES (@Nombre)";
+                        using (var command = new SqliteCommand(insertQuery, connection))
+                        {
+                            command.Parameters.AddWithValue("@Nombre", nuevaMarca.Trim());
+                            command.ExecuteNonQuery();
+
+                            MessageBox.Show("Marca agregada correctamente", "Éxito",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Recargar marcas y seleccionar la nueva
+                            CargarMarcas();
+                            cmbMarca.Text = nuevaMarca.Trim();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al agregar marca: {ex.Message}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

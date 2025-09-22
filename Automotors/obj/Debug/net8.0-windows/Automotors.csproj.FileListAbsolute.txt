@@ -196,3 +196,5 @@ C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de prog
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmReportes.resources
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmVentas.resources
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmBackup.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\BD\bd_automotors.db
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmEditarMarca.resources
