@@ -75,6 +75,7 @@
             BClientes.Text = "Clientes";
             BClientes.TextAlign = ContentAlignment.BottomCenter;
             BClientes.UseVisualStyleBackColor = true;
+            BClientes.Click += BClientes_Click;
             // 
             // BProductos
             // 
