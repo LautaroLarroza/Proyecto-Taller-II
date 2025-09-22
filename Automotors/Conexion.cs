@@ -7,7 +7,7 @@ namespace Automotors
 {
     public static class Conexion
     {
-        // Si dejás bd_automotors.db en la misma carpeta que el .exe, esta cadena alcanza.
+        // La BD debe estar en la misma carpeta que el .exe
         private static string connectionString = "Data Source=bd_automotors.db;Cache=Shared;Mode=ReadWriteCreate;";
 
         public static SqliteConnection GetConnection()
@@ -27,7 +27,8 @@ namespace Automotors
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error de conexión (SQLite): {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error de conexión (SQLite): {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -49,7 +50,8 @@ namespace Automotors
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al ejecutar consulta: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al ejecutar consulta: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -66,7 +68,8 @@ namespace Automotors
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al ejecutar consulta: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al ejecutar consulta: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }

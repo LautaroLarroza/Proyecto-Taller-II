@@ -129,3 +129,21 @@ C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de prog
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.pdb
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.genruntimeconfig.cache
 C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\ref\Automotors.dll
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.AssemblyReference.cache
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Form1.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Form2.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmAgregarProducto.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmAgregarUsuario.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmEditarProducto.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmLogin.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmProductos.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmReportes.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmUsuarios.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmVentas.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Properties.Resources.resources
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.GenerateResource.cache
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.AssemblyInfoInputs.cache
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.AssemblyInfo.cs
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.CoreCompileInputs.cache
+C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.sourcelink.json
