@@ -1,13 +1,33 @@
-# Visual Studio
-.vs/
-bin/
-obj/
-*.suo
+# Build y binarios
+/bin/
+/obj/
+/out/
+
+# Archivos de usuario de Visual Studio
 *.user
-*.cache
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Paquetes NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Archivos temporales
+*.log
+*.tmp
+*.temp
+*.vspscc
+
+# SQLite (pero dejamos la BD incluida)
+*.db
+!Automotors/BD/*.db
+
+# Configuración local
+appsettings.Development.json
+.vscode/
+
+# Otros
 *.pdb
-*.dll
-*.exe
-*.vsidx
-DocumentLayout.*
-DesignTimeBuild/
+*.cache

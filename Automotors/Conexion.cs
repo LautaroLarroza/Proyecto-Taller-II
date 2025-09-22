@@ -8,7 +8,9 @@ namespace Automotors
     public static class Conexion
     {
         // La BD debe estar en la misma carpeta que el .exe
-        private static string connectionString = "Data Source=bd_automotors.db;Cache=Shared;Mode=ReadWriteCreate;";
+        private static string connectionString = "Data Source=BD/bd_automotors.db;Cache=Shared;Mode=ReadWriteCreate;";
+
+
 
         public static SqliteConnection GetConnection()
         {
