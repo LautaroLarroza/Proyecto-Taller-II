@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.Data.Sqlite; // Asegurate de tener Microsoft.Data.Sqlite instalado
+using Microsoft.Data.Sqlite;
 
 namespace Automotors
 {
@@ -13,11 +13,16 @@ namespace Automotors
         public FrmReportes()
         {
             InitializeComponent();
+            // Si prefieres hacerlo en el evento Load, puedes mover esto allí.
+            this.Load += FrmReportes_Load;
+            btnBuscar.Click += btnBuscar_Click;
+            btnExportar.Click += btnExportar_Click;
         }
 
         private void FrmReportes_Load(object? sender, EventArgs e)
         {
             // Opciones de reporte
+            cboReporte.Items.Clear();
             cboReporte.Items.AddRange(new object[]
             {
                 "Ventas por fecha (detalle)",
@@ -63,7 +68,6 @@ namespace Automotors
                 return;
             }
 
-            // Si existe una columna Total/Importe calculamos suma
             decimal total = 0;
             foreach (DataColumn c in dt.Columns)
             {
@@ -72,8 +76,11 @@ namespace Automotors
                 {
                     foreach (DataRow r in dt.Rows)
                     {
-                        if (r[c] != DBNull.Value && decimal.TryParse(r[c].ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var v))
+                        if (r[c] != DBNull.Value &&
+                            decimal.TryParse(Convert.ToString(r[c]), NumberStyles.Any, CultureInfo.InvariantCulture, out var v))
+                        {
                             total += v;
+                        }
                     }
                     lblResumen.Text = $"Filas: {dt.Rows.Count:N0}   |   Suma {c.ColumnName}: {total:N2}";
                     return;
@@ -83,25 +90,34 @@ namespace Automotors
             lblResumen.Text = $"Filas: {dt.Rows.Count:N0}";
         }
 
-        // ========= QUERIES =========
-
-        // Abre conexión usando tu clase Conexion
-        private SqliteConnection AbrirConexion()
+        // =========================================================
+        // Helper genérico para ejecutar y devolver un DataTable
+        // =========================================================
+        private static DataTable ExecDataTable(string sql, Action<SqliteCommand>? addParams = null)
         {
-            // Debes tener algo tipo Conexion.GetConnection() que devuelve SqliteConnection
-            var cn = Conexion.GetConnection();
+            using var cn = Conexion.GetConnection();
             if (cn.State != ConnectionState.Open) cn.Open();
-            return cn;
+
+            using var cmd = cn.CreateCommand();
+            cmd.CommandText = sql;
+            addParams?.Invoke(cmd);
+
+            using var rd = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            var dt = new DataTable();
+            dt.Load(rd);
+            return dt;
         }
 
+        // ==========================
+        // Reportes (consultas)
+        // ==========================
         private DataTable ReporteVentasDetalle(DateTime desde, DateTime hasta)
         {
-            // Ajustá nombres de tablas/campos a tu esquema real
             const string sql = @"
                 SELECT
-                    date(v.Fecha)      AS Fecha,
-                    c.Nombre           AS Cliente,
-                    p.Descripcion      AS Producto,
+                    date(v.Fecha) AS Fecha,
+                    c.Nombre      AS Cliente,
+                    p.Descripcion AS Producto,
                     v.Cantidad,
                     v.PrecioUnitario,
                     (v.Cantidad * v.PrecioUnitario) AS Total
@@ -111,15 +127,11 @@ namespace Automotors
                 WHERE date(v.Fecha) BETWEEN date(@d) AND date(@h)
                 ORDER BY v.Fecha ASC;";
 
-            using var cn = AbrirConexion();
-            using var cmd = new SqliteCommand(sql, cn);
-            cmd.Parameters.AddWithValue("@d", desde.Date);
-            cmd.Parameters.AddWithValue("@h", hasta.Date);
-
-            using var da = new SqliteDataAdapter(cmd);
-            var table = new DataTable();
-            da.Fill(table);
-            return table;
+            return ExecDataTable(sql, cmd =>
+            {
+                cmd.Parameters.AddWithValue("@d", desde.Date);
+                cmd.Parameters.AddWithValue("@h", hasta.Date);
+            });
         }
 
         private DataTable ReporteVentasPorProducto(DateTime desde, DateTime hasta)
@@ -127,23 +139,19 @@ namespace Automotors
             const string sql = @"
                 SELECT
                     p.Descripcion AS Producto,
-                    SUM(v.Cantidad)                         AS Cantidad,
-                    SUM(v.Cantidad * v.PrecioUnitario)      AS Importe
+                    SUM(v.Cantidad)                    AS Cantidad,
+                    SUM(v.Cantidad * v.PrecioUnitario) AS Importe
                 FROM Ventas v
                 JOIN Productos p ON p.Id = v.IdProducto
                 WHERE date(v.Fecha) BETWEEN date(@d) AND date(@h)
                 GROUP BY p.Id, p.Descripcion
                 ORDER BY Importe DESC;";
 
-            using var cn = AbrirConexion();
-            using var cmd = new SqliteCommand(sql, cn);
-            cmd.Parameters.AddWithValue("@d", desde.Date);
-            cmd.Parameters.AddWithValue("@h", hasta.Date);
-
-            using var da = new SqliteDataAdapter(cmd);
-            var table = new DataTable();
-            da.Fill(table);
-            return table;
+            return ExecDataTable(sql, cmd =>
+            {
+                cmd.Parameters.AddWithValue("@d", desde.Date);
+                cmd.Parameters.AddWithValue("@h", hasta.Date);
+            });
         }
 
         private DataTable ReporteStockProductos()
@@ -158,11 +166,7 @@ namespace Automotors
                 FROM Productos
                 ORDER BY Descripcion;";
 
-            using var cn = AbrirConexion();
-            using var da = new SqliteDataAdapter(sql, cn);
-            var table = new DataTable();
-            da.Fill(table);
-            return table;
+            return ExecDataTable(sql);
         }
 
         private DataTable ReporteClientes()
@@ -177,15 +181,12 @@ namespace Automotors
                 FROM Clientes
                 ORDER BY Apellido, Nombre;";
 
-            using var cn = AbrirConexion();
-            using var da = new SqliteDataAdapter(sql, cn);
-            var table = new DataTable();
-            da.Fill(table);
-            return table;
+            return ExecDataTable(sql);
         }
 
-        // ========= EXPORTAR =========
-
+        // ==========================
+        // Exportar CSV
+        // ==========================
         private void btnExportar_Click(object? sender, EventArgs e)
         {
             if (dgv.DataSource is not DataTable dt || dt.Rows.Count == 0)
@@ -200,7 +201,6 @@ namespace Automotors
                 Filter = "CSV (*.csv)|*.csv",
                 FileName = $"reporte_{DateTime.Now:yyyyMMdd_HHmm}.csv"
             };
-
             if (sfd.ShowDialog() != DialogResult.OK) return;
 
             try
@@ -234,7 +234,9 @@ namespace Automotors
                 for (int i = 0; i < dt.Columns.Count; i++)
                 {
                     if (i > 0) sb.Append(';');
-                    var val = row[i]?.ToString()?.Replace('\n', ' ').Replace('\r', ' ').Replace(';', ',') ?? "";
+                    var val = row[i]?.ToString()?.Replace('\n', ' ')
+                                         .Replace('\r', ' ')
+                                         .Replace(';', ',') ?? "";
                     sb.Append(val);
                 }
                 sb.AppendLine();
