@@ -202,11 +202,5 @@ namespace Automotors
                 frm.ShowDialog();
             }
         }
-
-        private void btnGuardarCambios_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Para editar datos, use el botón 'Editar' y modifique en el formulario de detalles.",
-                "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
     }
 }
