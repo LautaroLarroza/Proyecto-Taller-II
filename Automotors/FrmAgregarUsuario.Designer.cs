@@ -2,15 +2,8 @@
 {
     partial class FrmAgregarUsuario
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAgregarUsuario));
@@ -35,6 +24,9 @@
             CRol = new ComboBox();
             BGuardar = new Button();
             panel1 = new Panel();
+            chkEstado = new CheckBox();
+            labelEstado = new Label();
+            btnCambiarContraseña = new Button();
             label7 = new Label();
             TDNI = new TextBox();
             label6 = new Label();
@@ -109,17 +101,20 @@
             BGuardar.FlatStyle = FlatStyle.Flat;
             BGuardar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             BGuardar.ForeColor = Color.White;
-            BGuardar.Location = new Point(180, 490);
+            BGuardar.Location = new Point(180, 520);
             BGuardar.Margin = new Padding(4);
             BGuardar.Name = "BGuardar";
             BGuardar.Size = new Size(180, 50);
-            BGuardar.TabIndex = 7;
+            BGuardar.TabIndex = 8;
             BGuardar.Text = "Guardar";
             BGuardar.UseVisualStyleBackColor = false;
             // 
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(chkEstado);
+            panel1.Controls.Add(labelEstado);
+            panel1.Controls.Add(btnCambiarContraseña);
             panel1.Controls.Add(label7);
             panel1.Controls.Add(TDNI);
             panel1.Controls.Add(label6);
@@ -142,6 +137,46 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(650, 600);
             panel1.TabIndex = 5;
+            // 
+            // chkEstado
+            // 
+            chkEstado.AutoSize = true;
+            chkEstado.Checked = true;
+            chkEstado.CheckState = CheckState.Checked;
+            chkEstado.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            chkEstado.Location = new Point(280, 470);
+            chkEstado.Margin = new Padding(4);
+            chkEstado.Name = "chkEstado";
+            chkEstado.Size = new Size(150, 29);
+            chkEstado.TabIndex = 17;
+            chkEstado.Text = "Usuario Activo";
+            chkEstado.UseVisualStyleBackColor = true;
+            // 
+            // labelEstado
+            // 
+            labelEstado.AutoSize = true;
+            labelEstado.Font = new Font("Segoe UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            labelEstado.Location = new Point(180, 470);
+            labelEstado.Margin = new Padding(4, 0, 4, 0);
+            labelEstado.Name = "labelEstado";
+            labelEstado.Size = new Size(76, 25);
+            labelEstado.TabIndex = 16;
+            labelEstado.Text = "Estado:";
+            // 
+            // btnCambiarContraseña
+            // 
+            btnCambiarContraseña.BackColor = Color.FromArgb(52, 152, 219);
+            btnCambiarContraseña.FlatAppearance.BorderSize = 0;
+            btnCambiarContraseña.FlatStyle = FlatStyle.Flat;
+            btnCambiarContraseña.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnCambiarContraseña.ForeColor = Color.White;
+            btnCambiarContraseña.Location = new Point(440, 355);
+            btnCambiarContraseña.Margin = new Padding(4);
+            btnCambiarContraseña.Name = "btnCambiarContraseña";
+            btnCambiarContraseña.Size = new Size(180, 40);
+            btnCambiarContraseña.TabIndex = 15;
+            btnCambiarContraseña.Text = "Cambiar Contraseña";
+            btnCambiarContraseña.UseVisualStyleBackColor = false;
             // 
             // label7
             // 
@@ -240,11 +275,11 @@
             BCancelar.FlatStyle = FlatStyle.Flat;
             BCancelar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             BCancelar.ForeColor = Color.White;
-            BCancelar.Location = new Point(370, 490);
+            BCancelar.Location = new Point(370, 520);
             BCancelar.Margin = new Padding(4);
             BCancelar.Name = "BCancelar";
             BCancelar.Size = new Size(180, 50);
-            BCancelar.TabIndex = 8;
+            BCancelar.TabIndex = 9;
             BCancelar.Text = "Cancelar";
             BCancelar.UseVisualStyleBackColor = false;
             // 
@@ -252,11 +287,11 @@
             // 
             CheckContraseña.AutoSize = true;
             CheckContraseña.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            CheckContraseña.Location = new Point(440, 365);
+            CheckContraseña.Location = new Point(440, 405);
             CheckContraseña.Margin = new Padding(4);
             CheckContraseña.Name = "CheckContraseña";
             CheckContraseña.Size = new Size(183, 27);
-            CheckContraseña.TabIndex = 6;
+            CheckContraseña.TabIndex = 7;
             CheckContraseña.Text = "Mostrar Contraseña";
             CheckContraseña.UseVisualStyleBackColor = true;
             // 
@@ -354,5 +389,8 @@
         private Label lblTitulo;
         private Label label7;
         private TextBox TDNI;
+        private Button btnCambiarContraseña;
+        private CheckBox chkEstado;
+        private Label labelEstado;
     }
 }

@@ -33,9 +33,10 @@
             // BUsuarios
             // 
             BUsuarios.Image = Properties.Resources.Usuario;
-            BUsuarios.Location = new Point(0, 10);
+            BUsuarios.Location = new Point(0, 13);
+            BUsuarios.Margin = new Padding(3, 4, 3, 4);
             BUsuarios.Name = "BUsuarios";
-            BUsuarios.Size = new Size(212, 80);
+            BUsuarios.Size = new Size(242, 107);
             BUsuarios.TabIndex = 1;
             BUsuarios.Text = "Usuarios";
             BUsuarios.TextAlign = ContentAlignment.BottomCenter;
@@ -45,20 +46,23 @@
             // BBackUp
             // 
             BBackUp.Image = Properties.Resources.Back_Up;
-            BBackUp.Location = new Point(3, 96);
+            BBackUp.Location = new Point(3, 128);
+            BBackUp.Margin = new Padding(3, 4, 3, 4);
             BBackUp.Name = "BBackUp";
-            BBackUp.Size = new Size(212, 80);
+            BBackUp.Size = new Size(242, 107);
             BBackUp.TabIndex = 2;
             BBackUp.Text = "Back Up";
             BBackUp.TextAlign = ContentAlignment.BottomCenter;
             BBackUp.UseVisualStyleBackColor = true;
+            BBackUp.Click += BBackUp_Click;
             // 
             // BVentas
             // 
             BVentas.Image = Properties.Resources.Ventas;
-            BVentas.Location = new Point(0, 182);
+            BVentas.Location = new Point(0, 243);
+            BVentas.Margin = new Padding(3, 4, 3, 4);
             BVentas.Name = "BVentas";
-            BVentas.Size = new Size(212, 80);
+            BVentas.Size = new Size(242, 107);
             BVentas.TabIndex = 3;
             BVentas.Text = "Ventas";
             BVentas.TextAlign = ContentAlignment.BottomCenter;
@@ -68,9 +72,10 @@
             // BClientes
             // 
             BClientes.Image = Properties.Resources.Clientes;
-            BClientes.Location = new Point(0, 268);
+            BClientes.Location = new Point(0, 357);
+            BClientes.Margin = new Padding(3, 4, 3, 4);
             BClientes.Name = "BClientes";
-            BClientes.Size = new Size(212, 80);
+            BClientes.Size = new Size(242, 107);
             BClientes.TabIndex = 4;
             BClientes.Text = "Clientes";
             BClientes.TextAlign = ContentAlignment.BottomCenter;
@@ -80,9 +85,10 @@
             // BProductos
             // 
             BProductos.Image = Properties.Resources.Productos;
-            BProductos.Location = new Point(0, 355);
+            BProductos.Location = new Point(0, 473);
+            BProductos.Margin = new Padding(3, 4, 3, 4);
             BProductos.Name = "BProductos";
-            BProductos.Size = new Size(212, 80);
+            BProductos.Size = new Size(242, 107);
             BProductos.TabIndex = 5;
             BProductos.Text = "Productos";
             BProductos.TextAlign = ContentAlignment.BottomCenter;
@@ -92,9 +98,10 @@
             // BReportes
             // 
             BReportes.Image = Properties.Resources.Reportes;
-            BReportes.Location = new Point(0, 441);
+            BReportes.Location = new Point(0, 588);
+            BReportes.Margin = new Padding(3, 4, 3, 4);
             BReportes.Name = "BReportes";
-            BReportes.Size = new Size(212, 90);
+            BReportes.Size = new Size(242, 120);
             BReportes.TabIndex = 6;
             BReportes.Text = "Reportes";
             BReportes.TextAlign = ContentAlignment.BottomCenter;
@@ -103,9 +110,10 @@
             // 
             // button7
             // 
-            button7.Location = new Point(2, 603);
+            button7.Location = new Point(2, 804);
+            button7.Margin = new Padding(3, 4, 3, 4);
             button7.Name = "button7";
-            button7.Size = new Size(212, 60);
+            button7.Size = new Size(242, 80);
             button7.TabIndex = 7;
             button7.Text = "Salir";
             button7.UseVisualStyleBackColor = true;
@@ -113,9 +121,10 @@
             // 
             // btnCerrarSesion
             // 
-            btnCerrarSesion.Location = new Point(3, 537);
+            btnCerrarSesion.Location = new Point(3, 716);
+            btnCerrarSesion.Margin = new Padding(3, 4, 3, 4);
             btnCerrarSesion.Name = "btnCerrarSesion";
-            btnCerrarSesion.Size = new Size(212, 60);
+            btnCerrarSesion.Size = new Size(242, 80);
             btnCerrarSesion.TabIndex = 8;
             btnCerrarSesion.Text = "Cerrar Sesión";
             btnCerrarSesion.UseVisualStyleBackColor = true;
@@ -133,27 +142,30 @@
             panel1.Controls.Add(BUsuarios);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1489, 664);
+            panel1.Size = new Size(1702, 885);
             panel1.TabIndex = 2;
             // 
             // panelContenedor
             // 
             panelContenedor.BorderStyle = BorderStyle.FixedSingle;
             panelContenedor.Dock = DockStyle.Right;
-            panelContenedor.Location = new Point(220, 0);
+            panelContenedor.Location = new Point(252, 0);
+            panelContenedor.Margin = new Padding(3, 4, 3, 4);
             panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(1269, 664);
+            panelContenedor.Size = new Size(1450, 885);
             panelContenedor.TabIndex = 0;
             panelContenedor.Paint += panelContenedor_Paint;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1489, 664);
+            ClientSize = new Size(1702, 885);
             Controls.Add(panelContenedor);
             Controls.Add(panel1);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "Automotors - Menú Principal";
             Load += Form1_Load;

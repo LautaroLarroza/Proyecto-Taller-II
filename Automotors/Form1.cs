@@ -30,12 +30,11 @@ namespace Automotors
                     BUsuarios.Enabled = true;
                     BBackUp.Enabled = true;
                     BProductos.Enabled = true;
-                    // (si querés que admin también vea ventas/clientes/reportes, habilitalos acá)
                     break;
 
                 case "Gerente":
                     BReportes.Enabled = true;
-                    BProductos.Enabled = true;   // gerente puede ver/editar productos
+                    BProductos.Enabled = true;   
                     break;
 
                 case "Vendedor":
@@ -85,14 +84,13 @@ namespace Automotors
         private void BBackUp_Click(object sender, EventArgs e)
         {
             if (!BBackUp.Enabled) return;
-            panelContenedor.Controls.Clear();
+            AbrirEnPanel(new FrmBackup());
         }
 
         private void BClientes_Click(object sender, EventArgs e)
         {
             if (!BClientes.Enabled) return;
-            panelContenedor.Controls.Clear();
-            // Cuando tengas el form de clientes, abrilo con AbrirEnPanel(new FrmClientes());
+            AbrirEnPanel(new FrmClientes());
         }
 
         private void BProductos_Click(object sender, EventArgs e)
@@ -113,8 +111,6 @@ namespace Automotors
             if (!BVentas.Enabled) return;
             AbrirEnPanel(new FrmVentas());
         }
-
-        // (si además tenés BVentas_Click, lo redirigimos por si el Designer cambia)
         private void BVentas_Click(object sender, EventArgs e)
         {
             BVentas_Click_1(sender, e);

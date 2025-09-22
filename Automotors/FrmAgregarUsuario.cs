@@ -8,6 +8,7 @@ namespace Automotors
     {
         private FrmUsuarios formPadre;
         private Panel panelContenedor;
+        private bool cambiarContraseña = false;
 
         public FrmAgregarUsuario(FrmUsuarios padre, Panel panel)
         {
@@ -18,9 +19,12 @@ namespace Automotors
             CheckContraseña.CheckedChanged += CheckContraseña_CheckedChanged;
             BGuardar.Click += BGuardar_Click;
             BCancelar.Click += BCancelar_Click;
+            btnCambiarContraseña.Click += BtnCambiarContraseña_Click;
 
             TContraseña.PasswordChar = '•';
+            TContraseña.Enabled = false;
             CargarRolesDesdeBD();
+            ConfigurarEstado();
         }
 
         // ====================
@@ -62,6 +66,12 @@ namespace Automotors
             set => CRol.Text = value;
         }
 
+        public bool Estado
+        {
+            get => chkEstado.Checked;
+            set => chkEstado.Checked = value;
+        }
+
         public bool ModificarEnCurso { get; set; } = false;
         public int UsuarioId { get; set; }
 
@@ -72,6 +82,26 @@ namespace Automotors
         private void CheckContraseña_CheckedChanged(object? sender, EventArgs e)
         {
             TContraseña.PasswordChar = CheckContraseña.Checked ? '\0' : '•';
+        }
+
+        private void BtnCambiarContraseña_Click(object? sender, EventArgs e)
+        {
+            cambiarContraseña = !cambiarContraseña;
+            TContraseña.Enabled = cambiarContraseña;
+            TContraseña.Text = "";
+
+            if (cambiarContraseña)
+            {
+                btnCambiarContraseña.Text = "Cancelar Cambio";
+                btnCambiarContraseña.BackColor = System.Drawing.Color.FromArgb(192, 57, 43);
+                TContraseña.Focus();
+            }
+            else
+            {
+                btnCambiarContraseña.Text = "Cambiar Contraseña";
+                btnCambiarContraseña.BackColor = System.Drawing.Color.FromArgb(52, 152, 219);
+                TContraseña.Text = "";
+            }
         }
 
         private void BCancelar_Click(object? sender, EventArgs e)
@@ -94,24 +124,23 @@ namespace Automotors
                     {
                         // INSERT
                         SqliteCommand cmd = new SqliteCommand(
-                            "INSERT INTO Usuarios (Nombre, Apellido, DNI, Email, PasswordHash, PasswordSalt, IdRol) " +
-                            "VALUES (@Nombre, @Apellido, @DNI, @Email, @PasswordHash, @PasswordSalt, @IdRol)",
+                            "INSERT INTO Usuarios (Nombre, Apellido, DNI, Email, PasswordHash, PasswordSalt, IdRol, Estado) " +
+                            "VALUES (@Nombre, @Apellido, @DNI, @Email, @PasswordHash, @PasswordSalt, @IdRol, @Estado)",
                             connection);
 
                         AgregarParametros(cmd);
                         cmd.ExecuteNonQuery();
 
-                        // ✅ SOLO mensaje esencial
                         MessageBox.Show("✅ Usuario agregado correctamente", "Éxito",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        // UPDATE - Manejar contraseña correctamente
+                        // UPDATE - Manejar contraseña condicionalmente
                         string query = "UPDATE Usuarios SET Nombre=@Nombre, Apellido=@Apellido, " +
-                                      "DNI=@DNI, Email=@Email, IdRol=@IdRol ";
+                                      "DNI=@DNI, Email=@Email, IdRol=@IdRol, Estado=@Estado ";
 
-                        if (!string.IsNullOrEmpty(Contraseña))
+                        if (cambiarContraseña && !string.IsNullOrEmpty(Contraseña))
                         {
                             query += ", PasswordHash=@PasswordHash, PasswordSalt=@PasswordSalt ";
                         }
@@ -125,9 +154,10 @@ namespace Automotors
                             cmd.Parameters.AddWithValue("@DNI", DNI);
                             cmd.Parameters.AddWithValue("@Email", Email);
                             cmd.Parameters.AddWithValue("@IdRol", GetRolId(Rol));
+                            cmd.Parameters.AddWithValue("@Estado", Estado ? 1 : 0);
                             cmd.Parameters.AddWithValue("@Id", UsuarioId);
 
-                            if (!string.IsNullOrEmpty(Contraseña))
+                            if (cambiarContraseña && !string.IsNullOrEmpty(Contraseña))
                             {
                                 byte[] salt = GenerateSalt();
                                 byte[] passwordHash = HashPassword(Contraseña, salt);
@@ -138,13 +168,11 @@ namespace Automotors
                             cmd.ExecuteNonQuery();
                         }
 
-                        // ✅ SOLO mensaje esencial
                         MessageBox.Show("✅ Usuario modificado correctamente", "Éxito",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
 
-                // ✅ CERRAR AUTOMÁTICAMENTE
                 this.Close();
             }
             catch (Exception ex)
@@ -166,6 +194,7 @@ namespace Automotors
             cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
             cmd.Parameters.AddWithValue("@PasswordSalt", salt);
             cmd.Parameters.AddWithValue("@IdRol", GetRolId(Rol));
+            cmd.Parameters.AddWithValue("@Estado", Estado ? 1 : 0);
         }
 
         private bool ValidarDatos()
@@ -198,11 +227,15 @@ namespace Automotors
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(Contraseña) || Contraseña.Length < 6)
+            // Validar contraseña solo si es nuevo usuario o si se está cambiando
+            if (!ModificarEnCurso || cambiarContraseña)
             {
-                MessageBox.Show("La contraseña debe tener al menos 6 caracteres.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                TContraseña.Focus();
-                return false;
+                if (string.IsNullOrWhiteSpace(Contraseña) || Contraseña.Length < 6)
+                {
+                    MessageBox.Show("La contraseña debe tener al menos 6 caracteres.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    TContraseña.Focus();
+                    return false;
+                }
             }
 
             if (string.IsNullOrEmpty(Rol))
@@ -213,6 +246,27 @@ namespace Automotors
             }
 
             return true;
+        }
+
+        private void ConfigurarEstado()
+        {
+            if (ModificarEnCurso)
+            {
+                label6.Text = "Modificar Usuario";
+                chkEstado.Visible = true;
+                labelEstado.Visible = true;
+                btnCambiarContraseña.Visible = true;
+                TContraseña.Enabled = false;
+            }
+            else
+            {
+                label6.Text = "Agregar Nuevo Usuario";
+                chkEstado.Visible = false;
+                labelEstado.Visible = false;
+                btnCambiarContraseña.Visible = false;
+                TContraseña.Enabled = true;
+                chkEstado.Checked = true; // Por defecto activo
+            }
         }
 
         // ====================
@@ -277,7 +331,6 @@ namespace Automotors
             }
             catch (Exception ex)
             {
-                // ✅ SOLO mostrar errores graves
                 Console.WriteLine($"Error obteniendo ID del rol: {ex.Message}");
             }
 
@@ -306,7 +359,6 @@ namespace Automotors
                     {
                         if (!reader.HasRows)
                         {
-                            // ✅ SIN MENSAJE - Insertar silenciosamente
                             InsertarRolesPorDefecto(connection);
                             CargarRolesDesdeBD();
                             return;
@@ -326,7 +378,6 @@ namespace Automotors
             }
             catch (Exception ex)
             {
-                // ✅ SOLO ERRORES GRAVES
                 MessageBox.Show($"Error cargando roles: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -349,12 +400,8 @@ namespace Automotors
             }
             catch (Exception ex)
             {
-                // ✅ SOLO ERRORES GRAVES
                 Console.WriteLine($"Error insertando roles: {ex.Message}");
             }
         }
-
-        private void FrmAgregarUsuario_Load(object? sender, EventArgs e) { }
-        private void panel1_Paint(object? sender, PaintEventArgs e) { }
     }
 }

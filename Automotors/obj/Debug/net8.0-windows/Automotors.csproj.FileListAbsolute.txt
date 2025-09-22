@@ -190,3 +190,9 @@ C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-window
 C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.pdb
 C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.genruntimeconfig.cache
 C:\Users\Latrozz\Documents\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\ref\Automotors.dll
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmClienteDetalle.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmClientes.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmComprasCliente.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmReportes.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmVentas.resources
+C:\Users\feder\OneDrive\Escritorio\xd\TercerAño\2do cuatrimestre\taller de programacion 2\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmBackup.resources

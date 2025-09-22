@@ -21,6 +21,9 @@ namespace Automotors
 
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = true;
+
+            // 🔑 Aseguramos que las columnas se generen automáticamente
+            dataGridView1.AutoGenerateColumns = true;
         }
 
         private void BEliminar_Click(object sender, EventArgs e)
@@ -96,6 +99,7 @@ namespace Automotors
             string dni = dataGridView1.SelectedRows[0].Cells["DNI"].Value?.ToString() ?? "";
             string email = dataGridView1.SelectedRows[0].Cells["Email"].Value.ToString();
             string rol = dataGridView1.SelectedRows[0].Cells["Rol"].Value.ToString();
+            bool estado = dataGridView1.SelectedRows[0].Cells["Estado"].Value?.ToString() == "Activo";
 
             panelContenedor.Controls.Clear();
             FrmAgregarUsuario frmModificar = new FrmAgregarUsuario(this, panelContenedor)
@@ -105,6 +109,7 @@ namespace Automotors
                 DNI = dni,
                 Email = email,
                 Rol = rol,
+                Estado = estado,
                 ModificarEnCurso = true,
                 UsuarioId = id
             };
@@ -138,12 +143,13 @@ namespace Automotors
                 {
                     connection.Open();
 
+                    // 🔑 LEFT JOIN para que siempre aparezcan usuarios aunque falte el rol
                     string query = @"
                         SELECT u.IdUsuario, u.Nombre, u.Apellido, u.DNI, u.Email, 
-                               r.Nombre as Rol, 
+                               COALESCE(r.Nombre, 'Sin rol') as Rol, 
                                CASE WHEN u.Estado = 1 THEN 'Activo' ELSE 'Inactivo' END as Estado
                         FROM Usuarios u
-                        INNER JOIN Roles r ON u.IdRol = r.IdRol";
+                        LEFT JOIN Roles r ON u.IdRol = r.IdRol";
 
                     using (var command = new SqliteCommand(query, connection))
                     using (var reader = command.ExecuteReader())
@@ -152,7 +158,7 @@ namespace Automotors
 
                         for (int i = 0; i < reader.FieldCount; i++)
                         {
-                            dt.Columns.Add(reader.GetName(i), reader.GetFieldType(i));
+                            dt.Columns.Add(reader.GetName(i), typeof(string));
                         }
 
                         while (reader.Read())
@@ -160,11 +166,13 @@ namespace Automotors
                             DataRow row = dt.NewRow();
                             for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                row[i] = reader.IsDBNull(i) ? DBNull.Value : reader.GetValue(i);
+                                row[i] = reader.IsDBNull(i) ? DBNull.Value : reader.GetValue(i).ToString();
                             }
                             dt.Rows.Add(row);
                         }
 
+                        // 🔑 Forzar generación automática de columnas
+                        dataGridView1.AutoGenerateColumns = true;
                         dataGridView1.DataSource = dt;
                     }
                 }
