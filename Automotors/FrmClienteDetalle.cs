@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Data.Sqlite;
+using System.Data.SqlClient; // Cambiar de Sqlite a SqlClient
 using System.Windows.Forms;
 
 namespace Automotors
@@ -34,7 +34,7 @@ namespace Automotors
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
-                    using (var cmd = new SqliteCommand(query, connection))
+                    using (var cmd = new SqlCommand(query, connection)) // Cambiar a SqlCommand
                     {
                         cmd.Parameters.AddWithValue("@IdCliente", idCliente);
                         using (var reader = cmd.ExecuteReader())
@@ -46,7 +46,7 @@ namespace Automotors
                                 txtDNI.Text = reader["DNI"].ToString();
                                 txtEmail.Text = reader["Email"].ToString();
                                 txtTelefono.Text = reader["Telefono"].ToString();
-                                txtDireccion.Text = reader["Direccion"].ToString();
+                                // Eliminar Direccion ya que no existe en la base de datos
                             }
                         }
                     }
@@ -68,20 +68,21 @@ namespace Automotors
             {
                 if (esNuevo)
                 {
-                    string query = @"INSERT INTO Clientes (Nombre, Apellido, DNI, Email, Telefono, Direccion) 
-                                     VALUES (@Nombre, @Apellido, @DNI, @Email, @Telefono, @Direccion)";
+                    // Eliminar Direccion de la consulta INSERT
+                    string query = @"INSERT INTO Clientes (Nombre, Apellido, DNI, Email, Telefono) 
+                                     VALUES (@Nombre, @Apellido, @DNI, @Email, @Telefono)";
 
                     using (var connection = Conexion.GetConnection())
                     {
                         connection.Open();
-                        using (var cmd = new SqliteCommand(query, connection))
+                        using (var cmd = new SqlCommand(query, connection)) // Cambiar a SqlCommand
                         {
                             cmd.Parameters.AddWithValue("@Nombre", txtNombre.Text);
                             cmd.Parameters.AddWithValue("@Apellido", txtApellido.Text);
                             cmd.Parameters.AddWithValue("@DNI", txtDNI.Text);
                             cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
                             cmd.Parameters.AddWithValue("@Telefono", txtTelefono.Text);
-                            cmd.Parameters.AddWithValue("@Direccion", txtDireccion.Text);
+                            // Eliminar parámetro Direccion
 
                             cmd.ExecuteNonQuery();
                         }
@@ -92,21 +93,22 @@ namespace Automotors
                 }
                 else
                 {
+                    // Eliminar Direccion de la consulta UPDATE
                     string query = @"UPDATE Clientes SET Nombre = @Nombre, Apellido = @Apellido, DNI = @DNI, 
-                                    Email = @Email, Telefono = @Telefono, Direccion = @Direccion 
+                                    Email = @Email, Telefono = @Telefono 
                                     WHERE IdCliente = @IdCliente";
 
                     using (var connection = Conexion.GetConnection())
                     {
                         connection.Open();
-                        using (var cmd = new SqliteCommand(query, connection))
+                        using (var cmd = new SqlCommand(query, connection)) // Cambiar a SqlCommand
                         {
                             cmd.Parameters.AddWithValue("@Nombre", txtNombre.Text);
                             cmd.Parameters.AddWithValue("@Apellido", txtApellido.Text);
                             cmd.Parameters.AddWithValue("@DNI", txtDNI.Text);
                             cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
                             cmd.Parameters.AddWithValue("@Telefono", txtTelefono.Text);
-                            cmd.Parameters.AddWithValue("@Direccion", txtDireccion.Text);
+                            // Eliminar parámetro Direccion
                             cmd.Parameters.AddWithValue("@IdCliente", idCliente);
 
                             cmd.ExecuteNonQuery();

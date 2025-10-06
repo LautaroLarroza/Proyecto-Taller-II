@@ -140,7 +140,6 @@
             panel1.Controls.Add(BVentas);
             panel1.Controls.Add(BBackUp);
             panel1.Controls.Add(BUsuarios);
-            panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";

@@ -1,20 +1,19 @@
 using System;
 using System.Data;
-using Microsoft.Data.Sqlite;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace Automotors
 {
     public static class Conexion
     {
-        // La BD debe estar en la misma carpeta que el .exe
-        private static string connectionString = "Data Source=BD/bd_automotors.db;Cache=Shared;Mode=ReadWriteCreate;";
+        // Conexión a SQL Server con autenticación de Windows
+        private static string connectionString =
+    "Server=GERBERFEDERICO\\SQLEXPRESS01;Database=bd_automotors;Trusted_Connection=True;Connection Timeout=30;";
 
-
-
-        public static SqliteConnection GetConnection()
+        public static SqlConnection GetConnection()
         {
-            return new SqliteConnection(connectionString);
+            return new SqlConnection(connectionString);
         }
 
         public static bool TestConnection()
@@ -29,7 +28,7 @@ namespace Automotors
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error de conexión (SQLite): {ex.Message}", "Error",
+                MessageBox.Show($"Error de conexión (SQL Server): {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -42,9 +41,8 @@ namespace Automotors
                 using (var connection = GetConnection())
                 {
                     connection.Open();
-                    using (var command = connection.CreateCommand())
+                    using (var command = new SqlCommand(query, connection))
                     {
-                        command.CommandText = query;
                         command.ExecuteNonQuery();
                         return true;
                     }
@@ -58,14 +56,13 @@ namespace Automotors
             }
         }
 
-        public static SqliteDataReader ExecuteReader(string query)
+        public static SqlDataReader ExecuteReader(string query)
         {
             try
             {
                 var connection = GetConnection();
                 connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = query;
+                var command = new SqlCommand(query, connection);
                 return command.ExecuteReader(CommandBehavior.CloseConnection);
             }
             catch (Exception ex)

@@ -24,8 +24,6 @@
             CRol = new ComboBox();
             BGuardar = new Button();
             panel1 = new Panel();
-            chkEstado = new CheckBox();
-            labelEstado = new Label();
             btnCambiarContraseña = new Button();
             label7 = new Label();
             TDNI = new TextBox();
@@ -101,7 +99,7 @@
             BGuardar.FlatStyle = FlatStyle.Flat;
             BGuardar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             BGuardar.ForeColor = Color.White;
-            BGuardar.Location = new Point(180, 520);
+            BGuardar.Location = new Point(180, 480);
             BGuardar.Margin = new Padding(4);
             BGuardar.Name = "BGuardar";
             BGuardar.Size = new Size(180, 50);
@@ -112,8 +110,6 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
-            panel1.Controls.Add(chkEstado);
-            panel1.Controls.Add(labelEstado);
             panel1.Controls.Add(btnCambiarContraseña);
             panel1.Controls.Add(label7);
             panel1.Controls.Add(TDNI);
@@ -137,31 +133,6 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(650, 600);
             panel1.TabIndex = 5;
-            // 
-            // chkEstado
-            // 
-            chkEstado.AutoSize = true;
-            chkEstado.Checked = true;
-            chkEstado.CheckState = CheckState.Checked;
-            chkEstado.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            chkEstado.Location = new Point(280, 470);
-            chkEstado.Margin = new Padding(4);
-            chkEstado.Name = "chkEstado";
-            chkEstado.Size = new Size(150, 29);
-            chkEstado.TabIndex = 17;
-            chkEstado.Text = "Usuario Activo";
-            chkEstado.UseVisualStyleBackColor = true;
-            // 
-            // labelEstado
-            // 
-            labelEstado.AutoSize = true;
-            labelEstado.Font = new Font("Segoe UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            labelEstado.Location = new Point(180, 470);
-            labelEstado.Margin = new Padding(4, 0, 4, 0);
-            labelEstado.Name = "labelEstado";
-            labelEstado.Size = new Size(76, 25);
-            labelEstado.TabIndex = 16;
-            labelEstado.Text = "Estado:";
             // 
             // btnCambiarContraseña
             // 
@@ -242,7 +213,7 @@
             label3.Location = new Point(180, 270);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
-            label3.Size = new Size(66, 25);
+            label3.Size = new Size(85, 25);
             label3.TabIndex = 9;
             label3.Text = "Email:";
             // 
@@ -275,7 +246,7 @@
             BCancelar.FlatStyle = FlatStyle.Flat;
             BCancelar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             BCancelar.ForeColor = Color.White;
-            BCancelar.Location = new Point(370, 520);
+            BCancelar.Location = new Point(370, 480);
             BCancelar.Margin = new Padding(4);
             BCancelar.Name = "BCancelar";
             BCancelar.Size = new Size(180, 50);
@@ -390,7 +361,5 @@
         private Label label7;
         private TextBox TDNI;
         private Button btnCambiarContraseña;
-        private CheckBox chkEstado;
-        private Label labelEstado;
     }
 }

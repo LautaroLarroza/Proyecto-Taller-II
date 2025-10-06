@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Microsoft.Data.Sqlite;
+using System.Data.SqlClient; // Cambiar de Sqlite a SqlClient
 
 namespace Automotors
 {
@@ -27,9 +27,10 @@ namespace Automotors
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
-                    string query = "SELECT IdMarca, Nombre, Descripcion FROM Marcas ORDER BY Nombre";
+                    // Eliminar Descripcion de la consulta
+                    string query = "SELECT IdMarca, Nombre FROM Marcas ORDER BY Nombre";
 
-                    using (var command = new SqliteCommand(query, connection))
+                    using (var command = new SqlCommand(query, connection)) // Cambiar a SqlCommand
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -37,9 +38,8 @@ namespace Automotors
                             marcasList.Add(new Marca
                             {
                                 IdMarca = reader.GetInt32(reader.GetOrdinal("IdMarca")),
-                                Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
-                                Descripcion = reader.IsDBNull(reader.GetOrdinal("Descripcion")) ?
-                                            string.Empty : reader.GetString(reader.GetOrdinal("Descripcion"))
+                                Nombre = reader.GetString(reader.GetOrdinal("Nombre"))
+                                // Eliminar Descripcion
                             });
                         }
                     }
@@ -70,10 +70,11 @@ namespace Automotors
 
                             // Verificar si la marca ya existe
                             string checkQuery = "SELECT COUNT(*) FROM Marcas WHERE Nombre = @Nombre";
-                            using (var checkCommand = new SqliteCommand(checkQuery, connection))
+                            using (var checkCommand = new SqlCommand(checkQuery, connection)) // Cambiar a SqlCommand
                             {
                                 checkCommand.Parameters.AddWithValue("@Nombre", form.MarcaEditada.Nombre.Trim());
-                                long existe = (long)checkCommand.ExecuteScalar();
+                                // Cambiar long por int para SQL Server
+                                int existe = (int)checkCommand.ExecuteScalar();
 
                                 if (existe > 0)
                                 {
@@ -83,14 +84,12 @@ namespace Automotors
                                 }
                             }
 
-                            // Insertar nueva marca
-                            string insertQuery = "INSERT INTO Marcas (Nombre, Descripcion) VALUES (@Nombre, @Descripcion)";
-                            using (var command = new SqliteCommand(insertQuery, connection))
+                            // Insertar nueva marca (sin Descripcion)
+                            string insertQuery = "INSERT INTO Marcas (Nombre) VALUES (@Nombre)";
+                            using (var command = new SqlCommand(insertQuery, connection)) // Cambiar a SqlCommand
                             {
                                 command.Parameters.AddWithValue("@Nombre", form.MarcaEditada.Nombre.Trim());
-                                command.Parameters.AddWithValue("@Descripcion",
-                                    string.IsNullOrWhiteSpace(form.MarcaEditada.Descripcion) ?
-                                    DBNull.Value : form.MarcaEditada.Descripcion.Trim());
+                                // Eliminar parámetro Descripcion
 
                                 command.ExecuteNonQuery();
 
@@ -134,11 +133,12 @@ namespace Automotors
 
                             // Verificar si el nuevo nombre ya existe (excluyendo la marca actual)
                             string checkQuery = "SELECT COUNT(*) FROM Marcas WHERE Nombre = @Nombre AND IdMarca != @IdMarca";
-                            using (var checkCommand = new SqliteCommand(checkQuery, connection))
+                            using (var checkCommand = new SqlCommand(checkQuery, connection)) // Cambiar a SqlCommand
                             {
                                 checkCommand.Parameters.AddWithValue("@Nombre", form.MarcaEditada.Nombre.Trim());
                                 checkCommand.Parameters.AddWithValue("@IdMarca", form.MarcaEditada.IdMarca);
-                                long existe = (long)checkCommand.ExecuteScalar();
+                                // Cambiar long por int para SQL Server
+                                int existe = (int)checkCommand.ExecuteScalar();
 
                                 if (existe > 0)
                                 {
@@ -148,15 +148,13 @@ namespace Automotors
                                 }
                             }
 
-                            // Actualizar marca
-                            string updateQuery = "UPDATE Marcas SET Nombre = @Nombre, Descripcion = @Descripcion WHERE IdMarca = @IdMarca";
-                            using (var command = new SqliteCommand(updateQuery, connection))
+                            // Actualizar marca (sin Descripcion)
+                            string updateQuery = "UPDATE Marcas SET Nombre = @Nombre WHERE IdMarca = @IdMarca";
+                            using (var command = new SqlCommand(updateQuery, connection)) // Cambiar a SqlCommand
                             {
                                 command.Parameters.AddWithValue("@IdMarca", form.MarcaEditada.IdMarca);
                                 command.Parameters.AddWithValue("@Nombre", form.MarcaEditada.Nombre.Trim());
-                                command.Parameters.AddWithValue("@Descripcion",
-                                    string.IsNullOrWhiteSpace(form.MarcaEditada.Descripcion) ?
-                                    DBNull.Value : form.MarcaEditada.Descripcion.Trim());
+                                // Eliminar parámetro Descripcion
 
                                 int affected = command.ExecuteNonQuery();
 
@@ -214,7 +212,7 @@ namespace Automotors
                         connection.Open();
                         string query = "DELETE FROM Marcas WHERE IdMarca = @IdMarca";
 
-                        using (var command = new SqliteCommand(query, connection))
+                        using (var command = new SqlCommand(query, connection)) // Cambiar a SqlCommand
                         {
                             command.Parameters.AddWithValue("@IdMarca", marcaSeleccionada.IdMarca);
                             int affected = command.ExecuteNonQuery();
@@ -246,10 +244,11 @@ namespace Automotors
                     connection.Open();
                     string query = "SELECT COUNT(*) FROM Productos WHERE IdMarca = @IdMarca";
 
-                    using (var command = new SqliteCommand(query, connection))
+                    using (var command = new SqlCommand(query, connection)) // Cambiar a SqlCommand
                     {
                         command.Parameters.AddWithValue("@IdMarca", idMarca);
-                        long count = (long)command.ExecuteScalar();
+                        // Cambiar long por int para SQL Server
+                        int count = (int)command.ExecuteScalar();
                         return count > 0;
                     }
                 }
@@ -277,6 +276,6 @@ namespace Automotors
     {
         public int IdMarca { get; set; }
         public string Nombre { get; set; }
-        public string Descripcion { get; set; }
+        // Eliminar Descripcion ya que no existe en la base de datos
     }
 }

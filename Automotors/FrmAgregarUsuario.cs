@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Data.Sqlite;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace Automotors
@@ -25,12 +25,12 @@ namespace Automotors
             TContraseña.PasswordChar = '•';
             TContraseña.Enabled = false;
             CargarRolesDesdeBD();
-            ConfigurarEstado(); // Configurar estado inicial
+            ConfigurarEstado();
+
+            // Agregar validación de email en tiempo real
+            TUsuario.TextChanged += TUsuario_TextChanged;
         }
 
-        // ====================
-        // Propiedades públicas
-        // ====================
         public string Nombre
         {
             get => TNombre.Text;
@@ -49,7 +49,7 @@ namespace Automotors
             set => TDNI.Text = value;
         }
 
-        public string Email
+        public string Usuario
         {
             get => TUsuario.Text;
             set => TUsuario.Text = value;
@@ -67,27 +67,17 @@ namespace Automotors
             set => CRol.Text = value;
         }
 
-        public bool Estado
-        {
-            get => chkEstado.Checked;
-            set => chkEstado.Checked = value;
-        }
-
         public bool ModificarEnCurso
         {
             get => _modificarEnCurso;
             set
             {
                 _modificarEnCurso = value;
-                ConfigurarEstado(); // Actualizar interfaz automáticamente
+                ConfigurarEstado();
             }
         }
 
         public int UsuarioId { get; set; }
-
-        // ====================
-        // Eventos
-        // ====================
 
         private void CheckContraseña_CheckedChanged(object? sender, EventArgs e)
         {
@@ -120,6 +110,28 @@ namespace Automotors
             this.Close();
         }
 
+        // Validación de email en tiempo real
+        private void TUsuario_TextChanged(object sender, EventArgs e)
+        {
+            string email = TUsuario.Text.Trim();
+
+            if (string.IsNullOrEmpty(email))
+            {
+                // Resetear el color cuando está vacío
+                TUsuario.ForeColor = System.Drawing.Color.Black;
+                return;
+            }
+
+            if (EsEmailValido(email))
+            {
+                TUsuario.ForeColor = System.Drawing.Color.Green;
+            }
+            else
+            {
+                TUsuario.ForeColor = System.Drawing.Color.Red;
+            }
+        }
+
         private void BGuardar_Click(object? sender, EventArgs e)
         {
             if (!ValidarDatos())
@@ -133,10 +145,19 @@ namespace Automotors
 
                     if (!ModificarEnCurso)
                     {
-                        // INSERT
-                        SqliteCommand cmd = new SqliteCommand(
-                            "INSERT INTO Usuarios (Nombre, Apellido, DNI, Email, PasswordHash, PasswordSalt, IdRol, Estado) " +
-                            "VALUES (@Nombre, @Apellido, @DNI, @Email, @PasswordHash, @PasswordSalt, @IdRol, @Estado)",
+                        // Verificar si el email ya existe
+                        if (EmailExiste(Usuario))
+                        {
+                            MessageBox.Show("❌ Este email ya está registrado. Use otro email.", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            TUsuario.Focus();
+                            return;
+                        }
+
+                        // PARA USUARIOS NUEVOS: Siempre se crean activos
+                        SqlCommand cmd = new SqlCommand(
+                            "INSERT INTO Usuarios (nombre, Apellido, DNI, usuario, PasswordHash, PasswordSalt, idRol, Estado) " +
+                            "VALUES (@nombre, @Apellido, @DNI, @usuario, @PasswordHash, @PasswordSalt, @idRol, 1)", // Estado siempre 1 (activo)
                             connection);
 
                         AgregarParametros(cmd);
@@ -147,25 +168,31 @@ namespace Automotors
                     }
                     else
                     {
-                        // UPDATE - Manejar contraseña condicionalmente
-                        string query = "UPDATE Usuarios SET Nombre=@Nombre, Apellido=@Apellido, " +
-                                      "DNI=@DNI, Email=@Email, IdRol=@IdRol, Estado=@Estado ";
-
-                        if (cambiarContraseña && !string.IsNullOrEmpty(Contraseña))
+                        // PARA MODIFICACIÓN: Verificar si el email ya existe (excluyendo el usuario actual)
+                        if (EmailExiste(Usuario, UsuarioId))
                         {
-                            query += ", PasswordHash=@PasswordHash, PasswordSalt=@PasswordSalt ";
+                            MessageBox.Show("❌ Este email ya está registrado. Use otro email.", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            TUsuario.Focus();
+                            return;
                         }
 
-                        query += "WHERE IdUsuario=@Id";
+                        // PARA MODIFICACIÓN: NO se actualiza el Estado
+                        string query = "UPDATE Usuarios SET nombre=@nombre, Apellido=@Apellido, " +
+                                       "DNI=@DNI, usuario=@usuario, idRol=@idRol "; // Eliminado Estado=@Estado
 
-                        using (SqliteCommand cmd = new SqliteCommand(query, connection))
+                        if (cambiarContraseña && !string.IsNullOrEmpty(Contraseña))
+                            query += ", PasswordHash=@PasswordHash, PasswordSalt=@PasswordSalt ";
+
+                        query += "WHERE idUsuario=@Id";
+
+                        using (SqlCommand cmd = new SqlCommand(query, connection))
                         {
-                            cmd.Parameters.AddWithValue("@Nombre", Nombre);
+                            cmd.Parameters.AddWithValue("@nombre", Nombre);
                             cmd.Parameters.AddWithValue("@Apellido", Apellido);
                             cmd.Parameters.AddWithValue("@DNI", DNI);
-                            cmd.Parameters.AddWithValue("@Email", Email);
-                            cmd.Parameters.AddWithValue("@IdRol", GetRolId(Rol));
-                            cmd.Parameters.AddWithValue("@Estado", Estado ? 1 : 0);
+                            cmd.Parameters.AddWithValue("@usuario", Usuario);
+                            cmd.Parameters.AddWithValue("@idRol", GetRolId(Rol));
                             cmd.Parameters.AddWithValue("@Id", UsuarioId);
 
                             if (cambiarContraseña && !string.IsNullOrEmpty(Contraseña))
@@ -193,19 +220,18 @@ namespace Automotors
             }
         }
 
-        private void AgregarParametros(SqliteCommand cmd)
+        private void AgregarParametros(SqlCommand cmd)
         {
             byte[] salt = GenerateSalt();
             byte[] passwordHash = HashPassword(Contraseña, salt);
 
-            cmd.Parameters.AddWithValue("@Nombre", Nombre);
+            cmd.Parameters.AddWithValue("@nombre", Nombre);
             cmd.Parameters.AddWithValue("@Apellido", Apellido);
             cmd.Parameters.AddWithValue("@DNI", DNI);
-            cmd.Parameters.AddWithValue("@Email", Email);
+            cmd.Parameters.AddWithValue("@usuario", Usuario);
             cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
             cmd.Parameters.AddWithValue("@PasswordSalt", salt);
-            cmd.Parameters.AddWithValue("@IdRol", GetRolId(Rol));
-            cmd.Parameters.AddWithValue("@Estado", Estado ? 1 : 0);
+            cmd.Parameters.AddWithValue("@idRol", GetRolId(Rol));
         }
 
         private bool ValidarDatos()
@@ -231,14 +257,21 @@ namespace Automotors
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(Email) || !EsEmailValido(Email))
+            if (string.IsNullOrWhiteSpace(Usuario))
             {
-                MessageBox.Show("Ingrese un email válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("El email es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 TUsuario.Focus();
                 return false;
             }
 
-            // Validar contraseña solo si es nuevo usuario o si se está cambiando
+            if (!EsEmailValido(Usuario))
+            {
+                MessageBox.Show("Ingrese un email válido (debe contener @ y dominio).", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                TUsuario.Focus();
+                TUsuario.SelectAll();
+                return false;
+            }
+
             if (!ModificarEnCurso || cambiarContraseña)
             {
                 if (string.IsNullOrWhiteSpace(Contraseña) || Contraseña.Length < 6)
@@ -264,14 +297,9 @@ namespace Automotors
             if (ModificarEnCurso)
             {
                 label6.Text = "Modificar Usuario";
-
-                // 🔥 VISIBLE EN MODO MODIFICACIÓN
-                chkEstado.Visible = true;
-                labelEstado.Visible = true;
                 btnCambiarContraseña.Visible = true;
-
                 TContraseña.Enabled = false;
-                TContraseña.Text = "********"; // Placeholder
+                TContraseña.Text = "********";
                 cambiarContraseña = false;
                 btnCambiarContraseña.Text = "Cambiar Contraseña";
                 btnCambiarContraseña.BackColor = System.Drawing.Color.FromArgb(52, 152, 219);
@@ -279,22 +307,12 @@ namespace Automotors
             else
             {
                 label6.Text = "Agregar Nuevo Usuario";
-
-                // 🔥 AHORA TAMBIÉN VISIBLE EN MODO AGREGAR
-                chkEstado.Visible = true;
-                labelEstado.Visible = true;
                 btnCambiarContraseña.Visible = false;
-
                 TContraseña.Enabled = true;
-                TContraseña.Text = ""; // Limpiar campo
-                chkEstado.Checked = true; // Por defecto activo para nuevos usuarios
+                TContraseña.Text = "";
                 cambiarContraseña = false;
             }
         }
-
-        // ====================
-        // Métodos de utilidad
-        // ====================
 
         private bool EsDniValido(string dni)
         {
@@ -303,8 +321,55 @@ namespace Automotors
 
         private bool EsEmailValido(string email)
         {
-            return System.Text.RegularExpressions.Regex.IsMatch(email,
-                @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                // Validación básica de email
+                return System.Text.RegularExpressions.Regex.IsMatch(email,
+                    @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // Verificar si el email ya existe en la base de datos
+        private bool EmailExiste(string email, int? excluirUsuarioId = null)
+        {
+            try
+            {
+                using (var connection = Conexion.GetConnection())
+                {
+                    connection.Open();
+                    string query = "SELECT COUNT(*) FROM Usuarios WHERE usuario = @email";
+
+                    if (excluirUsuarioId.HasValue)
+                    {
+                        query += " AND idUsuario != @excluirId";
+                    }
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@email", email);
+                        if (excluirUsuarioId.HasValue)
+                        {
+                            command.Parameters.AddWithValue("@excluirId", excluirUsuarioId.Value);
+                        }
+
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error verificando email: {ex.Message}");
+                return false;
+            }
         }
 
         private byte[] HashPassword(string password, byte[] salt)
@@ -313,10 +378,8 @@ namespace Automotors
             {
                 byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
                 byte[] combinedBytes = new byte[passwordBytes.Length + salt.Length];
-
                 Buffer.BlockCopy(passwordBytes, 0, combinedBytes, 0, passwordBytes.Length);
                 Buffer.BlockCopy(salt, 0, combinedBytes, passwordBytes.Length, salt.Length);
-
                 return sha256.ComputeHash(combinedBytes);
             }
         }
@@ -338,17 +401,13 @@ namespace Automotors
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
-                    string query = "SELECT IdRol FROM Roles WHERE LOWER(Nombre) = LOWER(@Nombre)";
-
-                    using (var command = new SqliteCommand(query, connection))
+                    string query = "SELECT idRol FROM Roles WHERE LOWER(Nombre) = LOWER(@Nombre)";
+                    using (var command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Nombre", rolNombre);
                         var result = command.ExecuteScalar();
-
                         if (result != null && result != DBNull.Value)
-                        {
                             return Convert.ToInt32(result);
-                        }
                     }
                 }
             }
@@ -371,13 +430,11 @@ namespace Automotors
             try
             {
                 CRol.Items.Clear();
-
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
                     string query = "SELECT Nombre FROM Roles ORDER BY Nombre";
-
-                    using (var command = new SqliteCommand(query, connection))
+                    using (var command = new SqlCommand(query, connection))
                     using (var reader = command.ExecuteReader())
                     {
                         if (!reader.HasRows)
@@ -388,16 +445,12 @@ namespace Automotors
                         }
 
                         while (reader.Read())
-                        {
                             CRol.Items.Add(reader["Nombre"].ToString());
-                        }
                     }
                 }
 
                 if (CRol.Items.Count > 0)
-                {
                     CRol.SelectedIndex = 0;
-                }
             }
             catch (Exception ex)
             {
@@ -406,17 +459,16 @@ namespace Automotors
             }
         }
 
-        private void InsertarRolesPorDefecto(SqliteConnection connection)
+        private void InsertarRolesPorDefecto(SqlConnection connection)
         {
             try
             {
                 string insertQuery = @"
-                    INSERT INTO Roles (Nombre, Descripcion) VALUES 
-                    ('Administrador', 'Acceso completo al sistema'),
-                    ('Gerente', 'Gestion de ventas y productos'),
-                    ('Vendedor', 'Solo ventas y clientes')";
-
-                using (var command = new SqliteCommand(insertQuery, connection))
+                    INSERT INTO Roles (Nombre) VALUES 
+                    ('Administrador'),
+                    ('Gerente'),
+                    ('Vendedor')";
+                using (var command = new SqlCommand(insertQuery, connection))
                 {
                     command.ExecuteNonQuery();
                 }

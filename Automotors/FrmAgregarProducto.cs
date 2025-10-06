@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using Microsoft.Data.Sqlite;
+using System.Data.SqlClient; // Cambiar de Sqlite a SqlClient
 using System.Windows.Forms;
 
 namespace Automotors
@@ -45,7 +45,8 @@ namespace Automotors
                     connection.Open();
                     string query = "SELECT Nombre FROM Marcas ORDER BY Nombre";
 
-                    using (var command = new SqliteCommand(query, connection))
+                    // Cambiar SqliteCommand por SqlCommand
+                    using (var command = new SqlCommand(query, connection))
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -113,10 +114,11 @@ namespace Automotors
 
                         // Verificar si la marca ya existe
                         string checkQuery = "SELECT COUNT(*) FROM Marcas WHERE Nombre = @Nombre";
-                        using (var checkCommand = new SqliteCommand(checkQuery, connection))
+                        using (var checkCommand = new SqlCommand(checkQuery, connection)) // Cambiar a SqlCommand
                         {
                             checkCommand.Parameters.AddWithValue("@Nombre", nuevaMarca.Trim());
-                            long existe = (long)checkCommand.ExecuteScalar();
+                            // Cambiar long por int para SQL Server
+                            int existe = (int)checkCommand.ExecuteScalar();
 
                             if (existe > 0)
                             {
@@ -128,7 +130,7 @@ namespace Automotors
 
                         // Insertar nueva marca
                         string insertQuery = "INSERT INTO Marcas (Nombre) VALUES (@Nombre)";
-                        using (var command = new SqliteCommand(insertQuery, connection))
+                        using (var command = new SqlCommand(insertQuery, connection)) // Cambiar a SqlCommand
                         {
                             command.Parameters.AddWithValue("@Nombre", nuevaMarca.Trim());
                             command.ExecuteNonQuery();

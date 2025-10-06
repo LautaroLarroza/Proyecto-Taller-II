@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Data.Sqlite;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace Automotors
@@ -8,6 +8,7 @@ namespace Automotors
     {
         public static string UsuarioLogueado { get; private set; }
         public static string TipoUsuario { get; private set; }
+        public static int UsuarioId { get; private set; }
 
         public FrmLogin()
         {
@@ -24,6 +25,7 @@ namespace Automotors
             {
                 UsuarioLogueado = "Administrador";
                 TipoUsuario = "Administrador";
+                UsuarioId = 1; // ✅ ASIGNAR ID PARA ADMIN
 
                 Form1 formPrincipal = new Form1();
                 formPrincipal.Show();
@@ -41,10 +43,9 @@ namespace Automotors
             // Verificar credenciales en la base de datos
             if (ValidarCredenciales(usuario, password))
             {
-                // Abrir formulario principal
                 Form1 formPrincipal = new Form1();
                 formPrincipal.Show();
-                this.Hide(); // Ocultar login
+                this.Hide();
             }
             else
             {
@@ -53,7 +54,7 @@ namespace Automotors
             }
         }
 
-        private bool ValidarCredenciales(string email, string password)
+        private bool ValidarCredenciales(string usuario, string password)
         {
             try
             {
@@ -61,29 +62,28 @@ namespace Automotors
                 {
                     connection.Open();
 
-                    // Buscar el usuario por email
                     string query = @"
-                        SELECT u.IdUsuario, u.Nombre, u.Apellido, u.Email, u.PasswordHash, u.PasswordSalt, 
-                               r.Nombre as Rol, u.Estado
-                        FROM Usuarios u
-                        INNER JOIN Roles r ON u.IdRol = r.IdRol
-                        WHERE u.Email = @Email AND u.Estado = 1";
+            SELECT u.IdUsuario, u.Nombre, u.Apellido, 
+                   u.Usuario, u.PasswordHash, u.PasswordSalt,
+                   r.Nombre AS Rol, u.Estado
+            FROM Usuarios u
+            INNER JOIN Roles r ON u.IdRol = r.IdRol
+            WHERE u.Usuario = @Usuario AND u.Estado = 1";
 
-                    using (SqliteCommand cmd = new SqliteCommand(query, connection))
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        cmd.Parameters.AddWithValue("@Email", email);
+                        cmd.Parameters.AddWithValue("@Usuario", usuario);
 
-                        using (SqliteDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                // Obtener el hash y salt almacenados
                                 byte[] storedHash = (byte[])reader["PasswordHash"];
                                 byte[] storedSalt = (byte[])reader["PasswordSalt"];
 
-                                // Verificar la contraseña
                                 if (VerifyPassword(password, storedHash, storedSalt))
                                 {
+                                    UsuarioId = reader.GetInt32(reader.GetOrdinal("IdUsuario")); // ✅ GUARDAR ID
                                     UsuarioLogueado = $"{reader["Nombre"]} {reader["Apellido"]}";
                                     TipoUsuario = reader["Rol"].ToString();
                                     return true;
@@ -102,14 +102,14 @@ namespace Automotors
             return false;
         }
 
+
+
         private bool VerifyPassword(string password, byte[] storedHash, byte[] storedSalt)
         {
             try
             {
-                // Hashear la contraseña ingresada con el salt almacenado
                 byte[] enteredHash = HashPassword(password, storedSalt);
 
-                // Comparar los hashes
                 if (enteredHash.Length != storedHash.Length)
                     return false;
 
@@ -131,7 +131,6 @@ namespace Automotors
         {
             using (var sha256 = System.Security.Cryptography.SHA256.Create())
             {
-                // Combinar password + salt antes de hashear
                 byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
                 byte[] combinedBytes = new byte[passwordBytes.Length + salt.Length];
 
@@ -152,7 +151,6 @@ namespace Automotors
             Application.Exit();
         }
 
-        // Método para crear un usuario administrador por defecto en la base de datos
         private void CrearUsuarioAdministradorPorDefecto()
         {
             try
@@ -161,22 +159,17 @@ namespace Automotors
                 {
                     connection.Open();
 
-                    // 1. PRIMERO verificar si YA EXISTE el usuario admin
                     string checkUserQuery = "SELECT COUNT(*) FROM Usuarios WHERE Email = 'admin@automotors.com'";
-                    using (SqliteCommand checkUserCmd = new SqliteCommand(checkUserQuery, connection))
+                    using (SqlCommand checkUserCmd = new SqlCommand(checkUserQuery, connection))
                     {
-                        long userCount = (long)checkUserCmd.ExecuteScalar();
-                        if (userCount > 0)
-                        {
-                            return; // Ya existe, no hacer nada
-                        }
+                        int userCount = (int)checkUserCmd.ExecuteScalar();
+                        if (userCount > 0) return;
                     }
 
-                    // 2. VERIFICAR que existe el rol Administrador (IdRol = 1)
                     string checkRolQuery = "SELECT COUNT(*) FROM Roles WHERE IdRol = 1";
-                    using (SqliteCommand checkRolCmd = new SqliteCommand(checkRolQuery, connection))
+                    using (SqlCommand checkRolCmd = new SqlCommand(checkRolQuery, connection))
                     {
-                        long rolCount = (long)checkRolCmd.ExecuteScalar();
+                        int rolCount = (int)checkRolCmd.ExecuteScalar();
                         if (rolCount == 0)
                         {
                             MessageBox.Show("Error: No existe el rol Administrador en la base de datos", "Error",
@@ -185,20 +178,20 @@ namespace Automotors
                         }
                     }
 
-                    // 3. SOLO SI no existe el usuario Y sí existe el rol, crearlo
                     byte[] salt = GenerateSalt();
                     byte[] passwordHash = HashPassword("admin123", salt);
 
                     string insertUserQuery = @"
-                INSERT INTO Usuarios (Nombre, Apellido, DNI, Email, PasswordHash, PasswordSalt, IdRol, Estado)
-                VALUES ('Administrador', 'Sistema', '00000000', 'admin@automotors.com', 
-                        @PasswordHash, @PasswordSalt, 1, 1)";
+                        INSERT INTO Usuarios (Nombre, Apellido, DNI, Email, PasswordHash, PasswordSalt, IdRol, Estado)
+                        VALUES ('Administrador', 'Sistema', '00000000', 'admin@automotors.com', 
+                                @PasswordHash, @PasswordSalt, 1, 1)";
 
-                    using (SqliteCommand insertUserCmd = new SqliteCommand(insertUserQuery, connection))
+                    using (SqlCommand insertUserCmd = new SqlCommand(insertUserQuery, connection))
                     {
                         insertUserCmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
                         insertUserCmd.Parameters.AddWithValue("@PasswordSalt", salt);
                         insertUserCmd.ExecuteNonQuery();
+
                         MessageBox.Show("Usuario admin creado exitosamente", "Éxito",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -223,50 +216,9 @@ namespace Automotors
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {
-            DebugBaseDeDatos(); // <- Agregar para diagnosticar
             CrearUsuarioAdministradorPorDefecto();
-
             txtUsuario.Text = "admin";
             txtPassword.Text = "admin123";
-        }
-
-        private void DebugBaseDeDatos()
-        {
-            try
-            {
-                using (var connection = Conexion.GetConnection())
-                {
-                    connection.Open();
-
-                    // Verificar roles
-                    string rolesQuery = "SELECT * FROM Roles";
-                    using (var cmd = new SqliteCommand(rolesQuery, connection))
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        Console.WriteLine("=== ROLES EN BD ===");
-                        while (reader.Read())
-                        {
-                            Console.WriteLine($"IdRol: {reader["IdRol"]}, Nombre: {reader["Nombre"]}");
-                        }
-                    }
-
-                    // Verificar usuarios
-                    string usersQuery = "SELECT * FROM Usuarios";
-                    using (var cmd = new SqliteCommand(usersQuery, connection))
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        Console.WriteLine("=== USUARIOS EN BD ===");
-                        while (reader.Read())
-                        {
-                            Console.WriteLine($"Usuario: {reader["Email"]}, IdRol: {reader["IdRol"]}");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error en debug: {ex.Message}");
-            }
         }
     }
 }

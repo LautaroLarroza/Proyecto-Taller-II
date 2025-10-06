@@ -29,6 +29,7 @@ namespace Automotors
             dgv = new DataGridView();
             pnlBottom = new TableLayoutPanel();
             lblResumen = new Label();
+            btnGrafico = new Button();
             btnExportar = new Button();
             main.SuspendLayout();
             pnlFiltros.SuspendLayout();
@@ -144,7 +145,6 @@ namespace Automotors
             btnBuscar.Size = new Size(105, 44);
             btnBuscar.TabIndex = 6;
             btnBuscar.Text = "Buscar";
-            btnBuscar.Click += btnBuscar_Click;
             // 
             // dgv
             // 
@@ -160,11 +160,13 @@ namespace Automotors
             // 
             // pnlBottom
             // 
-            pnlBottom.ColumnCount = 2;
+            pnlBottom.ColumnCount = 3;
             pnlBottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             pnlBottom.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
+            pnlBottom.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
             pnlBottom.Controls.Add(lblResumen, 0, 0);
-            pnlBottom.Controls.Add(btnExportar, 1, 0);
+            pnlBottom.Controls.Add(btnGrafico, 1, 0);
+            pnlBottom.Controls.Add(btnExportar, 2, 0);
             pnlBottom.Dock = DockStyle.Fill;
             pnlBottom.Location = new Point(15, 591);
             pnlBottom.Name = "pnlBottom";
@@ -177,10 +179,19 @@ namespace Automotors
             lblResumen.Dock = DockStyle.Fill;
             lblResumen.Location = new Point(3, 0);
             lblResumen.Name = "lblResumen";
-            lblResumen.Size = new Size(804, 34);
+            lblResumen.Size = new Size(664, 34);
             lblResumen.TabIndex = 0;
             lblResumen.Text = "—";
             lblResumen.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // btnGrafico
+            // 
+            btnGrafico.Dock = DockStyle.Fill;
+            btnGrafico.Location = new Point(673, 3);
+            btnGrafico.Name = "btnGrafico";
+            btnGrafico.Size = new Size(134, 28);
+            btnGrafico.TabIndex = 2;
+            btnGrafico.Text = "Gráfico";
             // 
             // btnExportar
             // 
@@ -189,8 +200,7 @@ namespace Automotors
             btnExportar.Name = "btnExportar";
             btnExportar.Size = new Size(134, 28);
             btnExportar.TabIndex = 1;
-            btnExportar.Text = "Exportar CSV";
-            btnExportar.Click += btnExportar_Click;
+            btnExportar.Text = "Exportar";
             // 
             // FrmReportes
             // 
@@ -200,6 +210,9 @@ namespace Automotors
             Name = "FrmReportes";
             Text = "Reportes";
             Load += FrmReportes_Load;
+            btnBuscar.Click += btnBuscar_Click;
+            btnExportar.Click += btnExportar_Click;
+            btnGrafico.Click += btnGrafico_Click;
             main.ResumeLayout(false);
             pnlFiltros.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgv).EndInit();
@@ -221,6 +234,7 @@ namespace Automotors
         private DataGridView dgv;
         private TableLayoutPanel pnlBottom;
         private Label lblResumen;
+        private Button btnGrafico;
         private Button btnExportar;
     }
 }

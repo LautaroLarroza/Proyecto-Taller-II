@@ -6,14 +6,15 @@
     public int Anio { get; set; }
     public decimal Precio { get; set; }
     public int CantidadStock { get; set; }
-    public string Descripcion { get; set; } // ✅ Nueva propiedad
+    public string Descripcion { get; set; }
     public bool Estado { get; set; }
 
-    // Constructor vacío
+    public string EstadoDisplay { get; set; }
+
     public Producto() { }
 
-    // Constructor con parámetros
-    public Producto(int id, string marca, string modelo, int anio, decimal precio, int cantidadStock, string descripcion, bool estado)
+    public Producto(int id, string marca, string modelo, int anio, decimal precio,
+                   int cantidadStock, string descripcion, bool estado, string estadoDisplay)
     {
         Id = id;
         Marca = marca;
@@ -23,5 +24,6 @@
         CantidadStock = cantidadStock;
         Descripcion = descripcion;
         Estado = estado;
+        EstadoDisplay = estadoDisplay;
     }
 }

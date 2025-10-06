@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using Microsoft.Data.Sqlite;
+using System.Data.SqlClient; // Cambiar de Sqlite a SqlClient
 using System.Windows.Forms;
 
 namespace Automotors
@@ -28,7 +28,7 @@ namespace Automotors
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
-                    using (var command = new SqliteCommand(query, connection))
+                    using (var command = new SqlCommand(query, connection)) // Cambiar a SqlCommand
                     using (var reader = command.ExecuteReader())
                     {
                         dtClientes = new DataTable();
@@ -101,13 +101,14 @@ namespace Automotors
                 Width = 120
             });
 
-            dgvClientes.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                DataPropertyName = "Direccion",
-                HeaderText = "Dirección",
-                Name = "Direccion",
-                Width = 200
-            });
+            // Eliminar columna Direccion ya que no existe en tu base de datos
+            // dgvClientes.Columns.Add(new DataGridViewTextBoxColumn()
+            // {
+            //     DataPropertyName = "Direccion",
+            //     HeaderText = "Dirección",
+            //     Name = "Direccion",
+            //     Width = 200
+            // });
         }
 
         private void btnNuevo_Click(object sender, EventArgs e)
@@ -165,7 +166,7 @@ namespace Automotors
                     using (var connection = Conexion.GetConnection())
                     {
                         connection.Open();
-                        using (var cmd = new SqliteCommand(query, connection))
+                        using (var cmd = new SqlCommand(query, connection)) // Cambiar a SqlCommand
                         {
                             cmd.Parameters.AddWithValue("@IdCliente", idCliente);
                             cmd.ExecuteNonQuery();

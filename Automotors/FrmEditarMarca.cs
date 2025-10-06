@@ -16,7 +16,7 @@ namespace Automotors
             if (marca != null)
             {
                 txtNombre.Text = marca.Nombre;
-                txtDescripcion.Text = marca.Descripcion;
+                // Eliminar asignación de Descripcion
                 this.Text = "Modificar Marca";
             }
             else
@@ -37,8 +37,8 @@ namespace Automotors
 
             MarcaEditada = new Marca
             {
-                Nombre = txtNombre.Text.Trim(),
-                Descripcion = txtDescripcion.Text.Trim()
+                Nombre = txtNombre.Text.Trim()
+                // Eliminar Descripcion
             };
 
             this.DialogResult = DialogResult.OK;

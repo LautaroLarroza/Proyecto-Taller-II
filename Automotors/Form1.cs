@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace Automotors
@@ -11,9 +12,6 @@ namespace Automotors
             ConfigurarAccesos();
         }
 
-        // =========================
-        // Accesos por rol
-        // =========================
         private void ConfigurarAccesos()
         {
             // Deshabilitar todo por defecto
@@ -34,7 +32,7 @@ namespace Automotors
 
                 case "Gerente":
                     BReportes.Enabled = true;
-                    BProductos.Enabled = true;   
+                    BProductos.Enabled = true;
                     break;
 
                 case "Vendedor":
@@ -49,6 +47,47 @@ namespace Automotors
         private void Form1_Load(object sender, EventArgs e)
         {
             ProbarConexion();
+            InsertarRolesPorDefecto(); // Asegurar que existan roles básicos
+        }
+
+        /// <summary>
+        /// Inserta los roles por defecto si no existen
+        /// </summary>
+        private void InsertarRolesPorDefecto()
+        {
+            try
+            {
+                using (var connection = Conexion.GetConnection())
+                {
+                    connection.Open();
+
+                    // Verificar si ya existen roles
+                    string checkQuery = "SELECT COUNT(*) FROM Roles";
+                    using (var checkCmd = new SqlCommand(checkQuery, connection))
+                    {
+                        int count = (int)checkCmd.ExecuteScalar();
+                        if (count == 0)
+                        {
+                            // Insertar roles por defecto
+                            string insertQuery = @"
+                                INSERT INTO Roles (Nombre) VALUES ('Administrador');
+                                INSERT INTO Roles (Nombre) VALUES ('Gerente');
+                                INSERT INTO Roles (Nombre) VALUES ('Vendedor');";
+
+                            using (var insertCmd = new SqlCommand(insertQuery, connection))
+                            {
+                                insertCmd.ExecuteNonQuery();
+                                Console.WriteLine("Roles por defecto insertados correctamente.");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // No mostrar error para no molestar al usuario
+                Console.WriteLine($"Error insertando roles por defecto: {ex.Message}");
+            }
         }
 
         private void AbrirEnPanel(Form frm)
@@ -105,12 +144,12 @@ namespace Automotors
             AbrirEnPanel(new FrmReportes());
         }
 
-
         private void BVentas_Click_1(object sender, EventArgs e)
         {
             if (!BVentas.Enabled) return;
             AbrirEnPanel(new FrmVentas());
         }
+
         private void BVentas_Click(object sender, EventArgs e)
         {
             BVentas_Click_1(sender, e);
@@ -136,15 +175,13 @@ namespace Automotors
             if (result == DialogResult.Yes) Application.Exit();
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e) { }
-
         private void ProbarConexion()
         {
             if (Conexion.TestConnection())
             {
                 // Podés comentar este mensaje si te molesta
-                MessageBox.Show("Conexión a la base de datos exitosa!", "Éxito",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // MessageBox.Show("Conexión a la base de datos exitosa!", "Éxito",
+                //     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -155,7 +192,8 @@ namespace Automotors
 
         private void panelContenedor_Paint(object sender, PaintEventArgs e)
         {
-
+            // Este método puede dejarse vacío si no necesitas lógica personalizada de pintado
+            // O puedes agregar lógica de dibujo personalizado si es necesario
         }
     }
 }

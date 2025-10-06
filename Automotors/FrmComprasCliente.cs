@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using Microsoft.Data.Sqlite;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace Automotors
@@ -28,16 +28,20 @@ namespace Automotors
         {
             try
             {
-                string query = @"SELECT v.IdVenta, v.FechaVenta as Fecha, v.Total, u.Nombre || ' ' || u.Apellido as Vendedor
-                FROM Ventas v
-                INNER JOIN Usuarios u ON v.IdUsuario = u.IdUsuario
-                WHERE v.IdCliente = @IdCliente
-                ORDER BY v.FechaVenta DESC";
+                string query = @"SELECT v.idVenta as IdVenta, v.fecha as Fecha, 
+                (SELECT SUM(dv.cantidad * dv.precioUnitario) 
+                 FROM DetalleVentas dv 
+                 WHERE dv.idVenta = v.idVenta) as Total,
+                u.Nombre + ' ' + u.Apellido as Vendedor
+         FROM Ventas v
+         INNER JOIN Usuarios u ON v.idUsuario = u.IdUsuario
+         WHERE v.idCliente = @IdCliente
+         ORDER BY v.fecha DESC";
 
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
-                    using (var cmd = new SqliteCommand(query, connection))
+                    using (var cmd = new SqlCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@IdCliente", idCliente);
                         using (var reader = cmd.ExecuteReader())
@@ -99,7 +103,7 @@ namespace Automotors
 
         private void dgvCompras_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvCompras.SelectedRows.Count > 0)
+            if (dgvCompras.SelectedRows.Count > 0 && dgvCompras.SelectedRows[0].Cells["IdVenta"].Value != DBNull.Value)
             {
                 int idVenta = Convert.ToInt32(dgvCompras.SelectedRows[0].Cells["IdVenta"].Value);
                 CargarDetalleVenta(idVenta);
@@ -110,17 +114,19 @@ namespace Automotors
         {
             try
             {
-                string query = @"SELECT p.Nombre as Producto, vd.Cantidad, vd.PrecioUnit, vd.Subtotal
-                                FROM VentaDetalle vd
-                                INNER JOIN Productos p ON vd.IdProducto = p.IdProducto
-                                WHERE vd.IdVenta = @IdVenta";
+                string query = @"SELECT p.Modelo as Producto, p.descripcion as Descripcion, p.Anio as Anio,
+                                dv.cantidad as Cantidad, dv.precioUnitario as PrecioUnit, 
+                                (dv.cantidad * dv.precioUnitario) as Subtotal
+                         FROM DetalleVentas dv
+                         INNER JOIN Productos p ON dv.idProducto = p.idProducto
+                         WHERE dv.idVenta = @IdVenta";
 
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
-                    using (var cmd = new SqliteCommand(query, connection))
+                    using (var cmd = new SqlCommand(query, connection))
                     {
-                        cmd.Parameters.AddWithValue("@IdVenta", idVenta);
+                        cmd.Parameters.AddWithValue("@idVenta", idVenta);
                         using (var reader = cmd.ExecuteReader())
                         {
                             DataTable dt = new DataTable();
@@ -149,16 +155,34 @@ namespace Automotors
                 HeaderText = "Producto",
                 Name = "Producto",
                 ReadOnly = true,
+                Width = 150
+            });
+
+            dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                DataPropertyName = "Descripcion",
+                HeaderText = "Descripción",
+                Name = "Descripcion",
+                ReadOnly = true,
                 Width = 200
             });
 
             dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn()
             {
+                DataPropertyName = "Anio",
+                HeaderText = "Año",
+                Name = "Anio",
+                ReadOnly = true,
+                Width = 60
+            });
+
+            dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn()
+            {
                 DataPropertyName = "Cantidad",
-                HeaderText = "Cantidad",
+                HeaderText = "Cant.",
                 Name = "Cantidad",
                 ReadOnly = true,
-                Width = 80
+                Width = 50
             });
 
             dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn()
@@ -167,7 +191,7 @@ namespace Automotors
                 HeaderText = "Precio Unit.",
                 Name = "PrecioUnit",
                 ReadOnly = true,
-                Width = 100,
+                Width = 90,
                 DefaultCellStyle = new DataGridViewCellStyle() { Format = "C2" }
             });
 
@@ -177,7 +201,7 @@ namespace Automotors
                 HeaderText = "Subtotal",
                 Name = "Subtotal",
                 ReadOnly = true,
-                Width = 100,
+                Width = 90,
                 DefaultCellStyle = new DataGridViewCellStyle() { Format = "C2" }
             });
         }
