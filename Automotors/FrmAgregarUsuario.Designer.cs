@@ -311,7 +311,7 @@
             lblTitulo.Name = "lblTitulo";
             lblTitulo.Size = new Size(350, 100);
             lblTitulo.TabIndex = 0;
-            lblTitulo.Text = "Sistema Automotors";
+            lblTitulo.Text = "Sistema Autom";
             lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // FrmAgregarUsuario

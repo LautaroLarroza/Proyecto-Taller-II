@@ -17,6 +17,9 @@ namespace Automotors
 
         private void InitializeComponent()
         {
+            panelHeader = new Panel();
+            labelHeader = new Label();
+            lblEstado = new Label();
             main = new TableLayoutPanel();
             pnlFiltros = new TableLayoutPanel();
             lblReporte = new Label();
@@ -31,11 +34,44 @@ namespace Automotors
             lblResumen = new Label();
             btnGrafico = new Button();
             btnExportar = new Button();
+            panelHeader.SuspendLayout();
             main.SuspendLayout();
             pnlFiltros.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgv).BeginInit();
             pnlBottom.SuspendLayout();
             SuspendLayout();
+            // 
+            // panelHeader
+            // 
+            panelHeader.BackColor = Color.SteelBlue;
+            panelHeader.Controls.Add(labelHeader);
+            panelHeader.Dock = DockStyle.Top;
+            panelHeader.Location = new Point(0, 0);
+            panelHeader.Name = "panelHeader";
+            panelHeader.Size = new Size(980, 60);
+            panelHeader.TabIndex = 1000;
+            // 
+            // labelHeader
+            // 
+            labelHeader.AutoSize = true;
+            labelHeader.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            labelHeader.ForeColor = Color.White;
+            labelHeader.Location = new Point(20, 20);
+            labelHeader.Name = "labelHeader";
+            labelHeader.Size = new Size(143, 24);
+            labelHeader.TabIndex = 0;
+            labelHeader.Text = "Reportes / KPI";
+            // 
+            // lblEstado
+            // 
+            lblEstado.BorderStyle = BorderStyle.FixedSingle;
+            lblEstado.Dock = DockStyle.Bottom;
+            lblEstado.Location = new Point(0, 600);
+            lblEstado.Name = "lblEstado";
+            lblEstado.Size = new Size(980, 40);
+            lblEstado.TabIndex = 1001;
+            lblEstado.Text = "Listo";
+            lblEstado.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // main
             // 
@@ -45,14 +81,14 @@ namespace Automotors
             main.Controls.Add(dgv, 0, 1);
             main.Controls.Add(pnlBottom, 0, 2);
             main.Dock = DockStyle.Fill;
-            main.Location = new Point(0, 0);
+            main.Location = new Point(0, 60);
             main.Name = "main";
             main.Padding = new Padding(12);
             main.RowCount = 3;
             main.RowStyles.Add(new RowStyle(SizeType.Absolute, 64F));
             main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             main.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-            main.Size = new Size(980, 640);
+            main.Size = new Size(980, 540);
             main.TabIndex = 0;
             // 
             // pnlFiltros
@@ -139,12 +175,16 @@ namespace Automotors
             // 
             // btnBuscar
             // 
+            btnBuscar.BackColor = Color.SteelBlue;
             btnBuscar.Dock = DockStyle.Fill;
+            btnBuscar.ForeColor = Color.White;
             btnBuscar.Location = new Point(842, 7);
             btnBuscar.Name = "btnBuscar";
             btnBuscar.Size = new Size(105, 44);
             btnBuscar.TabIndex = 6;
             btnBuscar.Text = "Buscar";
+            btnBuscar.UseVisualStyleBackColor = false;
+            btnBuscar.Click += btnBuscar_Click;
             // 
             // dgv
             // 
@@ -155,7 +195,7 @@ namespace Automotors
             dgv.Location = new Point(15, 79);
             dgv.Name = "dgv";
             dgv.ReadOnly = true;
-            dgv.Size = new Size(950, 506);
+            dgv.Size = new Size(950, 406);
             dgv.TabIndex = 1;
             // 
             // pnlBottom
@@ -168,7 +208,7 @@ namespace Automotors
             pnlBottom.Controls.Add(btnGrafico, 1, 0);
             pnlBottom.Controls.Add(btnExportar, 2, 0);
             pnlBottom.Dock = DockStyle.Fill;
-            pnlBottom.Location = new Point(15, 591);
+            pnlBottom.Location = new Point(15, 491);
             pnlBottom.Name = "pnlBottom";
             pnlBottom.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             pnlBottom.Size = new Size(950, 34);
@@ -186,33 +226,42 @@ namespace Automotors
             // 
             // btnGrafico
             // 
+            btnGrafico.BackColor = Color.SteelBlue;
             btnGrafico.Dock = DockStyle.Fill;
+            btnGrafico.ForeColor = Color.White;
             btnGrafico.Location = new Point(673, 3);
             btnGrafico.Name = "btnGrafico";
             btnGrafico.Size = new Size(134, 28);
             btnGrafico.TabIndex = 2;
             btnGrafico.Text = "Gráfico";
+            btnGrafico.UseVisualStyleBackColor = false;
+            btnGrafico.Click += btnGrafico_Click;
             // 
             // btnExportar
             // 
+            btnExportar.BackColor = Color.SteelBlue;
             btnExportar.Dock = DockStyle.Fill;
+            btnExportar.ForeColor = Color.White;
             btnExportar.Location = new Point(813, 3);
             btnExportar.Name = "btnExportar";
             btnExportar.Size = new Size(134, 28);
             btnExportar.TabIndex = 1;
             btnExportar.Text = "Exportar";
+            btnExportar.UseVisualStyleBackColor = false;
+            btnExportar.Click += btnExportar_Click;
             // 
             // FrmReportes
             // 
             ClientSize = new Size(980, 640);
             Controls.Add(main);
+            Controls.Add(lblEstado);
+            Controls.Add(panelHeader);
             FormBorderStyle = FormBorderStyle.None;
             Name = "FrmReportes";
             Text = "Reportes";
             Load += FrmReportes_Load;
-            btnBuscar.Click += btnBuscar_Click;
-            btnExportar.Click += btnExportar_Click;
-            btnGrafico.Click += btnGrafico_Click;
+            panelHeader.ResumeLayout(false);
+            panelHeader.PerformLayout();
             main.ResumeLayout(false);
             pnlFiltros.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgv).EndInit();
@@ -222,6 +271,12 @@ namespace Automotors
 
         #endregion
 
+        // ===== NUEVOS (visual) =====
+        private Panel panelHeader;
+        private Label labelHeader;
+        private Label lblEstado;
+
+        // ===== EXISTENTES (preservados) =====
         private TableLayoutPanel main;
         private TableLayoutPanel pnlFiltros;
         private Label lblReporte;

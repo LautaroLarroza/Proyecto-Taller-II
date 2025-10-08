@@ -17,6 +17,8 @@ namespace Automotors
 
         private void InitializeComponent()
         {
+            panel1 = new Panel();
+            label1 = new Label();
             grpListado = new GroupBox();
             tlp = new TableLayoutPanel();
             lblCliente = new Label();
@@ -41,21 +43,43 @@ namespace Automotors
             flowAcciones = new FlowLayoutPanel();
             btnGuardar = new Button();
             btnCancelar = new Button();
+            panel1.SuspendLayout();
             grpListado.SuspendLayout();
             tlp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudCantidad).BeginInit();
             flowAcciones.SuspendLayout();
             SuspendLayout();
             // 
+            // panel1
+            // 
+            panel1.BackColor = Color.SteelBlue;
+            panel1.Controls.Add(label1);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1100, 60);
+            panel1.TabIndex = 1000;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(20, 20);
+            label1.Name = "label1";
+            label1.Size = new Size(187, 24);
+            label1.TabIndex = 0;
+            label1.Text = "Registro de Ventas";
+            // 
             // grpListado
             // 
             grpListado.AutoSize = true;
             grpListado.Controls.Add(tlp);
             grpListado.Dock = DockStyle.Fill;
-            grpListado.Location = new Point(0, 0);
+            grpListado.Location = new Point(0, 60);
             grpListado.Name = "grpListado";
             grpListado.Padding = new Padding(12);
-            grpListado.Size = new Size(1100, 600);
+            grpListado.Size = new Size(1100, 540);
             grpListado.TabIndex = 0;
             grpListado.TabStop = false;
             grpListado.Text = "Ventas";
@@ -99,7 +123,7 @@ namespace Automotors
             tlp.RowStyles.Add(new RowStyle(SizeType.Absolute, 36F));
             tlp.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tlp.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
-            tlp.Size = new Size(1076, 560);
+            tlp.Size = new Size(1076, 500);
             tlp.TabIndex = 0;
             tlp.Paint += tlp_Paint;
             // 
@@ -277,7 +301,7 @@ namespace Automotors
             txtObs.Location = new Point(123, 219);
             txtObs.Multiline = true;
             txtObs.Name = "txtObs";
-            txtObs.Size = new Size(950, 290);
+            txtObs.Size = new Size(950, 230);
             txtObs.TabIndex = 17;
             txtObs.TextChanged += txtObs_TextChanged;
             // 
@@ -286,9 +310,9 @@ namespace Automotors
             lblStockDisp.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             tlp.SetColumnSpan(lblStockDisp, 3);
             lblStockDisp.ForeColor = Color.Gray;
-            lblStockDisp.Location = new Point(3, 537);
+            lblStockDisp.Location = new Point(3, 477);
             lblStockDisp.Name = "lblStockDisp";
-            lblStockDisp.Size = new Size(100, 23);
+            lblStockDisp.Size = new Size(200, 23);
             lblStockDisp.TabIndex = 18;
             lblStockDisp.Text = "Stock disponible: —";
             // 
@@ -299,7 +323,7 @@ namespace Automotors
             flowAcciones.Controls.Add(btnCancelar);
             flowAcciones.Dock = DockStyle.Fill;
             flowAcciones.FlowDirection = FlowDirection.RightToLeft;
-            flowAcciones.Location = new Point(658, 512);
+            flowAcciones.Location = new Point(658, 452);
             flowAcciones.Margin = new Padding(0);
             flowAcciones.Name = "flowAcciones";
             flowAcciones.Size = new Size(418, 48);
@@ -308,20 +332,23 @@ namespace Automotors
             // btnGuardar
             // 
             btnGuardar.AutoSize = true;
-            btnGuardar.Location = new Point(324, 3);
+            btnGuardar.BackColor = Color.SteelBlue;
+            btnGuardar.ForeColor = Color.White;
+            btnGuardar.Location = new Point(305, 3);
             btnGuardar.Name = "btnGuardar";
-            btnGuardar.Size = new Size(91, 25);
+            btnGuardar.Size = new Size(110, 30);
             btnGuardar.TabIndex = 0;
             btnGuardar.Text = "Guardar venta";
+            btnGuardar.UseVisualStyleBackColor = false;
             btnGuardar.Click += btnGuardar_Click;
             // 
             // btnCancelar
             // 
             btnCancelar.AutoSize = true;
             btnCancelar.DialogResult = DialogResult.Cancel;
-            btnCancelar.Location = new Point(243, 3);
+            btnCancelar.Location = new Point(209, 3);
             btnCancelar.Name = "btnCancelar";
-            btnCancelar.Size = new Size(75, 25);
+            btnCancelar.Size = new Size(90, 30);
             btnCancelar.TabIndex = 1;
             btnCancelar.Text = "Cancelar";
             // 
@@ -331,10 +358,13 @@ namespace Automotors
             CancelButton = btnCancelar;
             ClientSize = new Size(1100, 600);
             Controls.Add(grpListado);
+            Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "FrmVentas";
-            Text = "Ventas";
+            Text = "Ventas - Sistema Automotors";
             Load += FrmVentas_Load;
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             grpListado.ResumeLayout(false);
             tlp.ResumeLayout(false);
             tlp.PerformLayout();
@@ -347,6 +377,11 @@ namespace Automotors
 
         #endregion
 
+        // Nuevos (visual): panel superior y estado inferior
+        private Panel panel1;
+        private Label label1;
+
+        // Existentes: preservados
         private GroupBox grpListado;
         private TableLayoutPanel tlp;
         private Label lblCliente;
