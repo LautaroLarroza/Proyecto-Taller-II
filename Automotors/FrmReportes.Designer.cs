@@ -9,7 +9,8 @@ namespace Automotors
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null)) components.Dispose();
+            if (disposing && (components != null))
+                components.Dispose();
             base.Dispose(disposing);
         }
 
@@ -32,7 +33,6 @@ namespace Automotors
             dgv = new DataGridView();
             pnlBottom = new TableLayoutPanel();
             lblResumen = new Label();
-            btnGrafico = new Button();
             btnExportar = new Button();
             panelHeader.SuspendLayout();
             main.SuspendLayout();
@@ -200,13 +200,11 @@ namespace Automotors
             // 
             // pnlBottom
             // 
-            pnlBottom.ColumnCount = 3;
+            pnlBottom.ColumnCount = 2;
             pnlBottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             pnlBottom.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
-            pnlBottom.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
             pnlBottom.Controls.Add(lblResumen, 0, 0);
-            pnlBottom.Controls.Add(btnGrafico, 1, 0);
-            pnlBottom.Controls.Add(btnExportar, 2, 0);
+            pnlBottom.Controls.Add(btnExportar, 1, 0);
             pnlBottom.Dock = DockStyle.Fill;
             pnlBottom.Location = new Point(15, 491);
             pnlBottom.Name = "pnlBottom";
@@ -219,23 +217,10 @@ namespace Automotors
             lblResumen.Dock = DockStyle.Fill;
             lblResumen.Location = new Point(3, 0);
             lblResumen.Name = "lblResumen";
-            lblResumen.Size = new Size(664, 34);
+            lblResumen.Size = new Size(804, 34);
             lblResumen.TabIndex = 0;
             lblResumen.Text = "—";
             lblResumen.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // btnGrafico
-            // 
-            btnGrafico.BackColor = Color.SteelBlue;
-            btnGrafico.Dock = DockStyle.Fill;
-            btnGrafico.ForeColor = Color.White;
-            btnGrafico.Location = new Point(673, 3);
-            btnGrafico.Name = "btnGrafico";
-            btnGrafico.Size = new Size(134, 28);
-            btnGrafico.TabIndex = 2;
-            btnGrafico.Text = "Gráfico";
-            btnGrafico.UseVisualStyleBackColor = false;
-            btnGrafico.Click += btnGrafico_Click;
             // 
             // btnExportar
             // 
@@ -271,12 +256,9 @@ namespace Automotors
 
         #endregion
 
-        // ===== NUEVOS (visual) =====
         private Panel panelHeader;
         private Label labelHeader;
         private Label lblEstado;
-
-        // ===== EXISTENTES (preservados) =====
         private TableLayoutPanel main;
         private TableLayoutPanel pnlFiltros;
         private Label lblReporte;
@@ -289,7 +271,6 @@ namespace Automotors
         private DataGridView dgv;
         private TableLayoutPanel pnlBottom;
         private Label lblResumen;
-        private Button btnGrafico;
         private Button btnExportar;
     }
 }

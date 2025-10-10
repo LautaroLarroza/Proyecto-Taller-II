@@ -22,8 +22,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblInfoBD = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cboFormato = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.btnRestaurar = new System.Windows.Forms.Button();
             this.btnLimpiar = new System.Windows.Forms.Button();
             this.btnAbrirCarpeta = new System.Windows.Forms.Button();
             this.btnGenerarBackup = new System.Windows.Forms.Button();
@@ -81,8 +80,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.cboFormato);
-            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.btnRestaurar);
             this.groupBox2.Controls.Add(this.btnLimpiar);
             this.groupBox2.Controls.Add(this.btnAbrirCarpeta);
             this.groupBox2.Controls.Add(this.btnGenerarBackup);
@@ -96,27 +94,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Configuración de Backup";
             // 
-            // cboFormato
+            // btnRestaurar
             // 
-            this.cboFormato.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboFormato.FormattingEnabled = true;
-            this.cboFormato.Items.AddRange(new object[] {
-            "SQL Script",
-            "Word Document",
-            "CSV Files"});
-            this.cboFormato.Location = new System.Drawing.Point(120, 75);
-            this.cboFormato.Name = "cboFormato";
-            this.cboFormato.Size = new System.Drawing.Size(200, 21);
-            this.cboFormato.TabIndex = 7;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 78);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(95, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Formato de backup:";
+            this.btnRestaurar.BackColor = System.Drawing.Color.Green;
+            this.btnRestaurar.ForeColor = System.Drawing.Color.White;
+            this.btnRestaurar.Location = new System.Drawing.Point(120, 130);
+            this.btnRestaurar.Name = "btnRestaurar";
+            this.btnRestaurar.Size = new System.Drawing.Size(110, 30);
+            this.btnRestaurar.TabIndex = 6;
+            this.btnRestaurar.Text = "Restaurar Backup";
+            this.btnRestaurar.UseVisualStyleBackColor = false;
+            this.btnRestaurar.Click += new System.EventHandler(this.btnRestaurar_Click);
             // 
             // btnLimpiar
             // 
@@ -218,6 +206,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
             this.Name = "FrmBackup";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Backup - Sistema Automotors";
             this.Load += new System.EventHandler(this.FrmBackup_Load);
             this.panel1.ResumeLayout(false);
@@ -237,8 +226,7 @@
         private GroupBox groupBox1;
         private Label lblInfoBD;
         private GroupBox groupBox2;
-        private ComboBox cboFormato;
-        private Label label3;
+        private Button btnRestaurar;
         private Button btnLimpiar;
         private Button btnAbrirCarpeta;
         private Button btnGenerarBackup;

@@ -1,16 +1,7 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|c:\\users\\latrozz\u0027s computer\\source\\repos\\automotors\\proyecto-taller-ii\\automotors\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|solutionrelative:automotors\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\automotors\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|solutionrelative:automotors\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    }
-  ],
+  "WorkspaceRootPath": "C:\\Users\\feder\\OneDrive\\Escritorio\\xd\\TercerA\u00F1o\\2do cuatrimestre\\taller de programacion 2\\Proyecto-Taller-II\\",
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -18,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -27,35 +18,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Form1.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\Form1.cs",
-              "RelativeDocumentMoniker": "Automotors\\Form1.cs",
-              "ToolTip": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\Form1.cs [Design]",
-              "RelativeToolTip": "Automotors\\Form1.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-07T20:57:06.54Z",
-              "EditorCaption": " [Design]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\Form1.cs",
-              "RelativeDocumentMoniker": "Automotors\\Form1.cs",
-              "ToolTip": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\Form1.cs",
-              "RelativeToolTip": "Automotors\\Form1.cs",
-              "ViewState": "AgIAALIAAAAAAAAAAAAAAMMAAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-07T20:33:13.094Z",
-              "EditorCaption": ""
             }
           ]
         }

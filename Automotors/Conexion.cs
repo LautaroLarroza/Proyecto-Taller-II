@@ -9,7 +9,7 @@ namespace Automotors
     {
         // Conexión a SQL Server con autenticación de Windows
         private static string connectionString =
-    "Server=DESKTOP-CGS0MGN\\SQLEXPRESS;Database=bd_automotors;Trusted_Connection=True;Connection Timeout=30;";
+    "Server=GERBERFEDERICO\\SQLEXPRESS01;Database=bd_automotors;Trusted_Connection=True;Connection Timeout=30;";
 
         public static SqlConnection GetConnection()
         {

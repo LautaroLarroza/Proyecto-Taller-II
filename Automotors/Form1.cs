@@ -22,23 +22,37 @@ namespace Automotors
             BProductos.Enabled = false;
             BReportes.Enabled = false;
 
-            switch (FrmLogin.TipoUsuario)
+            // Acceso completo solo para el usuario admin
+            if (FrmLogin.EsUsuarioAdmin)
             {
-                case "Administrador":
-                    BUsuarios.Enabled = true;
-                    BBackUp.Enabled = true;
-                    BProductos.Enabled = true;
-                    break;
+                BUsuarios.Enabled = true;
+                BBackUp.Enabled = true;
+                BVentas.Enabled = true;
+                BClientes.Enabled = true;
+                BProductos.Enabled = true;
+                BReportes.Enabled = true;
+            }
+            else
+            {
+                // Permisos normales por rol para otros usuarios
+                switch (FrmLogin.TipoUsuario)
+                {
+                    case "Administrador":
+                        BUsuarios.Enabled = true;
+                        BBackUp.Enabled = true;
+                        BProductos.Enabled = true;
+                        break;
 
-                case "Gerente":
-                    BReportes.Enabled = true;
-                    BProductos.Enabled = true;
-                    break;
+                    case "Gerente":
+                        BReportes.Enabled = true;
+                        BProductos.Enabled = true;
+                        break;
 
-                case "Vendedor":
-                    BClientes.Enabled = true;
-                    BVentas.Enabled = true;
-                    break;
+                    case "Vendedor":
+                        BClientes.Enabled = true;
+                        BVentas.Enabled = true;
+                        break;
+                }
             }
 
             this.Text = $"Sistema Automotors - Usuario: {FrmLogin.UsuarioLogueado} ({FrmLogin.TipoUsuario})";

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient; // Cambiar de Sqlite a SqlClient
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace Automotors
@@ -28,7 +28,7 @@ namespace Automotors
                 using (var connection = Conexion.GetConnection())
                 {
                     connection.Open();
-                    using (var command = new SqlCommand(query, connection)) // Cambiar a SqlCommand
+                    using (var command = new SqlCommand(query, connection))
                     using (var reader = command.ExecuteReader())
                     {
                         dtClientes = new DataTable();
@@ -100,15 +100,6 @@ namespace Automotors
                 Name = "Telefono",
                 Width = 120
             });
-
-            // Eliminar columna Direccion ya que no existe en tu base de datos
-            // dgvClientes.Columns.Add(new DataGridViewTextBoxColumn()
-            // {
-            //     DataPropertyName = "Direccion",
-            //     HeaderText = "Dirección",
-            //     Name = "Direccion",
-            //     Width = 200
-            // });
         }
 
         private void btnNuevo_Click(object sender, EventArgs e)
@@ -155,33 +146,82 @@ namespace Automotors
             string nombre = dgvClientes.SelectedRows[0].Cells["Nombre"].Value.ToString();
             string apellido = dgvClientes.SelectedRows[0].Cells["Apellido"].Value.ToString();
 
+            // Verificar si el cliente tiene ventas
+            bool tieneVentas = VerificarVentasCliente(idCliente);
+
+            if (tieneVentas)
+            {
+                MessageBox.Show(
+                    $"No se puede eliminar al cliente {nombre} {apellido} porque tiene ventas registradas.\n\n" +
+                    "Para mantener la integridad de los datos históricos, los clientes con ventas no pueden ser eliminados.",
+                    "No se puede eliminar",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Solo eliminar si no tiene ventas
             var result = MessageBox.Show($"¿Está seguro que desea eliminar al cliente {nombre} {apellido}?",
                 "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
-                try
+                EliminarCliente(idCliente);
+            }
+        }
+
+        // MÉTODO NUEVO: Verificar si el cliente tiene ventas
+        private bool VerificarVentasCliente(int idCliente)
+        {
+            try
+            {
+                string query = "SELECT COUNT(*) FROM Ventas WHERE idCliente = @IdCliente";
+                using (var connection = Conexion.GetConnection())
                 {
-                    string query = "DELETE FROM Clientes WHERE IdCliente = @IdCliente";
-                    using (var connection = Conexion.GetConnection())
+                    connection.Open();
+                    using (var cmd = new SqlCommand(query, connection))
                     {
-                        connection.Open();
-                        using (var cmd = new SqlCommand(query, connection)) // Cambiar a SqlCommand
+                        cmd.Parameters.AddWithValue("@IdCliente", idCliente);
+                        int count = (int)cmd.ExecuteScalar();
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al verificar ventas del cliente: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return true; // Por seguridad, asumir que tiene ventas
+            }
+        }
+
+        // MÉTODO NUEVO: Eliminar cliente (solo si no tiene ventas)
+        private void EliminarCliente(int idCliente)
+        {
+            try
+            {
+                string query = "DELETE FROM Clientes WHERE IdCliente = @IdCliente";
+                using (var connection = Conexion.GetConnection())
+                {
+                    connection.Open();
+                    using (var cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@IdCliente", idCliente);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
                         {
-                            cmd.Parameters.AddWithValue("@IdCliente", idCliente);
-                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Cliente eliminado correctamente", "Éxito",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            CargarClientes();
                         }
                     }
-
-                    MessageBox.Show("Cliente eliminado correctamente", "Éxito",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    CargarClientes(); // Recargar la lista
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error al eliminar cliente: " + ex.Message, "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al eliminar cliente: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

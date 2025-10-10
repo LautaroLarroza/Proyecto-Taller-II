@@ -6,11 +6,8 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using ClosedXML.Excel;
 using Xceed.Words.NET;
 using Xceed.Document.NET;
-using static iTextSharp.text.TabStop;
-
 
 namespace Automotors
 {
@@ -34,7 +31,8 @@ namespace Automotors
                 "Productos más vendidos",
                 "Clientes con más compras",
                 "Listado de clientes",
-                "Productos sin stock"
+                "Productos sin stock",
+                "Ventas de servicios"
             });
             cboReporte.SelectedIndex = 0;
 
@@ -57,12 +55,12 @@ namespace Automotors
                     6 => ReporteClientesConMasCompras(dtpDesde.Value, dtpHasta.Value),
                     7 => ReporteClientes(),
                     8 => ReporteProductosSinStock(),
+                    9 => ReporteVentasDeServicios(dtpDesde.Value, dtpHasta.Value),
                     _ => new DataTable()
                 };
 
                 dgv.DataSource = dt;
                 ActualizarResumen(dt);
-
                 dgv.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             }
             catch (Exception ex)
@@ -124,24 +122,59 @@ namespace Automotors
             return dt;
         }
 
-        // [TODOS LOS MÉTODOS DE REPORTES SE MANTIENEN IGUAL]
+        // === REPORTES ===
+
         private DataTable ReporteVentasDetalle(DateTime desde, DateTime hasta)
         {
             const string sql = @"
+                -- Productos
                 SELECT
-                    v.idVenta as NroVenta,
-                    v.fecha as Fecha,
+                    v.idVenta AS NroVenta,
+                    v.fecha AS Fecha,
                     c.nombre + ' ' + c.apellido AS Cliente,
-                    p.Modelo AS Producto,
-                    dv.cantidad as Cantidad,
-                    dv.precioUnitario as PrecioUnitario,
+                    c.dni AS DNI_Cliente,
+                    u.nombre + ' ' + u.apellido AS Vendedor,
+                    u.dni AS DNI_Vendedor,
+                    'Producto' AS Tipo,
+                    m.nombre AS Marca,
+                    p.Modelo AS Modelo,
+                    p.Anio AS Año,
+                    dv.cantidad AS Cantidad,
+                    dv.precioUnitario AS PrecioUnitario,
                     (dv.cantidad * dv.precioUnitario) AS Total
                 FROM Ventas v
-                INNER JOIN Clientes c ON c.idCliente = v.idCliente
                 INNER JOIN DetalleVentas dv ON dv.idVenta = v.idVenta
                 INNER JOIN Productos p ON p.idProducto = dv.idProducto
+                INNER JOIN Marcas m ON m.idMarca = p.idMarca
+                INNER JOIN Clientes c ON c.idCliente = v.idCliente
+                INNER JOIN Usuarios u ON u.idUsuario = v.idUsuario
                 WHERE v.fecha BETWEEN @d AND @h
-                ORDER BY v.fecha ASC";
+
+                UNION ALL
+
+                -- Servicios
+                SELECT
+                    v.idVenta AS NroVenta,
+                    v.fecha AS Fecha,
+                    c.nombre + ' ' + c.apellido AS Cliente,
+                    c.dni AS DNI_Cliente,
+                    u.nombre + ' ' + u.apellido AS Vendedor,
+                    u.dni AS DNI_Vendedor,
+                    'Servicio' AS Tipo,
+                    s.Nombre AS Marca,
+                    s.Descripcion AS Modelo,
+                    NULL AS Año,
+                    1 AS Cantidad,
+                    s.Precio AS PrecioUnitario,
+                    s.Precio AS Total
+                FROM Ventas v
+                INNER JOIN DetalleServicios ds ON ds.IdVenta = v.idVenta
+                INNER JOIN Servicios s ON s.IdServicio = ds.IdServicio
+                INNER JOIN Clientes c ON c.idCliente = v.idCliente
+                INNER JOIN Usuarios u ON u.idUsuario = v.idUsuario
+                WHERE v.fecha BETWEEN @d AND @h
+
+                ORDER BY Fecha ASC";
 
             return ExecDataTable(sql, cmd =>
             {
@@ -155,21 +188,20 @@ namespace Automotors
             const string sql = @"
                 SELECT
                     p.Modelo AS Producto,
-                    m.nombre as Marca,
+                    m.nombre AS Marca,
                     SUM(dv.cantidad) AS CantidadVendida,
                     SUM(dv.cantidad * dv.precioUnitario) AS Importe
                 FROM Ventas v
                 INNER JOIN DetalleVentas dv ON dv.idVenta = v.idVenta
-                INNER JOIN Productos p ON p.idProducto = dv.idProducto
-                INNER JOIN Marcas m ON m.idMarca = p.idMarca
+                INNERJOIN Productos p ON p.idProducto = dv.idProducto
+                INNERJOIN Marcas m ON m.idMarca = p.idMarca
                 WHERE v.fecha BETWEEN @d AND @h
                 GROUP BY p.idProducto, p.Modelo, m.nombre
                 ORDER BY Importe DESC";
-
             return ExecDataTable(sql, cmd =>
             {
-                cmd.Parameters.AddWithValue("@d", desde.Date);
-                cmd.Parameters.AddWithValue("@h", hasta.Date.AddDays(1).AddSeconds(-1));
+                cmd.Parameters.AddWithValue("@d", desde);
+                cmd.Parameters.AddWithValue("@h", hasta);
             });
         }
 
@@ -178,6 +210,7 @@ namespace Automotors
             const string sql = @"
                 SELECT
                     c.nombre + ' ' + c.apellido AS Cliente,
+                    c.dni AS DNI,
                     COUNT(DISTINCT v.idVenta) AS CantidadVentas,
                     SUM(dv.cantidad) AS TotalProductos,
                     SUM(dv.cantidad * dv.precioUnitario) AS ImporteTotal
@@ -185,13 +218,12 @@ namespace Automotors
                 INNER JOIN Clientes c ON c.idCliente = v.idCliente
                 INNER JOIN DetalleVentas dv ON dv.idVenta = v.idVenta
                 WHERE v.fecha BETWEEN @d AND @h
-                GROUP BY c.idCliente, c.nombre, c.apellido
+                GROUP BY c.idCliente, c.nombre, c.apellido, c.dni
                 ORDER BY ImporteTotal DESC";
-
             return ExecDataTable(sql, cmd =>
             {
-                cmd.Parameters.AddWithValue("@d", desde.Date);
-                cmd.Parameters.AddWithValue("@h", hasta.Date.AddDays(1).AddSeconds(-1));
+                cmd.Parameters.AddWithValue("@d", desde);
+                cmd.Parameters.AddWithValue("@h", hasta);
             });
         }
 
@@ -200,6 +232,7 @@ namespace Automotors
             const string sql = @"
                 SELECT
                     u.nombre + ' ' + u.apellido AS Vendedor,
+                    u.dni AS DNI,
                     COUNT(DISTINCT v.idVenta) AS CantidadVentas,
                     SUM(dv.cantidad) AS TotalProductos,
                     SUM(dv.cantidad * dv.precioUnitario) AS ImporteTotal
@@ -207,13 +240,12 @@ namespace Automotors
                 INNER JOIN Usuarios u ON u.idUsuario = v.idUsuario
                 INNER JOIN DetalleVentas dv ON dv.idVenta = v.idVenta
                 WHERE v.fecha BETWEEN @d AND @h
-                GROUP BY u.idUsuario, u.nombre, u.apellido
+                GROUP BY u.idUsuario, u.nombre, u.apellido, u.dni
                 ORDER BY ImporteTotal DESC";
-
             return ExecDataTable(sql, cmd =>
             {
-                cmd.Parameters.AddWithValue("@d", desde.Date);
-                cmd.Parameters.AddWithValue("@h", hasta.Date.AddDays(1).AddSeconds(-1));
+                cmd.Parameters.AddWithValue("@d", desde);
+                cmd.Parameters.AddWithValue("@h", hasta);
             });
         }
 
@@ -223,18 +255,14 @@ namespace Automotors
                 SELECT 
                     p.Modelo AS Producto,
                     m.nombre AS Marca,
-                    p.descripcion as Descripcion,
-                    p.anio as Año,
-                    p.stock as Stock,
-                    p.precio as Precio,
-                    CASE 
-                        WHEN p.estado = 1 THEN 'Activo'
-                        ELSE 'Inactivo'
-                    END as Estado
+                    p.descripcion AS Descripcion,
+                    p.anio AS Año,
+                    p.stock AS Stock,
+                    p.precio AS Precio,
+                    CASE WHEN p.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS Estado
                 FROM Productos p
                 INNER JOIN Marcas m ON p.idMarca = m.idMarca
                 ORDER BY p.stock DESC, p.Modelo";
-
             return ExecDataTable(sql);
         }
 
@@ -253,11 +281,10 @@ namespace Automotors
                 WHERE v.fecha BETWEEN @d AND @h
                 GROUP BY p.idProducto, p.Modelo, m.nombre
                 ORDER BY CantidadVendida DESC";
-
             return ExecDataTable(sql, cmd =>
             {
-                cmd.Parameters.AddWithValue("@d", desde.Date);
-                cmd.Parameters.AddWithValue("@h", hasta.Date.AddDays(1).AddSeconds(-1));
+                cmd.Parameters.AddWithValue("@d", desde);
+                cmd.Parameters.AddWithValue("@h", hasta);
             });
         }
 
@@ -266,8 +293,8 @@ namespace Automotors
             const string sql = @"
                 SELECT TOP 10
                     c.nombre + ' ' + c.apellido AS Cliente,
-                    c.dni as DNI,
-                    c.email as Email,
+                    c.dni AS DNI,
+                    c.email AS Email,
                     COUNT(DISTINCT v.idVenta) AS CantidadCompras,
                     SUM(dv.cantidad * dv.precioUnitario) AS TotalGastado
                 FROM Clientes c
@@ -276,26 +303,19 @@ namespace Automotors
                 WHERE v.fecha BETWEEN @d AND @h
                 GROUP BY c.idCliente, c.nombre, c.apellido, c.dni, c.email
                 ORDER BY TotalGastado DESC";
-
             return ExecDataTable(sql, cmd =>
             {
-                cmd.Parameters.AddWithValue("@d", desde.Date);
-                cmd.Parameters.AddWithValue("@h", hasta.Date.AddDays(1).AddSeconds(-1));
+                cmd.Parameters.AddWithValue("@d", desde);
+                cmd.Parameters.AddWithValue("@h", hasta);
             });
         }
 
         private DataTable ReporteClientes()
         {
             const string sql = @"
-                SELECT
-                    nombre as Nombre,
-                    apellido as Apellido,
-                    dni as DNI,
-                    telefono as Telefono,
-                    email as Email
+                SELECT nombre, apellido, dni, telefono, email
                 FROM Clientes
                 ORDER BY apellido, nombre";
-
             return ExecDataTable(sql);
         }
 
@@ -305,9 +325,9 @@ namespace Automotors
                 SELECT 
                     p.Modelo AS Producto,
                     m.nombre AS Marca,
-                    p.descripcion as Descripcion,
-                    p.stock as Stock,
-                    p.precio as Precio,
+                    p.descripcion AS Descripcion,
+                    p.stock AS Stock,
+                    p.precio AS Precio,
                     CASE 
                         WHEN p.stock = 0 THEN 'SIN STOCK'
                         WHEN p.stock <= 5 THEN 'STOCK BAJO'
@@ -317,9 +337,38 @@ namespace Automotors
                 INNER JOIN Marcas m ON p.idMarca = m.idMarca
                 WHERE p.stock <= 5
                 ORDER BY p.stock ASC, p.Modelo";
-
             return ExecDataTable(sql);
         }
+
+        private DataTable ReporteVentasDeServicios(DateTime desde, DateTime hasta)
+        {
+            const string sql = @"
+                SELECT
+                    v.idVenta AS NroVenta,
+                    v.fecha AS Fecha,
+                    c.nombre + ' ' + c.apellido AS Cliente,
+                    c.dni AS DNI_Cliente,
+                    u.nombre + ' ' + u.apellido AS Vendedor,
+                    u.dni AS DNI_Vendedor,
+                    s.Nombre AS Servicio,
+                    s.Descripcion AS Descripcion,
+                    s.Precio AS Precio,
+                    CASE WHEN s.Estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS EstadoServicio
+                FROM Ventas v
+                INNER JOIN DetalleServicios ds ON ds.IdVenta = v.idVenta
+                INNER JOIN Servicios s ON s.IdServicio = ds.IdServicio
+                INNER JOIN Clientes c ON c.idCliente = v.idCliente
+                INNER JOIN Usuarios u ON u.idUsuario = v.idUsuario
+                WHERE v.fecha BETWEEN @d AND @h
+                ORDER BY v.fecha DESC, v.idVenta DESC";
+            return ExecDataTable(sql, cmd =>
+            {
+                cmd.Parameters.AddWithValue("@d", desde);
+                cmd.Parameters.AddWithValue("@h", hasta);
+            });
+        }
+
+        // === EXPORTAR SOLO WORD ===
 
         private void btnExportar_Click(object? sender, EventArgs e)
         {
@@ -332,7 +381,7 @@ namespace Automotors
 
             using var sfd = new SaveFileDialog
             {
-                Filter = "Excel (*.xlsx)|*.xlsx|Word (*.docx)|*.docx|CSV (*.csv)|*.csv",
+                Filter = "Word (*.docx)|*.docx",
                 FileName = $"reporte_{cboReporte.Text.Replace(" ", "_")}_{DateTime.Now:yyyyMMdd_HHmm}"
             };
 
@@ -341,20 +390,7 @@ namespace Automotors
             try
             {
                 Cursor = Cursors.WaitCursor;
-
-                switch (Path.GetExtension(sfd.FileName).ToLower())
-                {
-                    case ".xlsx":
-                        ExportarAExcel(dt, sfd.FileName);
-                        break;
-                    case ".docx":
-                        ExportarAWord(dt, sfd.FileName);
-                        break;
-                    case ".csv":
-                        ExportarDataTableACsv(dt, sfd.FileName);
-                        break;
-                }
-
+                ExportarAWord(dt, sfd.FileName);
                 Cursor = Cursors.Default;
 
                 var result = MessageBox.Show($"Exportación completada:\n{sfd.FileName}\n\n¿Desea abrir el archivo?",
@@ -373,59 +409,10 @@ namespace Automotors
             }
         }
 
-        // MÉTODOS DE EXPORTACIÓN
-
-        private void ExportarAExcel(DataTable dt, string filePath)
-        {
-            using var workbook = new XLWorkbook();
-            var worksheet = workbook.Worksheets.Add("Reporte");
-
-            // Encabezado principal
-            worksheet.Cell(1, 1).Value = $"REPORTE: {cboReporte.Text.ToUpper()}";
-            worksheet.Cell(2, 1).Value = $"Generado: {DateTime.Now:dd/MM/yyyy HH:mm}";
-            worksheet.Cell(3, 1).Value = $"Total de registros: {dt.Rows.Count}";
-
-            int startRow = 5; // Deja espacio para el encabezado
-
-            // --- Encabezados ---
-            for (int i = 0; i < dt.Columns.Count; i++)
-            {
-                var cell = worksheet.Cell(startRow, i + 1);
-                cell.Value = dt.Columns[i].ColumnName;
-                cell.Style.Font.Bold = true;
-                cell.Style.Fill.BackgroundColor = XLColor.LightGray;
-                cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            }
-
-            // --- Datos ---
-            for (int r = 0; r < dt.Rows.Count; r++)
-            {
-                for (int c = 0; c < dt.Columns.Count; c++)
-                {
-                    var value = dt.Rows[r][c]?.ToString() ?? string.Empty;
-                    worksheet.Cell(startRow + 1 + r, c + 1).Value = value;
-                }
-            }
-
-            // --- Ajustes de formato ---
-            worksheet.Columns().AdjustToContents();
-
-            var dataRange = worksheet.Range(startRow, 1, startRow + dt.Rows.Count, dt.Columns.Count);
-            dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-            dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
-
-            // --- Guardar ---
-            workbook.SaveAs(filePath);
-        }
-
-
-
         private void ExportarAWord(DataTable dt, string filePath)
         {
-            // Crear documento Word con Xceed.Words.NET (DocX)
             using var doc = DocX.Create(filePath);
 
-            // Encabezado del reporte
             doc.InsertParagraph($"REPORTE: {cboReporte.Text.ToUpper()}")
                 .FontSize(14)
                 .Bold()
@@ -438,94 +425,28 @@ namespace Automotors
                 .FontSize(10)
                 .SpacingAfter(20);
 
-            // Crear tabla con encabezados y datos
             var table = doc.AddTable(dt.Rows.Count + 1, dt.Columns.Count);
             table.Design = TableDesign.TableGrid;
 
             // Encabezados
             for (int c = 0; c < dt.Columns.Count; c++)
-            {
-                table.Rows[0].Cells[c].Paragraphs[0]
-                    .Append(dt.Columns[c].ColumnName)
-                    .Bold();
-            }
+                table.Rows[0].Cells[c].Paragraphs[0].Append(dt.Columns[c].ColumnName).Bold();
 
-            // Filas de datos
+            // Datos
             for (int r = 0; r < dt.Rows.Count; r++)
-            {
                 for (int c = 0; c < dt.Columns.Count; c++)
-                {
-                    string value = dt.Rows[r][c]?.ToString() ?? "";
-                    table.Rows[r + 1].Cells[c].Paragraphs[0].Append(value);
-                }
-            }
+                    table.Rows[r + 1].Cells[c].Paragraphs[0].Append(dt.Rows[r][c]?.ToString() ?? "");
 
             doc.InsertTable(table);
 
-            // Pie de página
             doc.InsertParagraph()
                 .SpacingBefore(20)
                 .Append("Automotors - Sistema de Gestión de Ventas")
                 .Italic()
                 .FontSize(9)
-                .Alignment = Xceed.Document.NET.Alignment.center;
+                .Alignment = Alignment.center;
 
-            // Guardar documento
             doc.Save();
-        }
-
-
-        private static void ExportarDataTableACsv(DataTable dt, string path)
-        {
-            var sb = new StringBuilder();
-
-            for (int i = 0; i < dt.Columns.Count; i++)
-            {
-                if (i > 0) sb.Append(';');
-                sb.Append(EscapeCsvValue(dt.Columns[i].ColumnName));
-            }
-            sb.AppendLine();
-
-            foreach (DataRow row in dt.Rows)
-            {
-                for (int i = 0; i < dt.Columns.Count; i++)
-                {
-                    if (i > 0) sb.Append(';');
-                    sb.Append(EscapeCsvValue(row[i]?.ToString() ?? ""));
-                }
-                sb.AppendLine();
-            }
-
-            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
-        }
-
-        private static string EscapeCsvValue(string value)
-        {
-            if (string.IsNullOrEmpty(value)) return "\"\"";
-
-            value = value.Replace("\"", "\"\"");
-            if (value.Contains(";") || value.Contains("\"") || value.Contains("\n") || value.Contains("\r"))
-            {
-                value = $"\"{value}\"";
-            }
-            return value;
-        }
-
-        private void btnGrafico_Click(object? sender, EventArgs e)
-        {
-            if (dgv.DataSource is not DataTable dt || dt.Rows.Count == 0)
-            {
-                MessageBox.Show("No hay datos para graficar.", "Reportes",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            MessageBox.Show($"Se generaría un gráfico para: {cboReporte.Text}\n\n" +
-                          $"Total de registros: {dt.Rows.Count:N0}\n" +
-                          "Esta funcionalidad puede extenderse con librerías de gráficos como:\n" +
-                          "- MSChart\n- LiveCharts\n- OxyPlot",
-                          "Gráficos - Vista Previa",
-                          MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

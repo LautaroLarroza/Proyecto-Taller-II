@@ -13,6 +13,13 @@ namespace Automotors
         public FrmLogin()
         {
             InitializeComponent();
+            EsUsuarioAdmin = false;
+        }
+
+        private void FrmLogin_Load(object sender, EventArgs e)
+        {
+            txtUsuario.Text = "admin";
+            txtPassword.Text = "admin123";
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -20,36 +27,37 @@ namespace Automotors
             string usuario = txtUsuario.Text.Trim();
             string password = txtPassword.Text;
 
-            // Credenciales estáticas para admin
+            // Credenciales estáticas para admin (acceso total)
             if (usuario == "admin" && password == "admin123")
             {
-                UsuarioLogueado = "Administrador";
+                UsuarioLogueado = "Administrador Sistema";
                 TipoUsuario = "Administrador";
-                UsuarioId = 1; // ✅ ASIGNAR ID PARA ADMIN
+                UsuarioId = 1;
+                EsUsuarioAdmin = true; // ← Nueva propiedad
 
-                Form1 formPrincipal = new Form1();
-                formPrincipal.Show();
+                Form1 principal = new Form1();
+                principal.Show();
                 this.Hide();
                 return;
             }
 
             if (string.IsNullOrEmpty(usuario) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Por favor ingrese usuario y contraseña", "Error",
+                MessageBox.Show("Por favor ingrese usuario y contraseña.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // Verificar credenciales en la base de datos
+            // Verificar credenciales de usuarios registrados
             if (ValidarCredenciales(usuario, password))
             {
-                Form1 formPrincipal = new Form1();
-                formPrincipal.Show();
+                Form1 principal = new Form1();
+                principal.Show();
                 this.Hide();
             }
             else
             {
-                MessageBox.Show("Usuario o contraseña incorrectos", "Error",
+                MessageBox.Show("Usuario o contraseña incorrectos.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -63,12 +71,12 @@ namespace Automotors
                     connection.Open();
 
                     string query = @"
-            SELECT u.IdUsuario, u.Nombre, u.Apellido, 
-                   u.Usuario, u.PasswordHash, u.PasswordSalt,
-                   r.Nombre AS Rol, u.Estado
-            FROM Usuarios u
-            INNER JOIN Roles r ON u.IdRol = r.IdRol
-            WHERE u.Usuario = @Usuario AND u.Estado = 1";
+                        SELECT u.IdUsuario, u.Nombre, u.Apellido, u.Usuario,
+                               u.PasswordHash, u.PasswordSalt,
+                               r.Nombre AS Rol, u.Estado
+                        FROM Usuarios u
+                        INNER JOIN Roles r ON u.IdRol = r.IdRol
+                        WHERE u.Usuario = @Usuario AND u.Estado = 1";
 
                     using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
@@ -83,7 +91,7 @@ namespace Automotors
 
                                 if (VerifyPassword(password, storedHash, storedSalt))
                                 {
-                                    UsuarioId = reader.GetInt32(reader.GetOrdinal("IdUsuario")); // ✅ GUARDAR ID
+                                    UsuarioId = reader.GetInt32(reader.GetOrdinal("IdUsuario"));
                                     UsuarioLogueado = $"{reader["Nombre"]} {reader["Apellido"]}";
                                     TipoUsuario = reader["Rol"].ToString();
                                     return true;
@@ -102,22 +110,15 @@ namespace Automotors
             return false;
         }
 
-
-
         private bool VerifyPassword(string password, byte[] storedHash, byte[] storedSalt)
         {
             try
             {
                 byte[] enteredHash = HashPassword(password, storedSalt);
-
-                if (enteredHash.Length != storedHash.Length)
-                    return false;
+                if (enteredHash.Length != storedHash.Length) return false;
 
                 for (int i = 0; i < enteredHash.Length; i++)
-                {
-                    if (enteredHash[i] != storedHash[i])
-                        return false;
-                }
+                    if (enteredHash[i] != storedHash[i]) return false;
 
                 return true;
             }
@@ -133,10 +134,8 @@ namespace Automotors
             {
                 byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
                 byte[] combinedBytes = new byte[passwordBytes.Length + salt.Length];
-
                 Buffer.BlockCopy(passwordBytes, 0, combinedBytes, 0, passwordBytes.Length);
                 Buffer.BlockCopy(salt, 0, combinedBytes, passwordBytes.Length, salt.Length);
-
                 return sha256.ComputeHash(combinedBytes);
             }
         }
@@ -151,59 +150,6 @@ namespace Automotors
             Application.Exit();
         }
 
-        private void CrearUsuarioAdministradorPorDefecto()
-        {
-            try
-            {
-                using (var connection = Conexion.GetConnection())
-                {
-                    connection.Open();
-
-                    string checkUserQuery = "SELECT COUNT(*) FROM Usuarios WHERE Email = 'admin@automotors.com'";
-                    using (SqlCommand checkUserCmd = new SqlCommand(checkUserQuery, connection))
-                    {
-                        int userCount = (int)checkUserCmd.ExecuteScalar();
-                        if (userCount > 0) return;
-                    }
-
-                    string checkRolQuery = "SELECT COUNT(*) FROM Roles WHERE IdRol = 1";
-                    using (SqlCommand checkRolCmd = new SqlCommand(checkRolQuery, connection))
-                    {
-                        int rolCount = (int)checkRolCmd.ExecuteScalar();
-                        if (rolCount == 0)
-                        {
-                            MessageBox.Show("Error: No existe el rol Administrador en la base de datos", "Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-                    }
-
-                    byte[] salt = GenerateSalt();
-                    byte[] passwordHash = HashPassword("admin123", salt);
-
-                    string insertUserQuery = @"
-                        INSERT INTO Usuarios (Nombre, Apellido, DNI, Email, PasswordHash, PasswordSalt, IdRol, Estado)
-                        VALUES ('Administrador', 'Sistema', '00000000', 'admin@automotors.com', 
-                                @PasswordHash, @PasswordSalt, 1, 1)";
-
-                    using (SqlCommand insertUserCmd = new SqlCommand(insertUserQuery, connection))
-                    {
-                        insertUserCmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-                        insertUserCmd.Parameters.AddWithValue("@PasswordSalt", salt);
-                        insertUserCmd.ExecuteNonQuery();
-
-                        MessageBox.Show("Usuario admin creado exitosamente", "Éxito",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error creando usuario admin: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private byte[] GenerateSalt()
         {
             byte[] salt = new byte[32];
@@ -213,12 +159,6 @@ namespace Automotors
             }
             return salt;
         }
-
-        private void FrmLogin_Load(object sender, EventArgs e)
-        {
-            CrearUsuarioAdministradorPorDefecto();
-            txtUsuario.Text = "admin";
-            txtPassword.Text = "admin123";
-        }
+        public static bool EsUsuarioAdmin { get; private set; }
     }
 }
