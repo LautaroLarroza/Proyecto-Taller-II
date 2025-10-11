@@ -1,127 +1,91 @@
-﻿namespace Automotors
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace Automotors
 {
     partial class FrmEditarMarca
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        private Label lblTitulo;
+        private Label label1;
+        private Label label2;
+        private TextBox txtNombre;
+        private TextBox txtDescripcion;
+        private Button btnAceptar;
+        private Button btnCancelar;
+
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtNombre = new System.Windows.Forms.TextBox();
-            this.txtDescripcion = new System.Windows.Forms.TextBox();
-            this.btnAceptar = new System.Windows.Forms.Button();
-            this.btnCancelar = new System.Windows.Forms.Button();
-            this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(20, 25);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Nombre:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(20, 55);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Descripción:";
-            // 
-            // txtNombre
-            // 
-            this.txtNombre.Location = new System.Drawing.Point(80, 22);
-            this.txtNombre.Name = "txtNombre";
-            this.txtNombre.Size = new System.Drawing.Size(200, 20);
-            this.txtNombre.TabIndex = 2;
-            this.txtNombre.MaxLength = 50;
-            // 
-            // txtDescripcion
-            // 
-            this.txtDescripcion.Location = new System.Drawing.Point(20, 75);
-            this.txtDescripcion.Multiline = true;
-            this.txtDescripcion.Name = "txtDescripcion";
-            this.txtDescripcion.Size = new System.Drawing.Size(260, 80);
-            this.txtDescripcion.TabIndex = 3;
-            this.txtDescripcion.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDescripcion.MaxLength = 200;
-            // 
-            // btnAceptar
-            // 
-            this.btnAceptar.Location = new System.Drawing.Point(120, 170);
-            this.btnAceptar.Name = "btnAceptar";
-            this.btnAceptar.Size = new System.Drawing.Size(75, 23);
-            this.btnAceptar.TabIndex = 4;
-            this.btnAceptar.Text = "Aceptar";
-            this.btnAceptar.UseVisualStyleBackColor = true;
-            this.btnAceptar.Click += new System.EventHandler(this.btnAceptar_Click);
-            // 
-            // btnCancelar
-            // 
-            this.btnCancelar.Location = new System.Drawing.Point(205, 170);
-            this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(75, 23);
-            this.btnCancelar.TabIndex = 5;
-            this.btnCancelar.Text = "Cancelar";
-            this.btnCancelar.UseVisualStyleBackColor = true;
-            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
-            // 
-            // FrmEditarMarca
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(300, 210);
-            this.Controls.Add(this.btnCancelar);
-            this.Controls.Add(this.btnAceptar);
-            this.Controls.Add(this.txtDescripcion);
-            this.Controls.Add(this.txtNombre);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FrmEditarMarca";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Editar Marca";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            lblTitulo = new Label();
+            label1 = new Label();
+            label2 = new Label();
+            txtNombre = new TextBox();
+            txtDescripcion = new TextBox();
+            btnAceptar = new Button();
+            btnCancelar = new Button();
+            SuspendLayout();
 
+            // --- Título ---
+            lblTitulo.AutoSize = true;
+            lblTitulo.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTitulo.ForeColor = Color.FromArgb(44, 62, 80);
+            lblTitulo.Location = new Point(20, 15);
+            lblTitulo.Text = "Agregar Marca";
+
+            // --- Campos ---
+            label1.AutoSize = true; label1.Location = new Point(20, 55); label1.Text = "Nombre:";
+            txtNombre.Location = new Point(100, 52); txtNombre.Size = new Size(280, 23); txtNombre.MaxLength = 50;
+
+            label2.AutoSize = true; label2.Location = new Point(20, 90); label2.Text = "Descripción:";
+            txtDescripcion.Location = new Point(100, 88);
+            txtDescripcion.Size = new Size(280, 90);
+            txtDescripcion.Multiline = true;
+            txtDescripcion.ScrollBars = ScrollBars.Vertical;
+            txtDescripcion.MaxLength = 200;
+
+            // --- Botones ---
+            btnAceptar.Text = "Guardar";
+            btnAceptar.BackColor = Color.SteelBlue;
+            btnAceptar.ForeColor = Color.White;
+            btnAceptar.FlatStyle = FlatStyle.Flat;
+            btnAceptar.Location = new Point(205, 190);
+            btnAceptar.Size = new Size(85, 30);
+            btnAceptar.Click += new System.EventHandler(this.btnAceptar_Click);
+
+            btnCancelar.Text = "Cancelar";
+            btnCancelar.BackColor = Color.Gray;
+            btnCancelar.ForeColor = Color.White;
+            btnCancelar.FlatStyle = FlatStyle.Flat;
+            btnCancelar.Location = new Point(295, 190);
+            btnCancelar.Size = new Size(85, 30);
+            btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
+
+            // --- Form (estilo emergente) ---
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(410, 240);
+            Controls.Add(lblTitulo);
+            Controls.Add(label1); Controls.Add(txtNombre);
+            Controls.Add(label2); Controls.Add(txtDescripcion);
+            Controls.Add(btnAceptar); Controls.Add(btnCancelar);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false; MinimizeBox = false;
+            ShowInTaskbar = false; StartPosition = FormStartPosition.CenterParent;
+            Text = "Agregar Marca";
+
+            // Teclas Enter/Esc
+            AcceptButton = btnAceptar;
+            CancelButton = btnCancelar;
+
+            ResumeLayout(false);
+            PerformLayout();
         }
-
-        #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtNombre;
-        private System.Windows.Forms.TextBox txtDescripcion;
-        private System.Windows.Forms.Button btnAceptar;
-        private System.Windows.Forms.Button btnCancelar;
     }
 }
