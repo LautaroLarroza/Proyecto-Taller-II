@@ -244,7 +244,6 @@ C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotor
 C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Data.SqlClient.dll
 C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.csproj.AssemblyReference.cache
 C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Form1.resources
-C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.Form2.resources
 C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmAgregarProducto.resources
 C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmAgregarUsuario.resources
 C:\Users\Latrozz's computer\source\repos\Automotors\Proyecto-Taller-II\Automotors\obj\Debug\net8.0-windows\Automotors.FrmBackup.resources

@@ -287,31 +287,37 @@ namespace Automotors
             }
         }
 
+        // === AHORA MODAL ===
         private void AbrirFormularioAgregarUsuario(bool esModificacion, int id = 0, string nombre = "",
-            string apellido = "", string usuario = "", string dni = "", string rol = "")
+    string apellido = "", string usuario = "", string dni = "", string rol = "")
         {
-            panelContenedor.Controls.Clear();
-            FrmAgregarUsuario frm = new FrmAgregarUsuario(this, panelContenedor)
+            using (var frm = new FrmAgregarUsuario())
             {
-                ModificarEnCurso = esModificacion,
-                UsuarioId = id,
-                Nombre = nombre,
-                Apellido = apellido,
-                Usuario = usuario,
-                DNI = dni,
-                Rol = rol,
-                TopLevel = false,
-                Dock = DockStyle.Fill
-            };
+                // 1) Primero el modo (arma la UI interna)
+                try { frm.ModificarEnCurso = esModificacion; } catch { }
 
-            panelContenedor.Controls.Add(frm);
-            frm.Show();
+                // 2) Precarga de datos (si aplica)
+                try { frm.UsuarioId = id; } catch { }
+                try { frm.Nombre = nombre; } catch { }
+                try { frm.Apellido = apellido; } catch { }
+                try { frm.Usuario = usuario; } catch { }
+                try { frm.DNI = dni; } catch { }
+                try { frm.Rol = rol; } catch { }
 
-            frm.FormClosed += (s, args) =>
-            {
-                CargarUsuarios();
-            };
+                // 3) FORZAR el título cuando el form ya está visible (evita que lo pisen)
+                frm.Shown += (s, e) =>
+                {
+                    try { frm.ConfigurarTitulo(esModificacion ? "Modificar Usuario" : "Agregar Usuario"); }
+                    catch { frm.Text = esModificacion ? "Modificar Usuario" : "Agregar Usuario"; }
+                };
+
+                // 4) Mostrar modal
+                if (frm.ShowDialog(this) == DialogResult.OK)
+                    CargarUsuarios();
+            }
         }
+
+
 
         private void BRoles_Click(object sender, EventArgs e)
         {

@@ -3,8 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|c:\\users\\latrozz\u0027s computer\\source\\repos\\automotors\\proyecto-taller-ii\\automotors\\frmusuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|solutionrelative:automotors\\frmusuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|c:\\users\\latrozz\u0027s computer\\source\\repos\\automotors\\proyecto-taller-ii\\automotors\\frmgestionroles.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|solutionrelative:automotors\\frmgestionroles.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|c:\\users\\latrozz\u0027s computer\\source\\repos\\automotors\\proyecto-taller-ii\\automotors\\frmagregarusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{A714E60E-8846-48FA-A436-A9998C57C38B}|Automotors\\Automotors.csproj|solutionrelative:automotors\\frmagregarusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -31,15 +35,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "FrmUsuarios.cs",
-              "DocumentMoniker": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\FrmUsuarios.cs",
-              "RelativeDocumentMoniker": "Automotors\\FrmUsuarios.cs",
-              "ToolTip": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\FrmUsuarios.cs",
-              "RelativeToolTip": "Automotors\\FrmUsuarios.cs",
-              "ViewState": "AgIAAFkBAAAAAAAAAAAgwHsBAAAAAAAAAAAAAA==",
+              "Title": "FrmGestionRoles.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\FrmGestionRoles.Designer.cs",
+              "RelativeDocumentMoniker": "Automotors\\FrmGestionRoles.Designer.cs",
+              "ToolTip": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\FrmGestionRoles.Designer.cs",
+              "RelativeToolTip": "Automotors\\FrmGestionRoles.Designer.cs",
+              "ViewState": "AgIAAIYAAAAAAAAAAAAgwJsAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-11T00:13:36.464Z",
+              "WhenOpened": "2025-10-11T02:11:43.873Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FrmAgregarUsuario.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\FrmAgregarUsuario.cs",
+              "RelativeDocumentMoniker": "Automotors\\FrmAgregarUsuario.cs",
+              "ToolTip": "C:\\Users\\Latrozz\u0027s computer\\source\\repos\\Automotors\\Proyecto-Taller-II\\Automotors\\FrmAgregarUsuario.cs [Dise\u00F1o]",
+              "RelativeToolTip": "Automotors\\FrmAgregarUsuario.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T02:06:43.506Z",
+              "EditorCaption": " [Dise\u00F1o]"
             }
           ]
         }

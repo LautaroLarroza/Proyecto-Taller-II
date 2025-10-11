@@ -7,27 +7,25 @@ namespace Automotors
     {
         private System.ComponentModel.IContainer components = null;
 
+        private Label lblTitulo;
+        private Label labelNombre;
+        private Label labelApellido;
+        private Label labelDni;
+        private Label labelEmail;
+        private Label labelContraseña;
+        private Label labelRol;
         private TextBox TNombre;
         private TextBox TApellido;
+        private TextBox TDNI;
         private TextBox TUsuario;
         private TextBox TContraseña;
         private ComboBox CRol;
+        private CheckBox CheckContraseña;
         private Button BGuardar;
         private Button BCancelar;
-        private Panel panel1;
-        private Panel panel2;
-        private PictureBox pictureBox1;
-        private Label lblTitulo;     // izquierda
-        private Label label6;        // encabezado derecha (NO se corta ahora)
-        private Label label5;
-        private Label label4;
-        private Label label3;
-        private Label label2;
-        private Label label1;
-        private CheckBox CheckContraseña;
-        private TextBox TDNI;
-        private Label label7;
         private Button btnCambiarContraseña;
+        private Panel headerPanel;
+        private Panel contentPanel;
 
         protected override void Dispose(bool disposing)
         {
@@ -37,188 +35,205 @@ namespace Automotors
 
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAgregarUsuario));
-            this.TNombre = new TextBox();
-            this.TApellido = new TextBox();
-            this.TUsuario = new TextBox();
-            this.TContraseña = new TextBox();
-            this.CRol = new ComboBox();
-            this.BGuardar = new Button();
-            this.BCancelar = new Button();
-            this.panel1 = new Panel();
-            this.btnCambiarContraseña = new Button();
-            this.label7 = new Label();
-            this.TDNI = new TextBox();
-            this.label6 = new Label();
-            this.label5 = new Label();
-            this.label4 = new Label();
-            this.label3 = new Label();
-            this.label2 = new Label();
-            this.label1 = new Label();
-            this.CheckContraseña = new CheckBox();
-            this.panel2 = new Panel();
-            this.pictureBox1 = new PictureBox();
-            this.lblTitulo = new Label();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
 
-            // --------------------- PANEL IZQUIERDO (oculto en modo popup) ---------------------
-            this.panel2.BackColor = Color.FromArgb(52, 73, 94);
-            this.panel2.Dock = DockStyle.Left;
-            this.panel2.Size = new Size(350, 560);
-            this.panel2.Controls.Add(this.pictureBox1);
-            this.panel2.Controls.Add(this.lblTitulo);
-            this.panel2.Visible = false;                 // <<< lo dejamos oculto para popup
+            lblTitulo = new Label();
+            labelNombre = new Label();
+            labelApellido = new Label();
+            labelDni = new Label();
+            labelEmail = new Label();
+            labelContraseña = new Label();
+            labelRol = new Label();
 
-            this.pictureBox1.Dock = DockStyle.Top;
-            this.pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            this.pictureBox1.Size = new Size(350, 240);
-            this.pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            TNombre = new TextBox();
+            TApellido = new TextBox();
+            TDNI = new TextBox();
+            TUsuario = new TextBox();
+            TContraseña = new TextBox();
 
-            this.lblTitulo.Dock = DockStyle.Bottom;
-            this.lblTitulo.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            this.lblTitulo.ForeColor = Color.White;
-            this.lblTitulo.Height = 72;
-            this.lblTitulo.Text = "Sistema Autom";
-            this.lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
+            CRol = new ComboBox();
+            CheckContraseña = new CheckBox();
+            BGuardar = new Button();
+            BCancelar = new Button();
+            btnCambiarContraseña = new Button();
 
-            // --------------------- PANEL DERECHO (contenido) ---------------------
-            this.panel1.BackColor = Color.White;
-            this.panel1.Dock = DockStyle.Fill;           // llena el form (como popup)
-            this.panel1.Padding = new Padding(0);
-            this.panel1.Controls.Add(this.btnCambiarContraseña);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.TDNI);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.BCancelar);
-            this.panel1.Controls.Add(this.CheckContraseña);
-            this.panel1.Controls.Add(this.TUsuario);
-            this.panel1.Controls.Add(this.BGuardar);
-            this.panel1.Controls.Add(this.TNombre);
-            this.panel1.Controls.Add(this.CRol);
-            this.panel1.Controls.Add(this.TApellido);
-            this.panel1.Controls.Add(this.TContraseña);
+            headerPanel = new Panel();
+            contentPanel = new Panel();
 
-            // --------------------- ENCABEZADO (título) ---------------------
-            this.label6.AutoSize = false;                // <<< clave: no autosize
-            this.label6.Dock = DockStyle.Top;            // ocupa todo el ancho
-            this.label6.Height = 56;
-            this.label6.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            this.label6.ForeColor = Color.FromArgb(52, 73, 94);
-            this.label6.TextAlign = ContentAlignment.MiddleCenter;
-            this.label6.Text = "Agregar Nuevo Usuario";   // cambiar en runtime a "Modificar Usuario" si aplica
-            this.label6.Padding = new Padding(0, 6, 0, 0);
+            SuspendLayout();
 
-            // --------------------- LABELS ---------------------
-            this.label1.AutoSize = true; this.label1.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            this.label1.Location = new Point(30, 80); this.label1.Text = "Nombre:";
-            this.label2.AutoSize = true; this.label2.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            this.label2.Location = new Point(30, 130); this.label2.Text = "Apellido:";
-            this.label7.AutoSize = true; this.label7.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            this.label7.Location = new Point(30, 180); this.label7.Text = "DNI:";
-            this.label3.AutoSize = true; this.label3.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            this.label3.Location = new Point(30, 230); this.label3.Text = "Email:";
-            this.label4.AutoSize = true; this.label4.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            this.label4.Location = new Point(30, 280); this.label4.Text = "Contraseña:";
-            this.label5.AutoSize = true; this.label5.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            this.label5.Location = new Point(30, 330); this.label5.Text = "Rol:";
+            // ===== HEADER =====
+            headerPanel.Dock = DockStyle.Top;
+            headerPanel.Height = 60;
+            headerPanel.BackColor = Color.FromArgb(41, 128, 185);
+            headerPanel.Padding = new Padding(0);
+            headerPanel.Margin = new Padding(0);
 
-            // --------------------- INPUTS ---------------------
-            int X = 150, W = 280, H = 27, GAP = 50;
+            lblTitulo.Dock = DockStyle.Fill;
+            lblTitulo.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            lblTitulo.ForeColor = Color.White;
+            lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
+            lblTitulo.Text = "Agregar Usuario";
+            headerPanel.Controls.Add(lblTitulo);
 
-            this.TNombre.BackColor = Color.WhiteSmoke; this.TNombre.BorderStyle = BorderStyle.FixedSingle;
-            this.TNombre.Font = new Font("Segoe UI", 11F);
-            this.TNombre.Location = new Point(X, 78); this.TNombre.Size = new Size(W, H);
+            // ===== CONTENT =====
+            contentPanel.Dock = DockStyle.Fill;
+            contentPanel.BackColor = Color.White;
+            contentPanel.Padding = new Padding(30);
 
-            this.TApellido.BackColor = Color.WhiteSmoke; this.TApellido.BorderStyle = BorderStyle.FixedSingle;
-            this.TApellido.Font = new Font("Segoe UI", 11F);
-            this.TApellido.Location = new Point(X, 128); this.TApellido.Size = new Size(W, H);
+            int labelWidth = 120;
+            int inputWidth = 250;
+            int startY = 20;
+            int spacingY = 45;
 
-            this.TDNI.BackColor = Color.WhiteSmoke; this.TDNI.BorderStyle = BorderStyle.FixedSingle;
-            this.TDNI.Font = new Font("Segoe UI", 11F);
-            this.TDNI.Location = new Point(X, 178); this.TDNI.Size = new Size(W, H);
+            // Nombre
+            labelNombre.Text = "Nombre:";
+            labelNombre.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            labelNombre.Location = new Point(20, startY);
+            labelNombre.Size = new Size(labelWidth, 25);
 
-            this.TUsuario.BackColor = Color.WhiteSmoke; this.TUsuario.BorderStyle = BorderStyle.FixedSingle;
-            this.TUsuario.Font = new Font("Segoe UI", 11F);
-            this.TUsuario.Location = new Point(X, 228); this.TUsuario.Size = new Size(W, H);
+            TNombre.Font = new Font("Segoe UI", 10.5F);
+            TNombre.BackColor = Color.WhiteSmoke;
+            TNombre.BorderStyle = BorderStyle.FixedSingle;
+            TNombre.Location = new Point(150, startY);
+            TNombre.Size = new Size(inputWidth, 27);
 
-            this.TContraseña.BackColor = Color.WhiteSmoke; this.TContraseña.BorderStyle = BorderStyle.FixedSingle;
-            this.TContraseña.Font = new Font("Segoe UI", 11F);
-            this.TContraseña.Location = new Point(X, 278); this.TContraseña.PasswordChar = '•';
-            this.TContraseña.Size = new Size(W, H);
+            // Apellido
+            labelApellido.Text = "Apellido:";
+            labelApellido.Font = labelNombre.Font;
+            labelApellido.Location = new Point(20, startY + spacingY);
+            labelApellido.Size = labelNombre.Size;
 
-            this.CRol.BackColor = Color.WhiteSmoke;
-            this.CRol.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.CRol.FlatStyle = FlatStyle.Flat;
-            this.CRol.Font = new Font("Segoe UI", 11F);
-            this.CRol.Items.AddRange(new object[] { "Administrador", "Gerente", "Vendedor" });
-            this.CRol.Location = new Point(X, 328); this.CRol.Size = new Size(W, 28);
+            TApellido.Font = TNombre.Font;
+            TApellido.BackColor = Color.WhiteSmoke;
+            TApellido.BorderStyle = BorderStyle.FixedSingle;
+            TApellido.Location = new Point(150, startY + spacingY);
+            TApellido.Size = TNombre.Size;
 
-            this.CheckContraseña.AutoSize = true;
-            this.CheckContraseña.Font = new Font("Segoe UI", 10F);
-            this.CheckContraseña.Location = new Point(X + W + 10, 281);
-            this.CheckContraseña.Text = "Mostrar";
+            // DNI
+            labelDni.Text = "DNI:";
+            labelDni.Font = labelNombre.Font;
+            labelDni.Location = new Point(20, startY + spacingY * 2);
+            labelDni.Size = labelNombre.Size;
 
-            // --------------------- BOTONES ---------------------
-            this.btnCambiarContraseña.BackColor = Color.FromArgb(52, 152, 219);
-            this.btnCambiarContraseña.FlatAppearance.BorderSize = 0;
-            this.btnCambiarContraseña.FlatStyle = FlatStyle.Flat;
-            this.btnCambiarContraseña.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            this.btnCambiarContraseña.ForeColor = Color.White;
-            this.btnCambiarContraseña.Location = new Point(X + W + 10, 312);
-            this.btnCambiarContraseña.Size = new Size(120, 30);
-            this.btnCambiarContraseña.Text = "Cambiar";
+            TDNI.Font = TNombre.Font;
+            TDNI.BackColor = Color.WhiteSmoke;
+            TDNI.BorderStyle = BorderStyle.FixedSingle;
+            TDNI.Location = new Point(150, startY + spacingY * 2);
+            TDNI.Size = TNombre.Size;
 
-            this.BGuardar.BackColor = Color.SteelBlue;
-            this.BGuardar.FlatAppearance.BorderSize = 0;
-            this.BGuardar.FlatStyle = FlatStyle.Flat;
-            this.BGuardar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            this.BGuardar.ForeColor = Color.White;
-            this.BGuardar.Location = new Point(150, 390);
-            this.BGuardar.Size = new Size(150, 40);
-            this.BGuardar.Text = "Guardar";
-            this.BGuardar.UseVisualStyleBackColor = false;
+            // Email
+            labelEmail.Text = "Email:";
+            labelEmail.Font = labelNombre.Font;
+            labelEmail.Location = new Point(20, startY + spacingY * 3);
+            labelEmail.Size = labelNombre.Size;
 
-            this.BCancelar.BackColor = Color.Gray;
-            this.BCancelar.FlatAppearance.BorderSize = 0;
-            this.BCancelar.FlatStyle = FlatStyle.Flat;
-            this.BCancelar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            this.BCancelar.ForeColor = Color.White;
-            this.BCancelar.Location = new Point(315, 390);
-            this.BCancelar.Size = new Size(150, 40);
-            this.BCancelar.Text = "Cancelar";
-            this.BCancelar.UseVisualStyleBackColor = false;
+            TUsuario.Font = TNombre.Font;
+            TUsuario.BackColor = Color.WhiteSmoke;
+            TUsuario.BorderStyle = BorderStyle.FixedSingle;
+            TUsuario.Location = new Point(150, startY + spacingY * 3);
+            TUsuario.Size = TNombre.Size;
 
-            // --------------------- FORM (modo popup) ---------------------
-            this.AcceptButton = this.BGuardar;
-            this.CancelButton = this.BCancelar;
-            this.AutoScaleDimensions = new SizeF(9F, 20F);
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.BackColor = Color.FromArgb(236, 240, 241);
-            this.ClientSize = new Size(540, 460);  // <<< tamaño chico
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.panel2);
-            this.Font = new Font("Segoe UI", 9F);
-            this.FormBorderStyle = FormBorderStyle.FixedDialog; // <<< diálogo
-            this.Icon = (Icon)resources.GetObject("$this.Icon");
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.ShowInTaskbar = false;                  // <<< emergente
-            this.StartPosition = FormStartPosition.CenterParent; // <<< centrado al padre
-            this.Text = "Gestión de Usuarios - Automotors";
+            // Contraseña
+            labelContraseña.Text = "Contraseña:";
+            labelContraseña.Font = labelNombre.Font;
+            labelContraseña.Location = new Point(20, startY + spacingY * 4);
+            labelContraseña.Size = labelNombre.Size;
 
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.ResumeLayout(false);
+            TContraseña.Font = TNombre.Font;
+            TContraseña.BackColor = Color.WhiteSmoke;
+            TContraseña.BorderStyle = BorderStyle.FixedSingle;
+            TContraseña.Location = new Point(150, startY + spacingY * 4);
+            TContraseña.Size = TNombre.Size;
+            TContraseña.PasswordChar = '•';
+
+            CheckContraseña.Text = "Mostrar";
+            CheckContraseña.Font = new Font("Segoe UI", 9F);
+            CheckContraseña.Location = new Point(410, startY + spacingY * 4 + 3);
+            CheckContraseña.AutoSize = true;
+
+            // Botón cambiar contraseña (solo visible en edición)
+            btnCambiarContraseña.Text = "Cambiar Contraseña";
+            btnCambiarContraseña.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnCambiarContraseña.BackColor = Color.FromArgb(52, 152, 219);
+            btnCambiarContraseña.ForeColor = Color.White;
+            btnCambiarContraseña.FlatStyle = FlatStyle.Flat;
+            btnCambiarContraseña.FlatAppearance.BorderSize = 0;
+            btnCambiarContraseña.Size = new Size(160, 28);
+            btnCambiarContraseña.Location = new Point(150, startY + spacingY * 5);
+            btnCambiarContraseña.Visible = false;
+
+            // Rol
+            labelRol.Text = "Rol:";
+            labelRol.Font = labelNombre.Font;
+            labelRol.Location = new Point(20, startY + spacingY * 6);
+            labelRol.Size = labelNombre.Size;
+
+            CRol.Font = TNombre.Font;
+            CRol.DropDownStyle = ComboBoxStyle.DropDownList;
+            CRol.FlatStyle = FlatStyle.Flat;
+            CRol.BackColor = Color.WhiteSmoke;
+            CRol.Items.AddRange(new object[] { "Administrador", "Gerente", "Vendedor" });
+            CRol.Location = new Point(150, startY + spacingY * 6);
+            CRol.Size = new Size(inputWidth, 28);
+
+            // Botones
+            BGuardar.Text = "Guardar";
+            BGuardar.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            BGuardar.ForeColor = Color.White;
+            BGuardar.BackColor = Color.FromArgb(46, 134, 193);
+            BGuardar.FlatStyle = FlatStyle.Flat;
+            BGuardar.FlatAppearance.BorderSize = 0;
+            BGuardar.Size = new Size(120, 35);
+            BGuardar.Location = new Point(100, startY + spacingY * 8);
+            BGuardar.Cursor = Cursors.Hand;
+
+            BCancelar.Text = "Cancelar";
+            BCancelar.Font = BGuardar.Font;
+            BCancelar.ForeColor = Color.White;
+            BCancelar.BackColor = Color.Gray;
+            BCancelar.FlatStyle = FlatStyle.Flat;
+            BCancelar.FlatAppearance.BorderSize = 0;
+            BCancelar.Size = BGuardar.Size;
+            BCancelar.Location = new Point(240, startY + spacingY * 8);
+            BCancelar.Cursor = Cursors.Hand;
+
+            // Añadir controles al contentPanel
+            contentPanel.Controls.Add(labelNombre);
+            contentPanel.Controls.Add(labelApellido);
+            contentPanel.Controls.Add(labelDni);
+            contentPanel.Controls.Add(labelEmail);
+            contentPanel.Controls.Add(labelContraseña);
+            contentPanel.Controls.Add(labelRol);
+            contentPanel.Controls.Add(TNombre);
+            contentPanel.Controls.Add(TApellido);
+            contentPanel.Controls.Add(TDNI);
+            contentPanel.Controls.Add(TUsuario);
+            contentPanel.Controls.Add(TContraseña);
+            contentPanel.Controls.Add(CRol);
+            contentPanel.Controls.Add(CheckContraseña);
+            contentPanel.Controls.Add(BGuardar);
+            contentPanel.Controls.Add(BCancelar);
+            contentPanel.Controls.Add(btnCambiarContraseña);
+
+            // ===== FORM =====
+            AcceptButton = BGuardar;
+            CancelButton = BCancelar;
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            ClientSize = new Size(520, 520);
+            Controls.Add(contentPanel);
+            Controls.Add(headerPanel);
+            Font = new Font("Segoe UI", 9F);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FrmAgregarUsuario";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Gestión de Usuarios";
+
+            ResumeLayout(false);
         }
     }
 }
